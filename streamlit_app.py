@@ -44,20 +44,33 @@ questions = [
 current_question_index = st.session_state.question_number - 1
 question_data = questions[current_question_index]
 st.subheader(f"Question {st.session_state.question_number}")
-response = st.radio(question_data["question"], question_data["options"])
+
+# Resetting response for each question
+if f"response_{st.session_state.question_number}" not in st.session_state:
+    st.session_state[f"response_{st.session_state.question_number}"] = None
+
+response = st.radio(
+    question_data["question"], 
+    question_data["options"], 
+    key=f"question_{st.session_state.question_number}"
+)
 
 # Button to proceed to the next question
 if st.button("Next"):
-    st.session_state.responses.append(response)  # Save the response
-    if st.session_state.question_number < len(questions):
-        st.session_state.question_number += 1  # Move to the next question
+    if response:  # Ensure a selection is made
+        st.session_state.responses.append(response)  # Save the response
+        if st.session_state.question_number < len(questions):
+            st.session_state.question_number += 1  # Move to the next question
+        else:
+            st.write("Thank you for completing the quiz!")
+            st.write("Your responses:")
+            for i, ans in enumerate(st.session_state.responses, start=1):
+                st.write(f"Q{i}: {ans}")
+            # Optionally reset the quiz
+            if st.button("Restart Quiz"):
+                st.session_state.question_number = 1
+                st.session_state.responses = []
     else:
-        st.write("Thank you for completing the quiz!")
-        st.write("Your responses:")
-        for i, ans in enumerate(st.session_state.responses, start=1):
-            st.write(f"Q{i}: {ans}")
-        # Optionally reset the quiz
-        if st.button("Restart Quiz"):
-            st.session_state.question_number = 1
-            st.session_state.responses = []
+        st.warning("Please select an answer before proceeding.")
+
 
