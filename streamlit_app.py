@@ -92,8 +92,8 @@ if st.session_state.final_score is None:
             
 # Store the final score
 st.session_state.final_score = total_score
-else:
-    st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
+    else:
+        st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
 
 
 
