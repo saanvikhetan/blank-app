@@ -73,16 +73,16 @@ if st.session_state.final_score is None:
             st.session_state.question_number += 1
         else:
            # Calculate the final score
-total_score = 0
-for i, resp in enumerate(st.session_state.responses):
-    q = questions[i]
-    if "input" in q and q["input"]:
-        total_score += resp * (0.5 if i == 5 else 3)
-    elif "multi" in q and q["multi"]:
-        if resp:  # Check if the user selected any options
-            for option in resp:
-                index = q["options"].index(option)
-                total_score += q["scores"][index]
+            total_score = 0
+            for i, resp in enumerate(st.session_state.responses):
+            q = questions[i]
+                if "input" in q and q["input"]:
+                    total_score += resp * (0.5 if i == 5 else 3)
+                elif "multi" in q and q["multi"]:
+                    if resp:  # Check if the user selected any options
+                    for option in resp:
+                    index = q["options"].index(option)
+                    total_score += q["scores"][index]
     else:
         total_score += q["scores"][q["options"].index(resp)]
 st.session_state.final_score = total_score
