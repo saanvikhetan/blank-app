@@ -193,15 +193,15 @@ def calculate_emissions():
 
     # Stuff
     if new_items:
-    try:
-        stuff_emissions = sum(
-            emission_factors["stuff"][item] for item in new_items
-        )
-    except KeyError as e:
-        st.error(f"Error calculating stuff emissions: {e}")
-        stuff_emissions = 0
-    else:
-        stuff_emissions = 0
+        try:
+            stuff_emissions = sum(
+                emission_factors["stuff"][item] for item in new_items
+            )
+        except KeyError as e:
+            st.error(f"Error calculating stuff emissions: {e}")
+            stuff_emissions = 0
+        else:
+            stuff_emissions = 0
     
     # Offsetting
     offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
