@@ -76,16 +76,19 @@ if st.session_state.final_score is None:
             total_score = 0
             for i, resp in enumerate(st.session_state.responses):
                 q = questions[i]
-                if "input" in q and q["input"]:
-                    total_score += resp * (0.5 if i == 5 else 3)
-                elif "multi" in q and q["multi"]:
-                    if resp:  # Check if the user selected any options
-                        for option in resp:
-                            index = q["options"].index(option)
-                            total_score += q["scores"][index]
-    else:
-        total_score += q["scores"][q["options"].index(resp)]
-        st.session_state.final_score = total_score
+                if "scores" in q and "options" in q:  # Check if the question has scores and options defined
+                    if "multi" in q and q["multi"]:  # Multi-select handling
+                        if resp:  # Ensure something was selected
+                            for option in resp:
+                                index = q["options"].index(option)
+                                total_score += q["scores"][index]
+                    else:  # Single-select or input
+                        index = q["options"].index(resp)
+                        total_score += q["scores"][index]
+                elif "input" in q and q["input"]:  # For numeric input questions
+                    total_score += resp * q.get("scale", 1)  # Use a scaling factor if provided
+            # Store the final score
+            st.session_state.final_score = total_score
 else:
     st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
 
