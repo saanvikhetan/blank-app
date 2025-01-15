@@ -1,99 +1,112 @@
 import streamlit as st
 
-# Initialize session state variables
-if "question_number" not in st.session_state:
-    st.session_state.question_number = 1
-if "responses" not in st.session_state:
-    st.session_state.responses = []
-if "final_score" not in st.session_state:
-    st.session_state.final_score = None
+def calculate_carbon_footprint(answers):
+    """Calculates carbon footprint based on user answers."""
 
-# Questions and options
-questions = [
-    {"category": "DIET", "question": "How would you best describe your diet?", 
-     "options": ["Meat in every meal", "Meat in some meals", "Meat very rarely", "Vegetarian", "Vegan"], 
-     "scores": [3.3, 2.5, 1.7, 1.2, 0.9]},
-    {"category": "DIET", "question": "Of the food you buy, how much is wasted and thrown away?", 
-     "options": ["None", "0% - 10%", "10% - 30%", "More than 30%"], 
-     "scores": [0, 0.1, 0.4, 1.0]},
-    {"category": "TRAVEL", "question": "Which of these best describes the vehicle you use most?", 
-     "options": ["Electric car", "Hybrid car", "Small petrol/diesel car", "Medium petrol/diesel car", 
-                 "Large petrol/diesel car", "Motorbike", "Public Transport", "Neither - I walk or cycle for most of my journeys"], 
-     "scores": [1, 2, 3, 4, 5, 3, 1.5, 0]},
-    {"category": "TRAVEL", "question": "How many hours a week do you spend in your car or on your motorbike for personal use including commuting?", 
-     "options": ["Under 2 hours", "2 to 5 hours", "5 to 15 hours", "15 to 25 hours", "Over 25 hours"], 
-     "scores": [1, 2, 4, 6, 8]},
-    {"category": "TRAVEL", "question": "How many hours a week do you spend on public transport (metro/train/bus) for personal use including commuting?", 
-     "options": ["I don’t travel by metro/bus/train", "Under 2 hours", "2 to 5 hours", "5 to 15 hours", "15 to 25 hours", "Over 25 hours"], 
-     "scores": [0, 0.5, 1, 1.5, 2, 2.5]},
-    {"category": "TRAVEL", "question": "In the last year, how many return flights have you made in total to the following locations?",
-     "options": ["Domestic (number of flights)", "Indian Subcontinent (number of flights)", "International (number of flights)"], 
-     "input": True},
-    {"category": "HOME", "question": "What kind of house do you live in?", 
-     "options": ["Detached", "Semi-detached", "Terrace", "Flat"], 
-     "scores": [6, 4, 3, 2]},
-    {"category": "HOME", "question": "How cool is your house during summer?", 
-     "options": ["I don’t use a cooler", "Below 19°C (very cold)", "19°C - 23°C (moderately cool)", "24°C - 30°C (energy-saving)"], 
-     "scores": [0, 3, 2, 1]},
-    {"category": "HOME", "question": "Which of these home energy efficiency improvements are installed in your home?", 
-     "options": ["Energy-saving lightbulbs", "Loft insulation", "Cavity or solid wall insulation", "Condensing boiler", 
-                 "Double glazing", "Low flow fittings to taps and showers", "Solar panels", "Solar water heater"], 
-     "multi": True, "scores": -0.2},
-    {"category": "STUFF", "question": "In the last 12 months, have you bought any of these new household items?", 
-     "options": ["TV, laptop, or PC", "Large item of furniture", "Washing machine, dishwasher, etc.", "Mobile phone or tablet"], 
-     "scores": [0.2, 0.3, 0.4, 0.1]},
-    {"category": "STUFF", "question": "In a typical month, how much do you spend on non-essential items (clothes, grooming, entertainment, and pets)?", 
-     "options": ["₹0 - ₹5,000", "₹5,000 - ₹15,000", "₹15,000 - ₹30,000", "Over ₹30,000"], 
-     "scores": [0.2, 0.5, 1, 1.5]},
-    {"category": "OFFSET", "question": "How often do you take actions to offset your carbon footprint?", 
-     "options": ["I never take offsetting actions", "Rarely (once or twice a year)", "Sometimes (a few times a year)", 
-                 "Often (monthly or more frequently)", "Always (I actively offset regularly and for most of my activities)"], 
-     "scores": [0, -0.1, -0.3, -0.6, -1]},
-    {"category": "OFFSET", "question": "What types of offsetting actions do you take?", 
-     "options": ["Donate to environmental projects (tree planting, renewable energy, etc.)", 
-                 "Participate in local initiatives (e.g., tree planting, clean-ups)", 
-                 "Purchase carbon credits", "Other"], 
-     "multi": True, "scores": [-0.2, -0.3, -0.2, 0]},
-]
+    emissions = 0
 
-# Handle question logic
-if st.session_state.final_score is None:
-    question = questions[st.session_state.question_number - 1]
-    st.subheader(f"{question['category']}: {question['question']}")
-    if "input" in question and question["input"]:
-        response = st.number_input("Enter number of flights for each category", min_value=0, step=1)
-    elif "multi" in question and question["multi"]:
-        response = st.multiselect("Select all that apply:", question["options"])
-    else:
-        response = st.radio("Select one:", question["options"])
+    # Diet
+    diet_emissions = {
+        "Meat in every meal": 3.3,
+        "Meat in some meals": 2.5,
+        "Meat very rarely": 1.7,
+        "Vegetarian": 1.2,
+        "Vegan": 0.9,
+    }
+    emissions += diet_emissions.get(answers["diet"], 0)
 
-    if st.button("Next"):
-        st.session_state.responses.append(response)
-        if st.session_state.question_number < len(questions):
-            st.session_state.question_number += 1
-        else:
-            # Calculate the final score
-            total_score = 0
-            for i, resp in enumerate(st.session_state.responses):
-                q = questions[i]
-                if "scores" in q and "options" in q:  # Check if the question has scores and options defined
-                    if "multi" in q and q["multi"]:  # Multi-select handling
-                        if resp:  # Ensure something was selected
-                            for option in resp:
-                                if option in q["options"]:  # Verify option is valid
-                                    index = q["options"].index(option)
-                                    total_score += q["scores"][index]
-                    else:  # Single-select or input
-                        if resp in q["options"]:  # Verify response is valid
-                            index = q["options"].index(resp)
-                            total_score += q["scores"][index]
-                elif "input" in q and q["input"]:  # For numeric input questions
-                    total_score += resp * q.get("scale", 1)  # Use a scaling factor if provided
+    # Food Waste
+    waste_emissions = {
+        "None": 0,
+        "0% - 10%": 0.1,
+        "10% - 30%": 0.4,
+        "More than 30%": 1.0,
+    }
+    emissions += waste_emissions.get(answers["food_waste"], 0)
 
-            # Store the final score
-            st.session_state.final_score = total_score
-else:
-    st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
+    # Travel (simplified, needs more detailed calculation for hours and flights)
+    vehicle_emissions = {
+        "Electric car": 1,
+        "Hybrid car": 2,
+        "Small petrol/diesel car": 3,
+        "Medium petrol/diesel car": 4,
+        "Large petrol/diesel car": 5,
+        "Public Transport": 1.5,
+        "Neither - I walk or cycle for most of my journeys": 0,
+    }
+    emissions += vehicle_emissions.get(answers["vehicle"], 0)
+
+    # Home
+    home_emissions = {
+        "Detached": 6,
+        "Semi-detached": 4,
+        "Terrace": 3,
+        "Flat": 2,
+    }
+    emissions += home_emissions.get(answers["house_type"], 0)
+
+    cooling_emissions = {
+      "I don’t use a cooler": 0,
+      "Below 19°C (very cold)": 3,
+      "19°C - 23°C (moderately cool)": 2,
+      "24°C - 30°C (energy-saving)": 1
+    }
+    emissions += cooling_emissions.get(answers["house_cool"],0)
+
+    # Stuff (simplified)
+    stuff_emissions = 0
+    if answers.get("tv_laptop", False): stuff_emissions += 0.2
+    if answers.get("furniture", False): stuff_emissions += 0.3
+    if answers.get("appliance", False): stuff_emissions += 0.4
+    if answers.get("phone", False): stuff_emissions += 0.1
+    emissions += stuff_emissions
+
+    # Offsetting (Simplified)
+    offset_reductions = {
+        "I never take offsetting actions": 0,
+        "Rarely (once or twice a year)": 0.1,
+        "Sometimes (a few times a year)": 0.3,
+        "Often (monthly or more frequently)": 0.6,
+        "Always (I actively offset regularly and for most of my activities)": 1,
+    }
+    emissions -= offset_reductions.get(answers["offset_frequency"],0)
+
+    return emissions
+
+st.title("Carbon Footprint Calculator")
+
+answers = {}
+
+# Diet
+answers["diet"] = st.selectbox("How would you best describe your diet?",
+    ["Meat in every meal", "Meat in some meals", "Meat very rarely", "Vegetarian", "Vegan"])
+
+answers["food_waste"] = st.selectbox("Of the food you buy, how much is wasted?",
+    ["None", "0% - 10%", "10% - 30%", "More than 30%"])
+
+# Travel
+answers["vehicle"] = st.selectbox("Which vehicle do you use most?",
+    ["Electric car", "Hybrid car", "Small petrol/diesel car", "Medium petrol/diesel car", "Large petrol/diesel car", "Public Transport", "Neither - I walk or cycle for most of my journeys"])
+
+# Home
+answers["house_type"] = st.selectbox("What kind of house do you live in?", ["Detached", "Semi-detached", "Terrace", "Flat"])
+answers["house_cool"] = st.selectbox("How cool is your house during summer?", ["I don’t use a cooler","Below 19°C (very cold)", "19°C - 23°C (moderately cool)", "24°C - 30°C (energy-saving)"])
+
+# Stuff
+st.subheader("Stuff")
+answers["tv_laptop"] = st.checkbox("Bought a TV, laptop, or PC in the last 12 months")
+answers["furniture"] = st.checkbox("Bought a large item of furniture in the last 12 months")
+answers["appliance"] = st.checkbox("Bought a washing machine, dishwasher, etc. in the last 12 months")
+answers["phone"] = st.checkbox("Bought a mobile phone or tablet in the last 12 months")
+
+# Offsetting
+answers["offset_frequency"] = st.selectbox("How often do you take actions to offset your carbon footprint?",
+    ["I never take offsetting actions", "Rarely (once or twice a year)", "Sometimes (a few times a year)", "Often (monthly or more frequently)", "Always (I actively offset regularly and for most of my activities)"])
+
+
+if st.button("Calculate"):
+    footprint = calculate_carbon_footprint(answers)
+    st.write(f"Your estimated annual carbon footprint is: {footprint:.2f} tons of CO₂e")
 
 
 
