@@ -1,221 +1,81 @@
 import streamlit as st
-import pandas as pd 
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# --- Data ---
-# Define emission factors (replace with your actual values)
-emission_factors = {
-    "diet": {
-        "Meat in every meal": 3.3,
-        "Meat in some meals": 2.5,
-        "Meat very rarely": 1.7,
-        "Vegetarian": 1.2,
-        "Vegan": 0.9,
-    },
-    "food_waste": {
-        "None": 0,
-        "0% - 10%": 0.1,
-        "10% - 30%": 0.4,
-        "More than 30%": 1.0,
-    },
-    "vehicle_use": {
-        "Electric car": 1,
-        "Hybrid car": 2,
-        "Small petrol/diesel car": 3,
-        "Medium petrol/diesel car": 4,
-        "Large petrol/diesel car": 5,
-        "Motorbike": 2.5,
-        "Public Transport": 1.5,
-        "Walking/Cycling": 0,
-    },
-    "home": {
-        "Detached": 6,
-        "Semi-detached": 4,
-        "Terrace": 3,
-        "Flat": 2,
-        "Cooling": {
-            "I don’t use a cooler": 0,
-            "Below 19°C": 3,
-            "19°C - 23°C": 2,
-            "24°C - 30°C": 1,
-        },
-        "Improvements": -0.2,  # Reduction per improvement
-    },
-    "stuff": {
-        "TV, laptop, or PC": 0.2,
-        "Large furniture": 0.3,
-        "Washing machine, dishwasher, etc.": 0.4,
-        "Mobile phone or tablet": 0.1,
-        "Spending": {
-            "₹0 - ₹5,000": 0.2,
-            "₹5,000 - ₹15,000": 0.5,
-            "₹15,000 - ₹30,000": 1,
-            "Over ₹30,000": 1.5,
-        },
-    },
-    "offsetting": {
-        "Frequency": {
-            "I never take offsetting actions": 0,
-            "Rarely (once or twice a year)": -0.1,
-            "Sometimes (a few times a year)": -0.3,
-            "Often (monthly or more frequently)": -0.6,
-            "Always (I actively offset regularly and for most of my activities)": -1,
-        },
-        "Actions": {
-            "Donate to environmental projects": -0.2,
-            "Participate in local initiatives": -0.3,
-            "Purchase carbon credits": -0.2,
-        },
-    },
-}
-
-# --- Streamlit App ---
-st.title("Carbon Footprint Calculator")
-
-# --- DIET ---
-st.header("Diet")
-diet = st.selectbox(
-    "How would you best describe your diet?",
-    list(emission_factors["diet"].keys())
-)
-
-food_waste = st.selectbox(
-    "Of the food you buy, how much is wasted and thrown away?",
-    list(emission_factors["food_waste"].keys())
-)
-
-# --- TRAVEL ---
-st.header("Travel")
-vehicle = st.selectbox(
-    "Which of these best describes the vehicle you use most?",
-    list(emission_factors["vehicle_use"].keys())
-)
-hours_in_vehicle = st.slider(
-    "How many hours a week do you spend in your car or on your motorbike for personal use?",
-    0, 25, 5
-)
-
-public_transport_hours = st.slider(
-    "How many hours a week do you spend on public transport (metro/train/bus) for personal use?",
-    0, 25, 5
-)
-
-domestic_flights = st.number_input("Number of domestic flights in the last year:", min_value=0)
-indian_subcontinent_flights = st.number_input(
-    "Number of flights to the Indian Subcontinent in the last year:", min_value=0
-)
-international_flights = st.number_input(
-    "Number of international flights in the last year:", min_value=0
-)
-
-# --- HOME ---
-st.header("Home")
-house_type = st.selectbox(
-    "What kind of house do you live in?", list(emission_factors["home"].keys())
-)
-cooling = st.selectbox(
-    "How cool is your house during summer?",
-    list(emission_factors["home"]["Cooling"].keys()),
-)
-
-home_improvements = st.multiselect(
-    "Which of these home energy efficiency improvements are installed in your home?",
-    [
-        "Energy-saving lightbulbs",
-        "Loft insulation",
-        "Cavity or solid wall insulation",
-        "Condensing boiler",
-        "Double glazing",
-        "Low flow fittings to taps and showers",
-        "Solar panels",
-        "Solar water heater",
-    ],
-)
-
-# --- STUFF ---
-st.header("Stuff")
-new_items = st.multiselect(
-    "In the last 12 months, have you bought any of these new household items?",
-    [
-        "TV, laptop, or PC",
-        "Washing machine, dishwasher, etc.",
-        "Mobile phone or tablet",
-    ],
-)
-
-non_essential_spending = st.selectbox(
-    "In a typical month, how much do you spend on non-essential items?",
-    list(emission_factors["stuff"]["Spending"].keys()),
-)
-
-# --- OFFSETTING ---
-st.header("Offsetting")
-offsetting_frequency = st.selectbox(
-    "How often do you take actions to offset your carbon footprint?",
-    list(emission_factors["offsetting"]["Frequency"].keys()),
-)
-offsetting_actions = st.multiselect(
-    "What types of offsetting actions do you take?",
-    list(emission_factors["offsetting"]["Actions"].keys()),
-)
-
-# --- CALCULATIONS ---
-def calculate_emissions():
-    """Calculates the total annual carbon footprint."""
-
-    # Diet
-    diet_emissions = emission_factors["diet"][diet]
-
-    # Food Waste
-    food_waste_emissions = emission_factors["food_waste"][food_waste]
-
-    # Travel
-    vehicle_emissions = (
-        emission_factors["vehicle_use"][vehicle]
-        * hours_in_vehicle * 0.27
+# --- Pie Chart and Suggestions ---
+def calculate_emissions_breakdown():
+    """Calculates emissions breakdown by category."""
+    breakdown = {
+        "Diet": emission_factors["diet"][diet] + emission_factors["food_waste"][food_waste],
+        "Travel": (
+            emission_factors["vehicle_use"][vehicle] * hours_in_vehicle
+            + emission_factors["vehicle_use"]["Public Transport"] * public_transport_hours
+            + domestic_flights * 0.5
+            + indian_subcontinent_flights * 1.5
+            + international_flights * 3
+        ),
+        "Home": (
+            emission_factors["home"][house_type]
+            + emission_factors["home"]["Cooling"][cooling]
+            + emission_factors["home"]["Improvements"] * len(home_improvements)
+        ),
+        "Stuff": (
+            sum(emission_factors["stuff"][item] for item in new_items)
+            + emission_factors["stuff"]["Spending"][non_essential_spending]
+        ),
+    }
+    offsetting_reductions = (
+        emission_factors["offsetting"]["Frequency"][offsetting_frequency]
+        + sum(emission_factors["offsetting"]["Actions"].get(action, 0) for action in offsetting_actions)
     )
-    public_transport_emissions = (
-        emission_factors["vehicle_use"]["Public Transport"]
-        * public_transport_hours * 0.0833
-    )
-    flight_emissions = (
-        domestic_flights * 0.5
-        + indian_subcontinent_flights * 1.5
-        + international_flights * 3
-    )
+    breakdown["Offsetting"] = offsetting_reductions
+    return breakdown
 
-    # Home
-    home_emissions = emission_factors["home"][house_type]
-    home_emissions += emission_factors["home"]["Cooling"][cooling]
-    home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements)
+def display_pie_chart(breakdown):
+    """Displays a pie chart of the emissions breakdown."""
+    categories = list(breakdown.keys())
+    emissions = [value for value in breakdown.values()]
 
-    # Stuff
-    stuff_emissions = sum(
-        emission_factors["stuff"][item] for item in new_items
-    ) + emission_factors["stuff"]["Spending"][non_essential_spending]
+    fig, ax = plt.subplots()
+    ax.pie(emissions, labels=categories, autopct="%1.1f%%", startangle=140)
+    ax.set_title("Carbon Footprint Breakdown by Category")
+    st.pyplot(fig)
 
-    # Offsetting
-    offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
-    for action in offsetting_actions:
-        offsetting_reductions += emission_factors["offsetting"]["Actions"][action]
+def generate_suggestions(breakdown):
+    """Generates personalized suggestions based on the highest-emitting category."""
+    highest_category = max(breakdown, key=breakdown.get)
 
-    # Total Emissions
-    total_emissions = (
-        diet_emissions
-        + food_waste_emissions
-        + vehicle_emissions
-        + public_transport_emissions
-        + flight_emissions
-        + home_emissions
-        + stuff_emissions
-        + offsetting_reductions
-    )
+    suggestions = {
+        "Diet": (
+            "It seems your diet choices contribute significantly to your carbon footprint. "
+            "Consider reducing meat consumption, wasting less food, and trying plant-based alternatives."
+        ),
+        "Travel": (
+            "Your travel habits are a major contributor. Try using public transport, carpooling, cycling, or walking when possible. "
+            "Reduce air travel by taking fewer flights or exploring local holiday destinations."
+        ),
+        "Home": (
+            "Your home energy use is a key contributor. Improve insulation, switch to energy-efficient appliances, and consider renewable energy options like solar panels."
+        ),
+        "Stuff": (
+            "Your spending on non-essential items is contributing to your footprint. Consider buying fewer new items, opting for second-hand, or focusing on quality over quantity."
+        ),
+        "Offsetting": (
+            "You're already taking steps to offset your carbon footprint. Continue supporting environmental projects and initiatives!"
+        ),
+    }
 
-    return total_emissions
+    st.markdown(f"**Suggestion:** {suggestions[highest_category]}")
 
 # --- Display Results ---
 if st.button("Calculate"):
-    total_emissions = calculate_emissions()
+    emissions_breakdown = calculate_emissions_breakdown()
+    total_emissions = sum(emissions_breakdown.values())
+
     st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+    st.header("Emissions Breakdown")
+    display_pie_chart(emissions_breakdown)
+    generate_suggestions(emissions_breakdown)
 
 # --- Additional Information ---
 st.markdown(
