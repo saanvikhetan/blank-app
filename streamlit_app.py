@@ -27,8 +27,8 @@ questions = [
      "options": ["I don’t travel by metro/bus/train", "Under 2 hours", "2 to 5 hours", "5 to 15 hours", "15 to 25 hours", "Over 25 hours"], 
      "scores": [0, 0.5, 1, 1.5, 2, 2.5]},
     {"category": "TRAVEL", "question": "In the last year, how many return flights have you made in total to the following locations?",
-     "input": True, "labels": ["Domestic (number of flights)", "Indian Subcontinent (number of flights)", "International (number of flights)"],
-     "scores": [0.5, 1.5, 3]},
+     "options": ["Domestic (number of flights)", "Indian Subcontinent (number of flights)", "International (number of flights)"], 
+     "input": True},
     {"category": "HOME", "question": "What kind of house do you live in?", 
      "options": ["Detached", "Semi-detached", "Terrace", "Flat"], 
      "scores": [6, 4, 3, 2]},
@@ -60,12 +60,8 @@ questions = [
 if st.session_state.final_score is None:
     question = questions[st.session_state.question_number - 1]
     st.subheader(f"{question['category']}: {question['question']}")
-
     if "input" in question and question["input"]:
-        responses = []
-        for label, score in zip(question["labels"], question["scores"]):
-            responses.append(st.number_input(f"{label}", min_value=0, step=1))
-        response = sum(resp * score for resp, score in zip(responses, question["scores"]))
+        response = st.number_input("Enter number of flights for each category", min_value=0, step=1)
     elif "multi" in question and question["multi"]:
         response = st.multiselect("Select all that apply:", question["options"])
     else:
@@ -73,22 +69,32 @@ if st.session_state.final_score is None:
 
     if st.button("Next"):
         st.session_state.responses.append(response)
-        st.session_state.question_number += 1
-
-        if st.session_state.question_number > len(questions):
+        if st.session_state.question_number < len(questions):
+            st.session_state.question_number += 1
+        else:
+            # Calculate the final score
             total_score = 0
             for i, resp in enumerate(st.session_state.responses):
                 q = questions[i]
-                if "scores" in q and "options" in q:
-                    if "multi" in q and q["multi"]:
-                        total_score += len(resp) * q["scores"]
-                    elif resp in q["options"]:
-                        total_score += q["scores"][q["options"].index(resp)]
-                elif "input" in q and q["input"]:
-                    total_score += resp
+                if "scores" in q and "options" in q:  # Check if the question has scores and options defined
+                    if "multi" in q and q["multi"]:  # Multi-select handling
+                        if resp:  # Ensure something was selected
+                            for option in resp:
+                                if option in q["options"]:  # Verify option is valid
+                                    index = q["options"].index(option)
+                                    total_score += q["scores"][index]
+                    else:  # Single-select or input
+                        if resp in q["options"]:  # Verify response is valid
+                            index = q["options"].index(resp)
+                            total_score += q["scores"][index]
+                elif "input" in q and q["input"]:  # For numeric input questions
+                    total_score += resp * q.get("scale", 1)  # Use a scaling factor if provided
+
+            # Store the final score
             st.session_state.final_score = total_score
 else:
     st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
+
 
 
 
