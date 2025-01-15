@@ -134,7 +134,6 @@ new_items = st.multiselect(
     "In the last 12 months, have you bought any of these new household items?",
     [
         "TV, laptop, or PC",
-        "Large item of furniture",
         "Washing machine, dishwasher, etc.",
         "Mobile phone or tablet",
     ],
@@ -166,10 +165,10 @@ def calculate_emissions():
 
     # Travel
     vehicle_emissions = (
-        emission_factors["vehicle_use"][vehicle] * hours_in_vehicle
+        emission_factors["vehicle_use"][vehicle] * hours_in_vehicle * 0.27
     )
     public_transport_emissions = (
-        emission_factors["vehicle_use"]["Public Transport"] * public_transport_hours
+        emission_factors["vehicle_use"]["Public Transport"] * public_transport_hours * 0.0833
     )
     flight_emissions = (
         domestic_flights * 0.5 + indian_subcontinent_flights * 1.5 + international_flights * 3
