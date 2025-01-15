@@ -1,5 +1,5 @@
 import streamlit as st
-import pandas as pd
+import pandas as pd 
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
@@ -173,12 +173,10 @@ def calculate_emissions():
     vehicle_emissions = (
         emission_factors["vehicle_use"][vehicle]
         * hours_in_vehicle
-        * 52  # Weeks in a year
     )
     public_transport_emissions = (
         emission_factors["vehicle_use"]["Public Transport"]
         * public_transport_hours
-        * 52
     )
     flight_emissions = (
         domestic_flights * 0.5
