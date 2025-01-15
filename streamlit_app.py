@@ -80,12 +80,12 @@ if st.session_state.final_score is None:
                     total_score += resp * (0.5 if i == 5 else 3)
                 elif "multi" in q and q["multi"]:
                     if resp:  # Check if the user selected any options
-                    for option in resp:
-                        index = q["options"].index(option)
-                        total_score += q["scores"][index]
+                        for option in resp:
+                            index = q["options"].index(option)
+                            total_score += q["scores"][index]
     else:
         total_score += q["scores"][q["options"].index(resp)]
-st.session_state.final_score = total_score
+        st.session_state.final_score = total_score
 else:
     st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
 
