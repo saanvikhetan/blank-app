@@ -80,15 +80,18 @@ if st.session_state.final_score is None:
                     if "multi" in q and q["multi"]:  # Multi-select handling
                         if resp:  # Ensure something was selected
                             for option in resp:
-                                index = q["options"].index(option)
-                                total_score += q["scores"][index]
+                                if option in q["options"]:  # Verify option is valid
+                                    index = q["options"].index(option)
+                                    total_score += q["scores"][index]
                     else:  # Single-select or input
-                        index = q["options"].index(resp)
-                        total_score += q["scores"][index]
+                        if resp in q["options"]:  # Verify response is valid
+                            index = q["options"].index(resp)
+                            total_score += q["scores"][index]
                 elif "input" in q and q["input"]:  # For numeric input questions
                     total_score += resp * q.get("scale", 1)  # Use a scaling factor if provided
-            # Store the final score
-            st.session_state.final_score = total_score
+            
+# Store the final score
+st.session_state.final_score = total_score
 else:
     st.success(f"Your estimated annual carbon footprint is {st.session_state.final_score:.2f} tons CO₂e.")
 
