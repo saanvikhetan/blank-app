@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
@@ -189,18 +190,46 @@ def calculate_emissions():
     for action in offsetting_actions:
         offsetting_reductions += emission_factors["offsetting"]["Actions"].get(action, 0)
 
+    # Category breakdown
+    category_emissions = {
+        "Diet": diet_emissions + food_waste_emissions,
+        "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
+        "Home": home_emissions,
+        "Stuff": stuff_emissions,
+    }
+
     # Total Emissions
-    total_emissions = (
-        diet_emissions + food_waste_emissions + vehicle_emissions +
-        public_transport_emissions + flight_emissions + home_emissions +
-        stuff_emissions + offsetting_reductions
-    )
-    return total_emissions
+    total_emissions = sum(category_emissions.values()) + offsetting_reductions
+
+    return total_emissions, category_emissions
 
 # --- Display Results ---
 if st.button("Calculate"):
-    total_emissions = calculate_emissions()
+    total_emissions, category_emissions = calculate_emissions()
+
     st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+
+    # Pie Chart
+    st.header("Breakdown of Your Carbon Footprint")
+    fig, ax = plt.subplots()
+    labels = category_emissions.keys()
+    sizes = category_emissions.values()
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    st.pyplot(fig)
+
+    # Suggestions
+    st.header("Personalized Suggestions")
+    max_category = max(category_emissions, key=category_emissions.get)
+
+    suggestions = {
+        "Diet": "Consider reducing meat consumption or switching to a vegetarian or vegan diet to lower emissions from food production.",
+        "Travel": "It seems as if your travel choices are influencing your carbon footprint the most. Here are a few steps you could take to cut down on travel emissions: use public transport if possible, take holidays closer to home, reduce flying, and walk if a destination is within walking distance.",
+        "Home": "Improving your home energy efficiency can help. Consider installing energy-saving lightbulbs, loft insulation, double glazing, or solar panels to reduce energy consumption.",
+        "Stuff": "Reducing the number of new items purchased or opting for second-hand goods can significantly cut emissions. Consider repairing items instead of replacing them and minimizing non-essential spending."
+    }
+
+    st.info(suggestions[max_category])
 
 # --- Additional Information ---
 st.markdown(
@@ -209,5 +238,6 @@ st.markdown(
     Consider consulting with a carbon footprint specialist for a more precise assessment.
     """
 )
+
 
 
