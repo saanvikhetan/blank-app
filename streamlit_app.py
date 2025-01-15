@@ -1,5 +1,3 @@
-python -m pip install -U pip
-python -m pip install -U matplotlib
 
 import streamlit as st
 import pandas as pd
