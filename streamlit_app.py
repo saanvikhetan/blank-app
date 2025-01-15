@@ -45,6 +45,15 @@ questions = [
     {"category": "STUFF", "question": "In a typical month, how much do you spend on non-essential items (clothes, grooming, entertainment, and pets)?", 
      "options": ["₹0 - ₹5,000", "₹5,000 - ₹15,000", "₹15,000 - ₹30,000", "Over ₹30,000"], 
      "scores": [0.2, 0.5, 1, 1.5]},
+    {"category": "OFFSET", "question": "How often do you take actions to offset your carbon footprint?", 
+     "options": ["I never take offsetting actions", "Rarely (once or twice a year)", "Sometimes (a few times a year)", 
+                 "Often (monthly or more frequently)", "Always (I actively offset regularly and for most of my activities)"], 
+     "scores": [0, -0.1, -0.3, -0.6, -1]},
+    {"category": "OFFSET", "question": "What types of offsetting actions do you take?", 
+     "options": ["Donate to environmental projects (tree planting, renewable energy, etc.)", 
+                 "Participate in local initiatives (e.g., tree planting, clean-ups)", 
+                 "Purchase carbon credits", "Other"], 
+     "multi": True, "scores": [-0.2, -0.3, -0.2, 0]},
 ]
 
 # Handle question logic
