@@ -192,9 +192,13 @@ def calculate_emissions():
     home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements)
 
     # Stuff
-    stuff_emissions = sum(
-        emission_factors["stuff"][item] for item in new_items
-    ) + emission_factors["stuff"]["Spending"][non_essential_spending]
+    if new_items:
+        stuff_emissions = sum(
+            emission_factors["stuff"][item] for item in new_items
+        )
+    else:
+        stuff_emissions = 0
+    stuff_emissions += emission_factors["stuff"]["Spending"][non_essential_spending]
 
     # Offsetting
     offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
