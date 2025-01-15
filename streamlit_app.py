@@ -172,11 +172,11 @@ def calculate_emissions():
     # Travel
     vehicle_emissions = (
         emission_factors["vehicle_use"][vehicle]
-        * hours_in_vehicle
+        * hours_in_vehicle * 0.27
     )
     public_transport_emissions = (
         emission_factors["vehicle_use"]["Public Transport"]
-        * public_transport_hours
+        * public_transport_hours * 0.0833
     )
     flight_emissions = (
         domestic_flights * 0.5
