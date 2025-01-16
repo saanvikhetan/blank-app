@@ -158,19 +158,7 @@ if menu == "Home":
         "How cool is your house during summer?",
         list(emission_factors["home_cooling"].keys()),  # Use separate dictionary for cooling
     )
-    home_improvements = st.multiselect(
-        "Which of these home energy efficiency improvements are installed in your home?",
-        [
-            "Energy-saving lightbulbs",
-            "Loft insulation",
-            "Cavity or solid wall insulation",
-            "Condensing boiler",
-            "Double glazing",
-            "Low flow fittings to taps and showers",
-            "Solar panels",
-            "Solar water heater",
-        ],
-    )
+    
 
     # --- STUFF ---
     st.subheader("Stuff")
@@ -187,16 +175,7 @@ if menu == "Home":
         list(emission_factors["stuff"]["Spending"].keys()),
     )
 
-    # --- OFFSETTING ---
-    st.subheader("Offsetting")
-    offsetting_frequency = st.selectbox(
-        "How often do you take actions to offset your carbon footprint?",
-        list(emission_factors["offsetting"]["Frequency"].keys()),
-    )
-    offsetting_actions = st.multiselect(
-        "What types of offsetting actions do you take?",
-        list(emission_factors["offsetting"]["Actions"].keys()),
-    )
+    
 
     # --- CALCULATIONS ---
     def calculate_emissions():
@@ -221,28 +200,25 @@ if menu == "Home":
         # Home
         home_emissions = emission_factors["home"][house_type]
         cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
-        home_improvements_emissions = emission_factors["home_improvements"] * len(home_improvements)
+        
 
         # Stuff
         stuff_emissions = sum(
             emission_factors["stuff"].get(item, 0) for item in new_items
         ) + emission_factors["stuff"]["Spending"][non_essential_spending]
 
-        # Offsetting
-        offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
-        for action in offsetting_actions:
-            offsetting_reductions += emission_factors["offsetting"]["Actions"].get(action, 0)
+        
 
         # Category breakdown
         category_emissions = {
             "Diet": diet_emissions + food_waste_emissions,
             "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
-            "Home": home_emissions + cooling_emissions + home_improvements_emissions,
+            "Home": home_emissions + cooling_emissions,
             "Stuff": stuff_emissions,
         }
 
         # Total Emissions
-        total_emissions = sum(category_emissions.values()) + offsetting_reductions
+        total_emissions = sum(category_emissions.values())
 
         return total_emissions, category_emissions
 
