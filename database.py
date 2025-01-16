@@ -32,8 +32,10 @@ data = {
     "offsetting_frequency": "Yearly",
     "offsetting_actions": "Carbon offsetting purchases"}
 
+new_df = pd.DataFrame([data])
+df = df.append(new_df, ignore_index=True)
 
-conn.write(data)
+conn.write(df)
 df = conn.read()
 
 st.write(df)
