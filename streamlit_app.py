@@ -232,28 +232,28 @@ if st.button("Calculate"):
 
     st.info(suggestions[max_category])
 
-# --- Additional Information ---
-st.markdown(
-    """
-    **Note:** This is a simplified estimation and may not reflect your actual carbon footprint accurately. 
-    Consider consulting with a carbon footprint specialist for a more precise assessment.
-    """
-)
-# --- Bar Graph ---
-st.header("Comparison to Global Averages")
-averages = {
-    "World": 4.7,
-    "India": 2.1,
-    "UK": 4.4,
-    "US": 14.3,
-    "China": 8.4,
-    "You": total_emissions
-}
-averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
-fig, ax = plt.subplots()
-averages_df.plot(kind='bar', ax=ax)
-ax.set_ylabel("Carbon Footprint (tCO2e)")
-ax.set_title("Your Footprint vs. Global Averages")
-st.pyplot(fig)
+    # --- Additional Information ---
+    st.markdown(
+        """
+        **Note:** This is a simplified estimation and may not reflect your actual carbon footprint accurately. 
+        Consider consulting with a carbon footprint specialist for a more precise assessment.
+        """
+    )
+    # --- Bar Graph ---
+    st.header("Comparison to Global Averages")
+    averages = {
+        "World": 4.7,
+        "India": 2.1,
+        "UK": 4.4,
+        "US": 14.3,
+        "China": 8.4,
+        "You": total_emissions
+    }
+    averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
+    fig, ax = plt.subplots()
+    averages_df.plot(kind='bar', ax=ax)
+    ax.set_ylabel("Carbon Footprint (tCO2e)")
+    ax.set_title("Your Footprint vs. Global Averages")
+    st.pyplot(fig)
 
 
