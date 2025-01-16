@@ -242,11 +242,12 @@ if st.button("Calculate"):
     # --- Bar Graph ---
     st.header("Comparison to Global Averages")
     averages = {
-        "World": 4.7,
-        "India": 2.1,
-        "UK": 4.4,
+        "Saudi Arabia":22.1,
         "US": 14.3,
         "China": 8.4,
+        "World": 4.7,
+        "UK": 4.4,
+        "India": 2.1,
         "You": total_emissions
     }
     averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
