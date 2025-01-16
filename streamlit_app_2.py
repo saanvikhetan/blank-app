@@ -200,4 +200,32 @@ st.markdown(
 Consider consulting with a carbon footprint specialist for a more precise assessment. 
 """ 
 )
- Calculate emissions for each category emissions_by_category = { "Diet": diet_emissions,"Food Waste": food_waste_emissions, "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,"Home": home_emissions, "Stuff": stuff_emissions, } return total_emissions, emissions_by_category # --- Display Results --- if st.button("Calculate"): total_emissions, emissions_by_category = calculate_emissions() st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e") # Create a pie chart fig, ax = plt.subplots() plt.pie(emissions_by_category.values(), labels=emissions_by_category.keys(), autopct='%1.1f%%') plt.title("Carbon Footprint Breakdown") plt.legend() st.pyplot(fig) st.header("Personalized Recommendations") for category, emissions inemissions_by_category.items(): if emissions > 0.5 * total_emissions:  # If a category contributes more than 50%st.write(f"**{category}:**") if category == "Travel": st.write("- **Weekly Goal:**") st.write(" - Use public transport at least twice this week instead of driving.") st.write(" - Carpool or bike to work/school once this week.") st.write(" - Plan a car-free day for errands.") st.write("- **Daily Goal:**") st.write(" - Walk or bike for short trips instead of driving.") st.write(" - Consider telecommuting one day per week.") elif category == "Home": st.write("- **Weekly Goal:**") st.write(" - Unplug electronics from the wall when not in use one day this week.") st.write(" - Do a short energy audit of your home (check for drafts, etc.).") st.write(" - Wash clothes in cold water.") st.write("- **Daily Goal:**") st.write(" - Turn off lights and appliances when leaving a room.") st.write(" - Take shorter showers.") elif category == "Diet": st.write("- **Weekly Goal:**") st.write(" - Cook a meat-free meal at least twice this week.") st.write(" - Plan and shop for meals to reduce food waste.") st.write(" - Visit a local farmers' market.") st.write("- **Daily Goal:**") st.write(" - Store food properly to prevent spoilage.") st.write(" - Eat smaller portions.") elif category == "Stuff": st.write("- **Weekly Goal:**") st.write(" - Repair one broken item instead of throwing it away.") st.write(" - Borrow, rent, or buy used items whenever possible.") st.write(" - Declutter and donate unwanted items.") st.write("- **Daily Goal:**") st.write(" - Think twice before making any non-essential purchases.") st.write(" - Choose products with minimal packaging.")
+ Calculate emissions for each category emissions_by_category = { "Diet": diet_emissions,"Food Waste": food_waste_emissions, "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,"Home": home_emissions, "Stuff": stuff_emissions, } return total_emissions, emissions_by_category 
+# --- Display Results --- 
+st.button("Calculate"):
+    total_emissions, emissions_by_category = calculate_emissions()
+    st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+
+    # Create a pie chart
+    fig, ax = plt.subplots()
+    plt.pie(emissions_by_category.values(), labels=emissions_by_category.keys(), autopct='%1.1f%%')
+    plt.title("Carbon Footprint Breakdown")
+    plt.legend()
+    st.pyplot(fig)
+
+    st.header("Personalized Recommendations")
+    for category, emissions in emissions_by_category.items():
+        if emissions > 0.5 * total_emissions:  # If a category contributes more than 50%
+            st.write(f"**{category}:**")
+            if category == "Travel":
+                st.write("- **Weekly Goal:** Use public transport at least twice this week instead of driving.")
+                st.write("- **Daily Goal:** Walk or bike for short trips instead of driving.")
+            elif category == "Home":
+                st.write("- **Weekly Goal:** Unplug electronics from the wall when not in use one day this week.")
+                st.write("- **Daily Goal:** Turn off lights and appliances when leaving a room.")
+            elif category == "Diet":
+                st.write("- **Weekly Goal:** Cook a meat-free meal at least twice this week.")
+                st.write("- **Daily Goal:** Store food properly to prevent spoilage.")
+            elif category == "Stuff":
+                st.write("- **Weekly Goal:** Repair one broken item instead of throwing it away.")
+                st.write("- **Daily Goal:** Think twice before making any non-essential purchases.")
