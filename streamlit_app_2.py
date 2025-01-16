@@ -184,20 +184,13 @@ def calculate_emissions():
         offsetting_reductions += emission_factors["offsetting"]["Actions"][action]
     # Total Emissions
     emissions_by_category = {
-    "Diet": 0,
-    "Food Waste": 0,
-    "Travel": 0,
-    "Home": 0,
-    "Stuff": 0,
-    "Offsetting": 0
+        "Diet": diet_emissions,
+        "Food Waste": food_waste_emissions,
+        "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
+        "Home": home_emissions,
+        "Stuff": stuff_emissions,
+        "Offsetting": offsetting_reductions
     }
-    total_emissions = sum(category_emissions.values()) + offsetting_reductions
-    emissions_by_category["Diet"] = diet_emissions 
-    emissions_by_category["Food Waste"] = food_waste_emissions 
-    emissions_by_category["Travel"] = vehicle_emissions + public_transport_emissions + flight_emissions
-    emissions_by_category["Home"] = home_emissions
-    emissions_by_category["Stuff"] = stuff_emissions
-    emissions_by_category["Offsetting"] = offsetting_reductions
     return total_emissions, emissions_by_category
 
 # --- Display Results --- 
