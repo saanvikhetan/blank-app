@@ -360,15 +360,25 @@ if menu == "Goals":
         for action in actions
     ]
 
-    selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in available_actions])
+    # Format options to include action and points
+    formatted_actions = [
+        f"{a['action']} (+{a['points']} points)" for a in available_actions
+    ]
+
+    selected_action = st.selectbox("Choose an action to add to your goals:", formatted_actions)
+
+    # Find the corresponding dictionary for the selected action if needed
+    selected_action_data = next(
+        (a for a in available_actions if f"{a['action']} (+{a['points']} points)" == selected_action),
+        None,
+    )
 
     if st.button("Add to Goals"):
-        action_to_add = next((a for a in available_actions if a["action"] == selected_action), None)
-        if action_to_add and action_to_add not in st.session_state.goals:
-            st.session_state.goals.append(action_to_add)
-            st.success(f"Added '{selected_action}' to your goals!")
-        elif action_to_add:
-            st.warning(f"'{selected_action}' is already in your goals.")
+        if selected_action_data and selected_action_data not in st.session_state.goals:
+            st.session_state.goals.append(selected_action_data)
+            st.success(f"Added '{selected_action_data['action']}' to your goals!")
+        elif selected_action_data:
+            st.warning(f"'{selected_action_data['action']}' is already in your goals.")
 
     # Display current goals
     if st.session_state.goals:
@@ -378,4 +388,3 @@ if menu == "Goals":
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.goals)}")
     else:
         st.write("You haven't set any goals yet.")
-   
