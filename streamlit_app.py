@@ -124,7 +124,7 @@ if "eco_points" not in st.session_state:
     st.session_state.eco_points = 0
 
 # Navigation menu
-menu = st.radio("Navigation", ["Home", "Suggestions", "Goals"])
+menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
 
 # --- Home Section ---
 if menu == "Home":
@@ -378,3 +378,36 @@ if menu == "Goals":
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.goals)}")
     else:
         st.write("You haven't set any goals yet.")
+
+# --- Offset Section ---
+if menu == "Offset":
+    st.header("Offset Your Carbon Footprint")
+    
+    offset_links = {
+        "HelpUsGreen": {
+            "url": "https://www.helpusgreen.com/",
+            "description": "By upcycling discarded temple flowers, they craft luxurious, eco-friendly incense. Therefore, fostering community growth and environmental conservation."
+        },
+        "Grow Trees": {
+            "url": "https://www.grow-trees.com/index.php",
+            "description": "With 20 million trees planted over almost 150 projects, Grow Trees is an environmental organization dedicated to facilitating tree planting through online platforms. They`ve recently started a project called Ratan Tata memorial forest, which will have a positive impact on carbon reduction, restoring forests and improving wildlife habitats."
+        },
+        "Solar Aid": {
+            "url": "https://solar-aid.org/",
+            "description": "Igniting kerosene lamps and paraffin candles can emit toxic fumes into people’s lungs and into the earth’s atmosphere, and in small towns this is the only option when the sun goes down. However, due to the use of solar power light, a real sustainable change can happen."
+        },
+        "TNC India": {
+            "url": "https://www.tncindia.in/what-we-do/our-priorities/support-renewable-energy/",
+            "description": "Their aim is to increase the use of readily available, cost-effective climate solutions such as reforestation, and implement policy changes to increase the rate of their transition to a clean energy future."
+        },
+        "WWF India": {
+            "url": "https://join.wwfindia.org/?source=WWF-JOIN-WEB&utm_source=main_website&utm_medium=nav_link&utm_campaign=donate",
+            "description": "WWF is an environmental organization whose main aims are to to improve environmental literacy, spread awareness on how to lower carbon footprint, preserve India’s vast wildlife heritage and to empower vulnerable groups through policy changes and on ground initiatives."
+        },
+        "BJSM": {
+            "url": "https://bjsm.org.in/donations/donate-to-protect-the-environment/",
+            "description": "This is one of India’s top NGO where they are dedicated to starting initiatives that combat climate change, focus on sustainable land management, aim to ensure clean and sufficient water resources and to promote agroforestry."
+        },
+        "Gold Standard": {
+            "url": "https://www.goldstandard.org/donate-to-gold-standard",
+            "description": "Gold Standard is a small Swiss-based NGO with a big impact. Established in 2003, Gold Standard projects have already prevented more than 300 million tonnes of CO2 from entering our atmosphere."
