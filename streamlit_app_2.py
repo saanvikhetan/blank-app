@@ -150,37 +150,37 @@ list(emission_factors["offsetting"]["Actions"].keys()),
 # --- CALCULATIONS --- 
 def calculate_emissions():
   """Calculates the total annual carbon footprint.""" 
- # Diet 
- diet_emissions = emission_factors["diet"][diet] 
- # Food Waste 
- food_waste_emissions = emission_factors["food_waste"][food_waste] 
- # Travel 
- vehicle_emissions = ( 
- emission_factors["vehicle_use"][vehicle] 
- * hours_in_vehicle 
- ) 
- public_transport_emissions = ( 
- emission_factors["vehicle_use"]["Public Transport"] 
- * public_transport_hours 
- ) 
- flight_emissions = ( 
- domestic_flights * 0.5 
- + indian_subcontinent_flights * 1.5 
- + international_flights * 3 
- ) 
- # Home 
- home_emissions = emission_factors["home"][house_type] 
- home_emissions += emission_factors["home"]["Cooling"][cooling] 
- home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements) 
- # Stuff 
- stuff_emissions = sum( 
- emission_factors["stuff"][item] for item in new_items 
- ) + emission_factors["stuff"]["Spending"][non_essential_spending] 
- # Offsetting 
- offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency] 
- for action in offsetting_actions: 
- offsetting_reductions += emission_factors["offsetting"]["Actions"][action] 
- # Total Emissions 
+ # Diet
+ diet_emissions = emission_factors["diet"][diet]
+ # Food Waste
+ food_waste_emissions = emission_factors["food_waste"][food_waste]
+ # Travel
+ vehicle_emissions = (
+ emission_factors["vehicle_use"][vehicle]
+ * hours_in_vehicle
+ )
+ public_transport_emissions = (
+ emission_factors["vehicle_use"]["Public Transport"]
+ * public_transport_hours
+ )
+ flight_emissions = (
+ domestic_flights * 0.5
+ + indian_subcontinent_flights * 1.5
+ + international_flights * 3
+ )
+ # Home
+ home_emissions = emission_factors["home"][house_type]
+ home_emissions += emission_factors["home"]["Cooling"][cooling]
+ home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements)
+ # Stuff
+ stuff_emissions = sum(
+ emission_factors["stuff"][item] for item in new_items
+ ) + emission_factors["stuff"]["Spending"][non_essential_spending]
+ # Offsetting
+ offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
+ for action in offsetting_actions:
+ offsetting_reductions += emission_factors["offsetting"]["Actions"][action]
+ # Total Emissions
  total_emissions = sum(category_emissions.values()) + offsetting_reductions
  return total_emissions, category_emissions
 
