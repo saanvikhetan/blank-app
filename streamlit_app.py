@@ -123,11 +123,11 @@ if "goals" not in st.session_state:
 if "eco_points" not in st.session_state:
     st.session_state.eco_points = 0
 
-# Tabs for navigation
-tabs = st.tabs(["Home", "Suggestions", "Goals"])
+# Navigation menu
+menu = st.radio("Navigation", ["Home", "Suggestions", "Goals"])
 
-# --- Home Tab ---
-with tabs[0]:
+# --- Home Section ---
+if menu == "Home":
     st.header("Calculate Your Carbon Footprint")
 
     # --- DIET ---
@@ -264,6 +264,9 @@ with tabs[0]:
     # --- Display Results ---
     if st.button("Calculate"):
         total_emissions, category_emissions = calculate_emissions()
+        st.session_state.total_emissions = total_emissions
+        st.session_state.category_emissions = category_emissions
+        st.session_state.max_category = max(category_emissions, key=category_emissions.get)
 
         st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
@@ -276,29 +279,75 @@ with tabs[0]:
         ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         st.pyplot(fig)
 
-        # Suggestions
-        st.header("Personalized Suggestions")
-        max_category = max(category_emissions, key=category_emissions.get)
+        # --- Bar Graph ---
+        st.header("Comparison to Global Averages")
+        averages = {
+            "Saudi Arabia": 22.1,
+            "US": 14.3,
+            "China": 8.4,
+            "World": 4.7,
+            "UK": 4.4,
+            "India": 2.1,
+            "You": total_emissions
+        }
+        averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
-        suggestions = {
-            "Diet": "Consider reducing meat consumption or switching to a vegetarian or vegan diet to lower emissions from food production.",
-            "Travel": "It seems as if your travel choices are influencing your carbon footprint the most. Here are a few steps you could take to cut down on travel emissions: use public transport if possible, take holidays closer to home, reduce flying, and walk if a destination is within walking distance.",
-            "Home": "Improving your home energy efficiency can help. Consider installing energy-saving lightbulbs, loft insulation, or switching to renewable energy sources like solar panels.",
-            "Stuff": "Focus on buying fewer new items, opting for second-hand goods, and recycling where possible. Avoid single-use plastics and support sustainable brands.",
+        fig, ax = plt.subplots()
+
+        # Define a dictionary to map countries to colors
+        colors = {
+            "Saudi Arabia": "#dc143c",
+            "US": "#4169e1",
+            "China": "#3cb371",
+            "World": "#000080",
+            "UK": "#40e0d0",
+            "India": "#ff7f50",
+            "You": "#8b008b"
         }
 
-        st.write(suggestions[max_category])
+        # Plot the bars with assigned colors
+        for country, value in averages.items():
+            ax.bar(country, value, color=colors[country])
 
-# --- Suggestions Tab ---
-with tabs[1]:
+        ax.set_ylabel("Carbon Footprint (tCO2e)")
+        ax.set_title("Your Footprint vs. Global Averages")
+        st.pyplot(fig)
+
+        # --- Personalized Goals ---
+        st.header("Personalized Goals")
+
+        weekly_goals = {
+            "Diet": "Reduce meat consumption to 2-3 times a week.",
+            "Travel": "Use public transport or walk/bike for at least 3 days a week.",
+            "Home": "Implement one energy-saving home improvement per month.",
+            "Stuff": "Limit non-essential purchases to once a week."
+        }
+
+        daily_goals = {
+            "Diet": "Incorporate at least one vegetarian meal per day.",
+            "Travel": "Use public transport or walk/bike for short distances daily.",
+            "Home": "Turn off lights and appliances when not in use.",
+            "Stuff": "Avoid buying non-essential items on a daily basis."
+        }
+
+        max_category = st.session_state.max_category
+
+        st.subheader(f"Weekly Goal for {max_category}")
+        st.write(weekly_goals[max_category])
+
+        st.subheader(f"Daily Goal for {max_category}")
+        st.write(daily_goals[max_category])
+
+# --- Suggestions Section ---
+if menu == "Suggestions":
     st.header("Eco-Friendly Actions and Suggestions")
     for category, actions in suggestions_data.items():
         st.subheader(category)
         for suggestion in actions:
             st.write(f"- {suggestion['action']} (+{suggestion['points']} points)")
 
-# --- Goals Tab ---
-with tabs[2]:
+# --- Goals Section ---
+if menu == "Goals":
     st.header("Set and Track Your Goals")
 
     available_actions = [
