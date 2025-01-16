@@ -412,3 +412,4 @@ if menu == "Offset":
         "Gold Standard": {
             "url": "https://www.goldstandard.org/donate-to-gold-standard",
             "description": "Gold Standard is a small Swiss-based NGO with a big impact. Established in 2003, Gold Standard projects have already prevented more than 300 million tonnes of CO2 from entering our atmosphere."
+        }
