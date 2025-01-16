@@ -420,6 +420,7 @@ if menu == "Goals":
     available_actions = [
         action for action in available_actions
         if action["action"] not in [goal["action"] for goal in st.session_state.goals]
+    ]
         
     # Category options for goal selection
     selected_category = st.selectbox("Choose a category:", list(goals_data.keys()))
