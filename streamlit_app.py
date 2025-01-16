@@ -262,7 +262,7 @@ if st.button("Calculate"):
         "China": "#3cb371",
         "World": "#000080",
         "UK": "#40e0d0",
-        "India": "#c32148",
+        "India": "#ff7f50",
         "You": "#8b008b" 
     }
 
