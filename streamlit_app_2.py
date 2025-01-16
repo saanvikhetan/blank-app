@@ -305,22 +305,27 @@ if menu == "Suggestions":
 # --- Goals Section ---
 import streamlit as st
 
-# Initialize session state variables
 if "completed_goals" not in st.session_state:
-    st.session_state.completed_goals = []
+    st.session_state.completed_goals = [] 
 if "goals" not in st.session_state:
-    st.session_state.goals = []
-
-menu = "Goals"  # Assuming this is set somewhere in your code
+    st.session_state.goals = [] 
 
 if menu == "Goals":
     st.header("Set and Track Your Goals")
 
-    # Sample suggestions_data for demonstration purposes
-    suggestions_data = {
-        "Health": [{"action": "Run", "points": 10}, {"action": "Yoga", "points": 5}],
-        "Productivity": [{"action": "Read", "points": 8}, {"action": "Work", "points": 12}],
-    }
+    # **your own code**
+    suggestions_data = { 
+        "Environment": [
+            {"action": "Reduce plastic consumption", "points": 10},
+            {"action": "Plant a tree", "points": 5},
+            {"action": "Use public transport", "points": 3}
+        ],
+        "Health": [
+            {"action": "Start a vegetarian diet", "points": 8},
+            {"action": "Exercise regularly", "points": 5},
+            {"action": "Drink more water", "points": 2}
+        ]
+    } 
 
     available_actions = [
         {
@@ -332,14 +337,12 @@ if menu == "Goals":
         for action in actions
     ]
 
-    # Format options to include action and points
-    formatted_actions = [
-        f"{a['action']} (+{a['points']} points)" for a in available_actions
-    ]
+    # **your own code**
+    formatted_actions = [f"{a['action']} (+{a['points']} points)" for a in available_actions]
 
     selected_action = st.selectbox("Choose an action to add to your goals:", formatted_actions)
 
-    # Find the corresponding dictionary for the selected action if needed
+    # **your own code**
     selected_action_data = next(
         (a for a in available_actions if f"{a['action']} (+{a['points']} points)" == selected_action),
         None,
@@ -364,7 +367,7 @@ if menu == "Goals":
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
                         st.session_state.goals.pop(i)  # Remove from current goals
-                        st.experimental_rerun()  # Rerun the app
+                        st.rerun()  # Rerun the app
 
     # Display completed goals
     if st.session_state.completed_goals:
@@ -375,5 +378,5 @@ if menu == "Goals":
         st.markdown("</p>", unsafe_allow_html=True)
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
-# Calculate and display total eco points (for all goals)
-st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}")
+    # Calculate and display total eco points (for all goals)
+    st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}") 
