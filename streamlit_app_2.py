@@ -185,9 +185,9 @@ def calculate_emissions():
     return total_emissions, category_emissions
 
 # --- Display Results --- 
-if st.button("Calculate"): 
- total_emissions = calculate_emissions() 
- st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e") 
+if st.button("Calculate"):
+    total_emissions, emissions_by_category = calculate_emissions()
+    st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 # --- Additional Information --- 
 st.markdown( 
 """ 
