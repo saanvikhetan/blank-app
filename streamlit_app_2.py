@@ -416,10 +416,10 @@ if menu == "Goals":
         for action in actions
     ]
 
-     # Filter out actions that are already in the user's goals
+     # Filter out actions that are already in the user's goals or completed goals
     available_actions = [
         action for action in available_actions
-        if action["action"] not in [goal["action"] for goal in st.session_state.goals]
+        if action["action"] not in [goal["action"] for goal in st.session_state.goals + st.session_state.completed_goals]
     ]
         
     # Category options for goal selection
