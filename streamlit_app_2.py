@@ -129,6 +129,16 @@ if "eco_points" not in st.session_state:
 # Navigation menu
 menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
 
+# --- Sidebar for displaying points and level ---
+if "eco_points" in st.session_state:
+    progress_level = get_progress_level(st.session_state.eco_points)
+    if progress_level:
+        st.sidebar.header("Your Progress")
+        st.sidebar.write(f"**{progress_level['title']}**")
+        st.sidebar.write(progress_level["description"])
+        st.sidebar.write(f"Points: {st.session_state.eco_points}")
+
+
 # --- Home Section ---
 if menu == "Home":
     st.header("Calculate Your Carbon Footprint")
