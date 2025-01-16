@@ -243,17 +243,33 @@ if st.button("Calculate"):
     # --- Bar Graph ---
     st.header("Comparison to Global Averages")
     averages = {
-        "Saudi Arabia":22.1,
+        "Saudi Arabia": 22.1,
         "US": 14.3,
         "China": 8.4,
         "World": 4.7,
         "UK": 4.4,
         "India": 2.1,
         "You": total_emissions
-      }
+    }
     averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
+
     fig, ax = plt.subplots()
-    averages_df.plot(kind='bar', ax=ax)
+
+    # Define a dictionary to map countries to colors
+    colors = {
+        "Saudi Arabia": "#ff9999",
+        "US": "#66b3ff",
+        "China": "#99ff99",
+        "World": "#ffcc99",
+        "UK": "#c2c2f0",
+        "India": "#edc948",
+        "You": "#8c564b" 
+    }
+
+    # Plot the bars with assigned colors
+    for country, value in averages.items():
+        ax.bar(country, value, color=colors[country])
+
     ax.set_ylabel("Carbon Footprint (tCO2e)")
     ax.set_title("Your Footprint vs. Global Averages")
     st.pyplot(fig)
