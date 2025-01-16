@@ -332,23 +332,77 @@ if menu == "Suggestions":
             st.write(f"- {suggestion['action']} (+{suggestion['points']} points)")
 
 # --- Goals Section ---
+
+goals_data = {
+    "Food": [
+        {"action": "Have one meat-free day per week", "carbon_reduction": 0.078, "points": 50},
+        {"action": "Eat a plant-based diet", "carbon_reduction": 0.80, "points": 500},
+        {"action": "Choose local and seasonal produce for 75% of meals", "carbon_reduction": 0.137, "points": 75},
+        {"action": "Avoid food waste by 25%", "carbon_reduction": 0.012, "points": 40},
+        {"action": "Reduce consumption of processed foods by 25%", "carbon_reduction": 0.05, "points": 25},
+        {"action": "Support sustainable farming practices (e.g., certified organic)", "carbon_reduction": 1, "points": 200}
+    ],
+    "Travel": [
+        {"action": "Walk or cycle instead of driving for 5 short trips per week", "carbon_reduction": 0.028, "points": 25},
+        {"action": "Use public transportation or carpool for 3 trips per week", "carbon_reduction": 0.1, "points": 50},
+        {"action": "Bike or walk for 3 short distances per week", "carbon_reduction": 0.03, "points": 25},
+        {"action": "Take no more than 2 domestic flights per year", "carbon_reduction": 1, "points": 500},
+        {"action": "Drive an electric or hybrid vehicle instead of normal", "carbon_reduction": 1, "points": 800},
+        {"action": "Combine 2 trips per week to reduce car use", "carbon_reduction": 0.05, "points": 25}
+    ],
+    "Home": [
+        {"action": "Install energy-efficient lightbulbs in all fixtures", "carbon_reduction": 0.03, "points": 50},
+        {"action": "Use a fan instead of air conditioning for 3 months", "carbon_reduction": 0.04, "points": 50},
+        {"action": "Replace 1 major appliance with an energy-efficient model", "carbon_reduction": 0.125, "points": 50},
+        {"action": "Use LED lighting in all fixtures", "carbon_reduction": 0.05, "points": 75},
+        {"action": "Insulate your loft", "carbon_reduction": 0.5, "points": 200},
+        {"action": "Switch to a 100% renewable energy supplier", "carbon_reduction": 2, "points": 1500},
+        {"action": "Lower thermostat by 1°C in winter and raise by 1°C in summer", "carbon_reduction": 0.1, "points": 50},
+        {"action": "Cavity or solid wall insulation (if applicable)", "carbon_reduction": 1, "points": 500},
+        {"action": "Condensing boiler (if replacing an old boiler)", "carbon_reduction": 1.2, "points": 600},
+        {"action": "Double glazing all windows (if not already done)", "carbon_reduction": 0.8, "points": 400},
+        {"action": "Low flow fittings to all taps and showers", "carbon_reduction": 0.2, "points": 100},
+        {"action": "Solar water heater (if suitable for your location)", "carbon_reduction": 0.8, "points": 400}
+    ],
+    "Stuff": [
+        {"action": "Buy at least 5 second-hand instead of new items per year", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Repair 2 items instead of replacing them", "carbon_reduction": 0.1, "points": 150},
+        {"action": "Reduce monthly non-essential spending by 5%", "carbon_reduction": 0.05, "points": 100},
+        {"action": "Reduce, reuse, recycle consistently (e.g., weekly)", "carbon_reduction": 0.5, "points": 250},
+        {"action": "Buy second-hand or refurbished electronics", "carbon_reduction": 0.15, "points": 200},
+        {"action": "Avoid single-use plastics for 3 meals per week", "carbon_reduction": 0.03, "points": 100},
+        {"action": "Repair 1 major household item instead of replacing it", "carbon_reduction": 0.1, "points": 200},
+        {"action": "Support 2 sustainable brands per year", "carbon_reduction": 0.25, "points": 400}
+    ],
+    "Other": [
+        {"action": "Donate $50 to a reputable environmental organization", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Participate in 2 local environmental initiatives per year", "carbon_reduction": 0.3, "points": 400},
+        {"action": "Purchase $50 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
+    ]
+}
+
 if menu == "Goals":
     st.header("Set and Track Your Goals")
 
+    # Flatten goals data into a list of actions with categories, carbon reduction, and points
     available_actions = [
         {
             "action": action["action"],
             "points": action["points"],
             "category": category,
+            "carbon_reduction": action["carbon_reduction"]
         }
-        for category, actions in suggestions_data.items()
+        for category, actions in goals_data.items()
         for action in actions
     ]
 
-    selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in available_actions])
+    # Category options for goal selection
+    selected_category = st.selectbox("Choose a category:", list(goals_data.keys()))
+    category_actions = [a for a in available_actions if a["category"] == selected_category]
+    selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
 
     if st.button("Add to Goals"):
-        action_to_add = next((a for a in available_actions if a["action"] == selected_action), None)
+        action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
         if action_to_add and action_to_add not in st.session_state.goals:
             st.session_state.goals.append(action_to_add)
             st.success(f"Added '{selected_action}' to your goals!")
@@ -359,7 +413,7 @@ if menu == "Goals":
     if st.session_state.goals:
         st.subheader("Your Goals")
         for goal in st.session_state.goals:
-            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points, reduced {goal['carbon_reduction']} tons of carbon)")
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.goals)}")
     else:
         st.write("You haven't set any goals yet.")
