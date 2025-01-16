@@ -261,8 +261,8 @@ if st.button("Calculate"):
     # Ensure enough colors
     num_bars = len(averages_df)
     if num_bars > len(colors):
-        colors = colors * math.ceil(num_bars / len(colors)) 
-
+        colors = colors * math.ceil(num_bars / len(colors))  # Extend colors list if needed
+    
     # Set the color for each bar using a loop
     for i, row in averages_df.iterrows():
         color_index = i % len(colors)  # Calculate the index correctly
