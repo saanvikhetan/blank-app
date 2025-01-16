@@ -444,6 +444,9 @@ if menu == "Goals":
             for i in sorted(goals_to_remove, reverse=True):
                 del st.session_state.goals[i]
 
+            # Display updated goals immediately
+            st.experimental_set_query_params(goals=st.session_state.goals)
+
     # Display completed goals
     if st.session_state.completed_goals:
         st.subheader("Completed Goals")
