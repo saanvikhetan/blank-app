@@ -190,8 +190,8 @@ diet_emissions
 + home_emissions 
 + stuff_emissions 
 + offsetting_reductions 
-) 
-return total_emissions 
+ return total_emissions 
+)
 # --- Display Results --- 
 if st.button("Calculate"): 
  total_emissions = calculate_emissions() 
