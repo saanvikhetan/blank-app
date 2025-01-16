@@ -428,8 +428,8 @@ if menu == "Goals":
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
-        goals_to_remove = []
-        for i, goal in enumerate(st.session_state.goals):
+        updated_goals = st.session_state.goals.copy()  # Create a copy of the goals list to modify
+        for i, goal in enumerate(updated_goals):
             col1, col2 = st.columns([5, 1])
             with col1:
                 st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
@@ -437,15 +437,8 @@ if menu == "Goals":
                 if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
-                        goals_to_remove.append(i)  # Mark goal for removal
-
-        # Remove completed goals from the current goals list
-        if goals_to_remove:
-            for i in sorted(goals_to_remove, reverse=True):
-                del st.session_state.goals[i]
-
-            # Display updated goals immediately
-            st.query_params(goals=st.session_state.goals)
+                        updated_goals.pop(i)  # Mark goal for removal
+        st.session_state.goals = updated_goals  # Update the session state with the modified goals list
 
     # Display completed goals
     if st.session_state.completed_goals:
