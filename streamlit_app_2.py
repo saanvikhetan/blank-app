@@ -179,7 +179,7 @@ emission_factors["stuff"][item] for item in new_items
 # Offsetting 
 offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency] 
 for action in offsetting_actions: 
-offsetting_reductions += emission_factors["offsetting"]["Actions"][action] 
+ offsetting_reductions += emission_factors["offsetting"]["Actions"][action] 
 # Total Emissions 
 total_emissions = ( 
 diet_emissions 
@@ -194,8 +194,8 @@ diet_emissions
 return total_emissions 
 # --- Display Results --- 
 if st.button("Calculate"): 
-total_emissions = calculate_emissions() 
-st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e") 
+ total_emissions = calculate_emissions() 
+ st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e") 
 # --- Additional Information --- 
 st.markdown( 
 """ 
