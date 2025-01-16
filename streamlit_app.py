@@ -250,12 +250,12 @@ if st.button("Calculate"):
           "China": 8.4,
           "You": total_emissions
       }
-      averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
-      fig, ax = plt.subplots()
-      averages_df.plot(kind='bar', ax=ax)
-      ax.set_ylabel("Carbon Footprint (tCO2e)")
-      ax.set_title("Your Footprint vs. Global Averages")
-      st.pyplot(fig)
+    averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
+    fig, ax = plt.subplots()
+    averages_df.plot(kind='bar', ax=ax)
+    ax.set_ylabel("Carbon Footprint (tCO2e)")
+    ax.set_title("Your Footprint vs. Global Averages")
+    st.pyplot(fig)
 
 
 
