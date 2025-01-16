@@ -191,6 +191,8 @@ def calculate_emissions():
         "Stuff": stuff_emissions,
         "Offsetting": offsetting_reductions
     }
+    # Calculate total_emissions after assigning values to emissions_by_category
+    total_emissions = sum(emissions_by_category.values()) 
     return total_emissions, emissions_by_category
 
 # --- Display Results --- 
