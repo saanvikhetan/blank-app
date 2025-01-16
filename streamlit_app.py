@@ -257,13 +257,13 @@ if st.button("Calculate"):
 
     # Define a dictionary to map countries to colors
     colors = {
-        "Saudi Arabia": "#ff9999",
-        "US": "#66b3ff",
-        "China": "#99ff99",
-        "World": "#ffcc99",
-        "UK": "#c2c2f0",
-        "India": "#edc948",
-        "You": "#8c564b" 
+        "Saudi Arabia": "#dc143c",
+        "US": "#4169e1",
+        "China": "#3cb371",
+        "World": "#000080",
+        "UK": "#40e0d0",
+        "India": "#c32148",
+        "You": "#8b008b" 
     }
 
     # Plot the bars with assigned colors
