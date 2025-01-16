@@ -115,7 +115,7 @@ house_type = st.selectbox(
 )
 cooling = st.selectbox(
     "How cool is your house during summer?",
-    list(emission_factors["Cooling"].keys()),
+    list(emission_factors["home"]["Cooling"].keys()),
 )
 home_improvements = st.multiselect(
     "Which of these home energy efficiency improvements are installed in your home?",
