@@ -380,6 +380,25 @@ goals_data = {
         {"action": "Purchase $50 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
     ]
 }
+import streamlit as st
+
+# Initialize session state variables if not already present
+if 'goals' not in st.session_state:
+    st.session_state.goals = []
+if 'completed_goals' not in st.session_state:
+    st.session_state.completed_goals = []
+
+# Example goals data
+goals_data = {
+    "Health": [
+        {"action": "Exercise", "points": 10, "carbon_reduction": 0},
+        {"action": "Eat Vegetables", "points": 5, "carbon_reduction": 0},
+    ],
+    "Environment": [
+        {"action": "Recycle", "points": 8, "carbon_reduction": 5},
+        {"action": "Use Public Transport", "points": 12, "carbon_reduction": 10},
+    ],
+}
 
 if menu == "Goals":
     st.header("Set and Track Your Goals")
@@ -417,12 +436,11 @@ if menu == "Goals":
             with col1:
                 st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
             with col2:
-                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
+                if st.button(f"Complete", key=f"complete_{i}"):
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
-                        st.session_state.goals.pop(i)  # Remove from current goals
-                        st.session_state.goals = st.session_state.goals  # Update session state
-                        st.rerun()  # Rerun the app
+                        st.session_state.goals.pop(i)
+                        st.experimental_rerun()
 
     # Display completed goals
     if st.session_state.completed_goals:
