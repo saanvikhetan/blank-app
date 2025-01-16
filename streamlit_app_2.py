@@ -329,9 +329,17 @@ if menu == "Goals":
         None,
     )
 
+
+if st.button("Add to Goals"):
+    if selected_action_data and selected_action_data not in st.session_state.goals:
+        st.session_state.goals.append(selected_action_data)
+        st.success(f"Added '{selected_action_data['action']}' to your goals!")
+    elif selected_action_data:
+        st.warning(f"'{selected_action_data['action']}' is already in your goals.")
+
 st.session_state.completed_goals = [] 
 
-    # Display current goals with "Mark as Completed" buttons
+# Display current goals with "Mark as Completed" buttons
 if st.session_state.goals:
     st.subheader("Your Goals")
     for i, goal in enumerate(st.session_state.goals):
@@ -343,14 +351,8 @@ if st.session_state.goals:
                 if goal not in st.session_state.completed_goals:
                     st.session_state.completed_goals.append(goal)
                     st.session_state.goals.pop(i)  # Remove from current goals
-                    st.experimental_rerun()  # Rerun to update UI
-
-if st.button("Add to Goals"):
-    if selected_action_data and selected_action_data not in st.session_state.goals:
-        st.session_state.goals.append(selected_action_data)
-        st.success(f"Added '{selected_action_data['action']}' to your goals!")
-    elif selected_action_data:
-        st.warning(f"'{selected_action_data['action']}' is already in your goals.")
+                    st.experimental_singletons.cache.clear()  # Clear the cache 
+                    st.rerun()  # Rerun the app
 
 # Display completed goals
 if st.session_state.completed_goals:
@@ -358,9 +360,8 @@ if st.session_state.completed_goals:
     st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
     for goal in st.session_state.completed_goals:
         st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
-        st.markdown("</p>", unsafe_allow_html=True)
-        st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+    st.markdown("</p>", unsafe_allow_html=True)
+    st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
 # Calculate and display total eco points (for all goals)
 st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}") 
-
