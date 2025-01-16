@@ -303,6 +303,13 @@ if menu == "Suggestions":
             st.write(f"- {suggestion['action']} (+{suggestion['points']} points)")
 
 # --- Goals Section ---
+
+
+if "completed_goals" not in st.session_state:
+    st.session_state.completed_goals = [] 
+if "goals" not in st.session_state:
+    st.session_state.goals = [] 
+
 if menu == "Goals":
     st.header("Set and Track Your Goals")
 
