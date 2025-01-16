@@ -180,7 +180,7 @@ def calculate_emissions():
     # Home
     home_emissions = emission_factors["home"][house_type]
     home_emissions += emission_factors["Cooling"][cooling]
-    home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements)
+    home_emissions += emission_factors["Improvements"] * len(home_improvements)
 
     # Stuff
     stuff_emissions = sum(
