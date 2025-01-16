@@ -1,4 +1,4 @@
-import streamlit as st import pandas as pd import matplotlib.pyplot as plt import seaborn as sns # --- (Your original code for data and user input) --- def calculate_emissions(): """Calculates the total annual carbon footprint.""" # --- Data --- 
+import streamlit as st import pandas as pd import matplotlib.pyplot as plt import seaborn as sns 
 # Define emission factors (replace with your actual values) 
 emission_factors = { 
 "diet": { 
