@@ -181,17 +181,9 @@ offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_f
 for action in offsetting_actions: 
  offsetting_reductions += emission_factors["offsetting"]["Actions"][action] 
 # Total Emissions 
-total_emissions = ( 
-diet_emissions 
-+ food_waste_emissions 
-+ vehicle_emissions 
-+ public_transport_emissions 
-+ flight_emissions 
-+ home_emissions 
-+ stuff_emissions 
-+ offsetting_reductions 
- return total_emissions 
-)
+ total_emissions = sum(category_emissions.values()) + offsetting_reductions
+ return total_emissions, category_emissions
+
 # --- Display Results --- 
 if st.button("Calculate"): 
  total_emissions = calculate_emissions() 
