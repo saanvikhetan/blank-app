@@ -241,8 +241,8 @@ if st.button("Calculate"):
         """
     )
     # --- Bar Graph ---
-      st.header("Comparison to Global Averages")
-      averages = {
+    st.header("Comparison to Global Averages")
+    averages = {
           "World": 4.7,
           "India": 2.1,
           "UK": 4.4,
