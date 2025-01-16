@@ -136,7 +136,7 @@ if "eco_points" in st.session_state:
         st.sidebar.header("Your Progress")
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
-        st.sidebar.write(f"Points: {total_points}")
+        st.sidebar.write(f"Points: {st.session_state.eco_points}")
 
 
 # --- Home Section ---
