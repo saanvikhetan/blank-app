@@ -445,7 +445,7 @@ if menu == "Goals":
                 del st.session_state.goals[i]
 
             # Display updated goals immediately
-            st.experimental_set_query_params(goals=st.session_state.goals)
+            st.query_params(goals=st.session_state.goals)
 
     # Display completed goals
     if st.session_state.completed_goals:
