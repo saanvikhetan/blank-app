@@ -303,15 +303,24 @@ if menu == "Suggestions":
             st.write(f"- {suggestion['action']} (+{suggestion['points']} points)")
 
 # --- Goals Section ---
+import streamlit as st
 
-
+# Initialize session state variables
 if "completed_goals" not in st.session_state:
-    st.session_state.completed_goals = [] 
+    st.session_state.completed_goals = []
 if "goals" not in st.session_state:
-    st.session_state.goals = [] 
+    st.session_state.goals = []
+
+menu = "Goals"  # Assuming this is set somewhere in your code
 
 if menu == "Goals":
     st.header("Set and Track Your Goals")
+
+    # Sample suggestions_data for demonstration purposes
+    suggestions_data = {
+        "Health": [{"action": "Run", "points": 10}, {"action": "Yoga", "points": 5}],
+        "Productivity": [{"action": "Read", "points": 8}, {"action": "Work", "points": 12}],
+    }
 
     available_actions = [
         {
@@ -336,37 +345,35 @@ if menu == "Goals":
         None,
     )
 
+    if st.button("Add to Goals"):
+        if selected_action_data and selected_action_data not in st.session_state.goals:
+            st.session_state.goals.append(selected_action_data)
+            st.success(f"Added '{selected_action_data['action']}' to your goals!")
+        elif selected_action_data:
+            st.warning(f"'{selected_action_data['action']}' is already in your goals.")
 
-if st.button("Add to Goals"):
-    if selected_action_data and selected_action_data not in st.session_state.goals:
-        st.session_state.goals.append(selected_action_data)
-        st.success(f"Added '{selected_action_data['action']}' to your goals!")
-    elif selected_action_data:
-        st.warning(f"'{selected_action_data['action']}' is already in your goals.")
-
-st.session_state.completed_goals = [] 
-   # Display current goals with "Mark as Completed" buttons
-if st.session_state.goals:
-    st.subheader("Your Goals")
-    for i, goal in enumerate(st.session_state.goals):
-        col1, col2 = st.columns([5, 1])
-        with col1:
-            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
-        with col2:
-            if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
-                if goal not in st.session_state.completed_goals:
-                    st.session_state.completed_goals.append(goal)
-                    st.session_state.goals.pop(i)  # Remove from current goals
-                    st.rerun()  # Rerun the app
+    # Display current goals with "Mark as Completed" buttons
+    if st.session_state.goals:
+        st.subheader("Your Goals")
+        for i, goal in enumerate(st.session_state.goals):
+            col1, col2 = st.columns([5, 1])
+            with col1:
+                st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+            with col2:
+                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
+                    if goal not in st.session_state.completed_goals:
+                        st.session_state.completed_goals.append(goal)
+                        st.session_state.goals.pop(i)  # Remove from current goals
+                        st.experimental_rerun()  # Rerun the app
 
     # Display completed goals
-if st.session_state.completed_goals:
-    st.subheader("Completed Goals")
-    st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
-    for goal in st.session_state.completed_goals:
-        st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
-    st.markdown("</p>", unsafe_allow_html=True)
-    st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+    if st.session_state.completed_goals:
+        st.subheader("Completed Goals")
+        st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
+        for goal in st.session_state.completed_goals:
+            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+        st.markdown("</p>", unsafe_allow_html=True)
+        st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
-    # Calculate and display total eco points (for all goals)
-st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}") 
+# Calculate and display total eco points (for all goals)
+st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}")
