@@ -215,16 +215,7 @@ if menu == "Home":
         list(emission_factors["stuff"]["Spending"].keys()),
     )
 
-    # --- OFFSETTING ---
-    st.subheader("Offsetting")
-    offsetting_frequency = st.selectbox(
-        "How often do you take actions to offset your carbon footprint?",
-        list(emission_factors["offsetting"]["Frequency"].keys()),
-    )
-    offsetting_actions = st.multiselect(
-        "What types of offsetting actions do you take?",
-        list(emission_factors["offsetting"]["Actions"].keys()),
-    )
+    
 
     # --- CALCULATIONS ---
     def calculate_emissions():
