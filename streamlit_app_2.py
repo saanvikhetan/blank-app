@@ -421,6 +421,7 @@ if menu == "Goals":
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
                         st.session_state.goals.pop(i)  # Remove from current goals
+                        st.session_state.goals = st.session_state.goals  # Update session state
                         st.rerun()  # Rerun the app
 
     # Display completed goals
@@ -433,8 +434,8 @@ if menu == "Goals":
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
     # Calculate and display total eco points (for all goals)
-    st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}") 
-
+    total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
+    st.write(f"Total Eco Points (All Goals): {total_points}")
 # --- Offset Section ---
 if menu == "Offset":
     st.header("Offset Your Carbon Footprint")
