@@ -35,7 +35,7 @@ data = {
     "offsetting_actions": "Carbon offsetting purchases"}
 
 new_df = pd.DataFrame([data])
-df = df.append(new_df, ignore_index=True)
+df = pd.concat([df, new_df], ignore_index=True) 
 
 conn.write(df)
 df = conn.read()
