@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
