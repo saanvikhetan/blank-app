@@ -255,17 +255,17 @@ if st.button("Calculate"):
 
     fig, ax = plt.subplots()
 
-    # Define a list of colors
+    # Define a list of colors (ensure at least as many colors as countries)
     colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#c2c2f0', '#edc948', '#8c564b', '#1f77b4', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
 
     # Ensure enough colors
     num_bars = len(averages_df)
     if num_bars > len(colors):
-        colors = colors * (math.ceil(num_bars / len(colors))) 
+        colors = colors * math.ceil(num_bars / len(colors)) 
 
     # Set the color for each bar using a loop
     for i, row in averages_df.iterrows():
-        color_index = i % len(colors)
+        color_index = i % len(colors)  # Calculate the index correctly
         ax.bar(row.name, row['Carbon Footprint (tCO2e)'], color=colors[color_index])
 
     ax.set_ylabel("Carbon Footprint (tCO2e)")
