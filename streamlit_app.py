@@ -34,7 +34,7 @@ emission_factors = {
         "Semi-detached": 4,
         "Terrace": 3,
         "Flat": 2,
-    }
+        },
     "Cooling": {
             "I don’t use a cooler": 0,
             "Below 19°C": 3,
