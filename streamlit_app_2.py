@@ -362,5 +362,9 @@ if st.session_state.completed_goals:
     st.markdown("</p>", unsafe_allow_html=True)
     st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
+
+st.write(f"st.session_state.goals: {st.session_state.goals}")
+st.write(f"st.session_state.completed_goals: {st.session_state.completed_goals}") 
+
 # Calculate and display total eco points (for all goals)
 st.write(f"Total Eco Points (All Goals): {sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)}") 
