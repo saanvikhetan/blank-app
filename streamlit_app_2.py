@@ -416,6 +416,11 @@ if menu == "Goals":
         for action in actions
     ]
 
+     # Filter out actions that are already in the user's goals
+    available_actions = [
+        action for action in available_actions
+        if action["action"] not in [goal["action"] for goal in st.session_state.goals]
+        
     # Category options for goal selection
     selected_category = st.selectbox("Choose a category:", list(goals_data.keys()))
     category_actions = [a for a in available_actions if a["category"] == selected_category]
