@@ -148,14 +148,7 @@ offsetting_actions = st.multiselect(
 list(emission_factors["offsetting"]["Actions"].keys()), 
 ) 
 
-emissions_by_category = {
-    "Diet": 0,
-    "Food Waste": 0,
-    "Travel": 0,
-    "Home": 0,
-    "Stuff": 0,
-    "Offsetting": 0
-}
+
 # --- CALCULATIONS --- 
 def calculate_emissions():
     """Calculates the total annual carbon footprint."""
@@ -190,6 +183,14 @@ def calculate_emissions():
     for action in offsetting_actions:
         offsetting_reductions += emission_factors["offsetting"]["Actions"][action]
     # Total Emissions
+    emissions_by_category = {
+    "Diet": 0,
+    "Food Waste": 0,
+    "Travel": 0,
+    "Home": 0,
+    "Stuff": 0,
+    "Offsetting": 0
+    }
     total_emissions = sum(category_emissions.values()) + offsetting_reductions
     emissions_by_category["Diet"] = diet_emissions 
     emissions_by_category["Food Waste"] = food_waste_emissions 
@@ -211,20 +212,20 @@ Consider consulting with a carbon footprint specialist for a more precise assess
 """ 
 )
 
-# --- Display Results --- 
+# --- Display Results --- 
 st.header("Personalized Recommendations")
 for category, emissions in emissions_by_category.items():
- if emissions > 0.5 * total_emissions:  # If a category contributes more than 50%
-  st.write(f"**{category}:**")
-  if category == "Travel":
-   st.write("- **Weekly Goal:** Use public transport at least twice this week instead of driving.")
-   st.write("- **Daily Goal:** Walk or bike for short trips instead of driving.")
-  elif category == "Home":
-   st.write("- **Weekly Goal:** Unplug electronics from the wall when not in use one day this week.")
-   st.write("- **Daily Goal:** Turn off lights and appliances when leaving a room.")
-  elif category == "Diet":
-   st.write("- **Weekly Goal:** Cook a meat-free meal at least twice this week.")
-   st.write("- **Daily Goal:** Store food properly to prevent spoilage.")
-  elif category == "Stuff":
-   st.write("- **Weekly Goal:** Repair one broken item instead of throwing it away.")
-   st.write("- **Daily Goal:** Think twice before making any non-essential purchases.")
+    if emissions > 0.5 * total_emissions:  # If a category contributes more than 50%
+        st.write(f"**{category}:**")
+        if category == "Travel":
+            st.write("- **Weekly Goal:** Use public transport at least twice this week instead of driving.")
+            st.write("- **Daily Goal:** Walk or bike for short trips instead of driving.")
+        elif category == "Home":
+            st.write("- **Weekly Goal:** Unplug electronics from the wall when not in use one day this week.")
+            st.write("- **Daily Goal:** Turn off lights and appliances when leaving a room.")
+        elif category == "Diet":
+            st.write("- **Weekly Goal:** Cook a meat-free meal at least twice this week.")
+            st.write("- **Daily Goal:** Store food properly to prevent spoilage.")
+        elif category == "Stuff":
+            st.write("- **Weekly Goal:** Repair one broken item instead of throwing it away.")
+            st.write("- **Daily Goal:** Think twice before making any non-essential purchases.")
