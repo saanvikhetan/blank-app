@@ -253,7 +253,12 @@ if st.button("Calculate"):
     averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
     fig, ax = plt.subplots()
-    averages_df.plot(kind='bar', ax=ax, color=['lightcoral', 'lightgreen', 'lightskyblue', 'lightpink', 'khaki', 'gold'])  # Set colors here
+    # Create a list of colors
+    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#c2c2f0', '#edc948']  
+    # Set the color for each bar using a loop
+    for i, row in averages_df.iterrows():
+        ax.bar(row.name, row['Carbon Footprint (tCO2e)'], color=colors[i])
+
     ax.set_ylabel("Carbon Footprint (tCO2e)")
     ax.set_title("Your Footprint vs. Global Averages")
     st.pyplot(fig)
