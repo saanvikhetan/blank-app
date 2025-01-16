@@ -129,7 +129,7 @@ if "eco_points" not in st.session_state:
 # Navigation menu
 menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
 
-# --- Sidebar for displaying points and level ---
+# Sidebar for displaying points and level
 if "eco_points" in st.session_state:
     progress_level = get_progress_level(st.session_state.eco_points)
     if progress_level:
@@ -445,18 +445,21 @@ if menu == "Goals":
                     updated_goals.append(goal)
         st.session_state.goals = updated_goals
 
-    # Display completed goals
-    if st.session_state.completed_goals:
-        st.subheader("Completed Goals")
-        st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
-        for goal in st.session_state.completed_goals:
-            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
-        st.markdown("</p>", unsafe_allow_html=True)
-        st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+   # Display completed goals
+if st.session_state.completed_goals:
+    st.subheader("Completed Goals")
+    st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
+    for goal in st.session_state.completed_goals:
+        st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+    st.markdown("</p>", unsafe_allow_html=True)
+    st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
-    # Calculate and display total eco points (for all goals)
-    total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
-    st.write(f"Total Eco Points (All Goals): {total_points}")
+# Calculate and display total eco points (for all goals)
+total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
+st.write(f"Total Eco Points (All Goals): {total_points}")
+
+# Update session state with total points
+st.session_state.eco_points = total_points
 # --- Offset Section ---
 if menu == "Offset":
     st.header("Offset Your Carbon Footprint")
