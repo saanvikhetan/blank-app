@@ -10,6 +10,10 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 df = conn.read()
 #df2 = conn2.read()
 
+conn_write = st.experimental_connection("write_sheet", type="gcp_spreadsheets")
+conn_write.write(["test1", "test2", "test3"], mode="append")
+
+
 
 st.write(df)
 #st.write(df2)
