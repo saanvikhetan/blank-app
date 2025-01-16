@@ -417,7 +417,7 @@ if menu == "Goals":
     category_actions = [a for a in available_actions if a["category"] == selected_category]
     selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
 
-    if st.button("Add to Goals"):
+     if st.button("Add to Goals"):
         action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
         if action_to_add and action_to_add not in st.session_state.goals:
             st.session_state.goals.append(action_to_add)
@@ -428,19 +428,21 @@ if menu == "Goals":
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
-        completed_goal_indices = []
+        goals_to_remove = []
         for i, goal in enumerate(st.session_state.goals):
             col1, col2 = st.columns([5, 1])
             with col1:
                 st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
             with col2:
-                if st.button(f"Complete", key=f"complete_{i}"):
+                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
-                        completed_goal_indices.append(i)
-        
-        # Remove completed goals from current goals
-        st.session_state.goals = [goal for j, goal in enumerate(st.session_state.goals) if j not in completed_goal_indices]
+                        goals_to_remove.append(i)  # Mark goal for removal
+
+        # Remove completed goals from the current goals list
+        if goals_to_remove:
+            for i in sorted(goals_to_remove, reverse=True):
+                del st.session_state.goals[i]
 
     # Display completed goals
     if st.session_state.completed_goals:
