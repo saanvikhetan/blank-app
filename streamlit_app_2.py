@@ -41,7 +41,6 @@ emission_factors = {
         "19°C - 23°C": 2,
         "24°C - 30°C": 1,
     },
-    "home_improvements": -0.2,  # Reduction per improvement
     "stuff": {
         "TV, laptop, or PC": 0.2,
         "Large furniture": 0.3,
@@ -52,20 +51,6 @@ emission_factors = {
             "₹5,000 - ₹15,000": 0.5,
             "₹15,000 - ₹30,000": 1,
             "Over ₹30,000": 1.5,
-        },
-    },
-    "offsetting": {
-        "Frequency": {
-            "I never take offsetting actions": 0,
-            "Rarely (once or twice a year)": -0.1,
-            "Sometimes (a few times a year)": -0.3,
-            "Often (monthly or more frequently)": -0.6,
-            "Always (I actively offset regularly and for most of my activities)": -1,
-        },
-        "Actions": {
-            "Donate to environmental projects": -0.2,
-            "Participate in local initiatives": -0.3,
-            "Purchase carbon credits": -0.2,
         },
     },
 }
@@ -173,19 +158,6 @@ if menu == "Home":
         "How cool is your house during summer?",
         list(emission_factors["home_cooling"].keys()),  # Use separate dictionary for cooling
     )
-    home_improvements = st.multiselect(
-        "Which of these home energy efficiency improvements are installed in your home?",
-        [
-            "Energy-saving lightbulbs",
-            "Loft insulation",
-            "Cavity or solid wall insulation",
-            "Condensing boiler",
-            "Double glazing",
-            "Low flow fittings to taps and showers",
-            "Solar panels",
-            "Solar water heater",
-        ],
-    )
 
     # --- STUFF ---
     st.subheader("Stuff")
@@ -201,18 +173,6 @@ if menu == "Home":
         "In a typical month, how much do you spend on non-essential items?",
         list(emission_factors["stuff"]["Spending"].keys()),
     )
-
-    # --- OFFSETTING ---
-    st.subheader("Offsetting")
-    offsetting_frequency = st.selectbox(
-        "How often do you take actions to offset your carbon footprint?",
-        list(emission_factors["offsetting"]["Frequency"].keys()),
-    )
-    offsetting_actions = st.multiselect(
-        "What types of offsetting actions do you take?",
-        list(emission_factors["offsetting"]["Actions"].keys()),
-    )
-
     # --- CALCULATIONS ---
     def calculate_emissions():
         """Calculates the total annual carbon footprint."""
@@ -236,23 +196,19 @@ if menu == "Home":
         # Home
         home_emissions = emission_factors["home"][house_type]
         cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
-        home_improvements_emissions = emission_factors["home_improvements"] * len(home_improvements)
 
         # Stuff
         stuff_emissions = sum(
             emission_factors["stuff"].get(item, 0) for item in new_items
         ) + emission_factors["stuff"]["Spending"][non_essential_spending]
 
-        # Offsetting
-        offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
-        for action in offsetting_actions:
-            offsetting_reductions += emission_factors["offsetting"]["Actions"].get(action, 0)
+       
 
         # Category breakdown
         category_emissions = {
             "Diet": diet_emissions + food_waste_emissions,
             "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
-            "Home": home_emissions + cooling_emissions + home_improvements_emissions,
+            "Home": home_emissions + cooling_emissions,
             "Stuff": stuff_emissions,
         }
 
