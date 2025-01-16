@@ -34,13 +34,13 @@ emission_factors = {
         "Semi-detached": 4,
         "Terrace": 3,
         "Flat": 2,
-        "Cooling": {
+    "Cooling": {
             "I don’t use a cooler": 0,
             "Below 19°C": 3,
             "19°C - 23°C": 2,
             "24°C - 30°C": 1,
         },
-        "Improvements": -0.2,  # Reduction per improvement
+    "Improvements": -0.2,  # Reduction per improvement
     },
     "stuff": {
         "TV, laptop, or PC": 0.2,
