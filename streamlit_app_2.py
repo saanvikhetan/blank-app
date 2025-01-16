@@ -213,7 +213,7 @@ if menu == "Home":
         }
 
         # Total Emissions
-        total_emissions = sum(category_emissions.values()) + offsetting_reductions
+        total_emissions = sum(category_emissions.values())
 
         return total_emissions, category_emissions
 
