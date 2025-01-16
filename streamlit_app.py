@@ -252,7 +252,7 @@ if st.button("Calculate"):
     }
     averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
     fig, ax = plt.subplots()
-    averages_df.plot(kind='bar', ax=ax)
+    averages_df.plot(kind='bar', ax=ax, color=['lightcoral', 'lightgreen', 'lightskyblue', 'lightpink', 'khaki', 'gold'])  # Set colors here
     ax.set_ylabel("Carbon Footprint (tCO2e)")
     ax.set_title("Your Footprint vs. Global Averages")
     st.pyplot(fig)
