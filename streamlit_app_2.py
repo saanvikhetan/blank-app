@@ -271,7 +271,7 @@ if menu == "Home":
             ax.bar(country, value, color=colors[country])
 
         ax.set_ylabel("Carbon Footprint (tCO2e)")
-        ax.setTitle("Your Footprint vs. Global Averages")
+        ax.set_title("Your Footprint vs. Global Averages")
         st.pyplot(fig)
 
         # --- Personalized Goals ---
