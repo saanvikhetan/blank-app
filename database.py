@@ -1,47 +1,52 @@
 import streamlit as st
-from streamlit_gsheets import GSheetsConnection
 import pandas as pd
+from streamlit_gsheets import GSheetsConnection
 
 
-# Create a connection object.
-conn = st.connection("gsheets", type=GSheetsConnection)
-#conn2 = st.connection("gsheets2", type=GSheetsConnection)
+## sheet names
+sheetname_usersinfo = "users_info"
+sheetname_userdata = "user_data"
 
-df = conn.read()
-#df2 = conn2.read()
+## low level func
 
-conn_write = st.experimental_connection("write_sheet", type="gcp_spreadsheets")
-conn_write.write(["test1", "test2", "test3"], mode="append")
+def gsheet_connect():
+    ## TODO: connect only if not already connected
+    conn = st.connection("gsheets", type=GSheetsConnection)
+
+def read_sheet_df(sheet_name):
+    gsheet_connect()
+    return conn.read(ttl=0, worksheet=sheet_name)
+
+def overwrite_sheet_df(df, sheet_name):
+    gsheet_connect()
+    conn.update(data=df, worksheet=sheet_name)
+
+def append_sheet_df(df_append, sheet_name):
+    gsheet_connect()
+    df = read_sheet_df(sheet_name)
+    df_new = pd.concat(df, df_append, ignore_index=True)
+    overwrite_sheet_df(df_new, sheet_name)
 
 
+## user functions
 
-st.write(df)
-#st.write(df2)
+def register_new_user(name, email, password):
+    if (get_userid(email, password) is not None):
+        return None
+        
+    df = read_sheet_df(sheetname_usersinfo)
+    ## columns in the Pandas Dataframe df will be:   UserID	Name	Email	Password
 
+    max_userID = ## TODO: add code here to find max of userID so far in df 
+    new_userID = max_userID + 1
+    new_user_df = ## TODO: new df with 1 row: new_userID, name, email, password
 
-data = {
-    "UserID": "user123",
-    "Quiz_Time": "2023-11-15 10:30:00",
-    "diet": "Vegetarian",
-    "food_waste": 50,
-    "vehicle": "Car",
-    "hours_in_vehicle": 2.5,
-    "public_transport_hours": 1.0,
-    "domestic_flights": 0,
-    "indian_subcontinent_flights": 0,
-    "international_flights": 1,
-    "house_type": "Apartment",
-    "cooling": "Air Conditioning",
-    "home_improvements": 100,
-    "new_items": 50,
-    "non_essential_spending": 200,
-    "offsetting_frequency": "Yearly",
-    "offsetting_actions": "Carbon offsetting purchases"}
+    append_sheet_df(new_user_df, sheetname_usersinfo)
 
-new_df = pd.DataFrame([data])
-df = pd.concat([df, new_df], ignore_index=True) 
+    return new_userID
 
-conn.write(df)
-df = conn.read()
+def get_userid(email, password):
+    ## TODO: reply with userid of the user with this email if password matches
+    ## TODO: reply with None if no user found with this email and password
 
-st.write(df)
+    df_new = pd.concat([df, new_row], ignore_index=True)
