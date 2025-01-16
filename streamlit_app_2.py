@@ -345,6 +345,13 @@ if st.session_state.goals:
                     st.session_state.goals.pop(i)  # Remove from current goals
                     st.experimental_rerun()  # Rerun to update UI
 
+if st.button("Add to Goals"):
+    if selected_action_data and selected_action_data not in st.session_state.goals:
+        st.session_state.goals.append(selected_action_data)
+        st.success(f"Added '{selected_action_data['action']}' to your goals!")
+    elif selected_action_data:
+        st.warning(f"'{selected_action_data['action']}' is already in your goals.")
+
 # Display completed goals
 if st.session_state.completed_goals:
     st.subheader("Completed Goals")
