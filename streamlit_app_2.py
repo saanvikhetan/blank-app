@@ -264,6 +264,9 @@ if menu == "Home":
     # --- Display Results ---
     if st.button("Calculate"):
         total_emissions, category_emissions = calculate_emissions()
+        st.session_state.total_emissions = total_emissions
+        st.session_state.category_emissions = category_emissions
+        st.session_state.max_category = max(category_emissions, key=category_emissions.get)
 
         st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
@@ -276,28 +279,30 @@ if menu == "Home":
         ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         st.pyplot(fig)
 
- # --- Personalized Goals ---
-    st.header("Personalized Goals")
+        # --- Personalized Goals ---
+        st.header("Personalized Goals")
 
-    weekly_goals = {
-        "Diet": "Reduce meat consumption to 2-3 times a week.",
-        "Travel": "Use public transport or walk/bike for at least 3 days a week.",
-        "Home": "Implement one energy-saving home improvement per month.",
-        "Stuff": "Limit non-essential purchases to once a week."
-    }
+        weekly_goals = {
+            "Diet": "Reduce meat consumption to 2-3 times a week.",
+            "Travel": "Use public transport or walk/bike for at least 3 days a week.",
+            "Home": "Implement one energy-saving home improvement per month.",
+            "Stuff": "Limit non-essential purchases to once a week."
+        }
 
-    daily_goals = {
-        "Diet": "Incorporate at least one vegetarian meal per day.",
-        "Travel": "Use public transport or walk/bike for short distances daily.",
-        "Home": "Turn off lights and appliances when not in use.",
-        "Stuff": "Avoid buying non-essential items on a daily basis."
-    }
+        daily_goals = {
+            "Diet": "Incorporate at least one vegetarian meal per day.",
+            "Travel": "Use public transport or walk/bike for short distances daily.",
+            "Home": "Turn off lights and appliances when not in use.",
+            "Stuff": "Avoid buying non-essential items on a daily basis."
+        }
 
-    st.subheader(f"Weekly Goal for {max_category}")
-    st.write(weekly_goals[max_category])
+        max_category = st.session_state.max_category
 
-    st.subheader(f"Daily Goal for {max_category}")
-    st.write(daily_goals[max_category])
+        st.subheader(f"Weekly Goal for {max_category}")
+        st.write(weekly_goals[max_category])
+
+        st.subheader(f"Daily Goal for {max_category}")
+        st.write(daily_goals[max_category])
 
 # --- Suggestions Section ---
 if menu == "Suggestions":
