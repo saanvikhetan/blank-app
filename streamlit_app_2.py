@@ -203,7 +203,7 @@ st.markdown(
 Consider consulting with a carbon footprint specialist for a more precise assessment. 
 """ 
 )
- Calculate emissions for each category emissions_by_category = { "Diet": diet_emissions,"Food Waste": food_waste_emissions, "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,"Home": home_emissions, "Stuff": stuff_emissions, } return total_emissions, emissions_by_category 
+Calculate emissions for each category emissions_by_category = { "Diet": diet_emissions,"Food Waste": food_waste_emissions, "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,"Home": home_emissions, "Stuff": stuff_emissions, } return total_emissions, emissions_by_category 
 # --- Display Results --- 
 st.button("Calculate"):
     total_emissions, emissions_by_category = calculate_emissions()
