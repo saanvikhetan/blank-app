@@ -388,17 +388,14 @@ if 'goals' not in st.session_state:
 if 'completed_goals' not in st.session_state:
     st.session_state.completed_goals = []
 
-# Example goals data
-goals_data = {
-    "Health": [
-        {"action": "Exercise", "points": 10, "carbon_reduction": 0},
-        {"action": "Eat Vegetables", "points": 5, "carbon_reduction": 0},
-    ],
-    "Environment": [
-        {"action": "Recycle", "points": 8, "carbon_reduction": 5},
-        {"action": "Use Public Transport", "points": 12, "carbon_reduction": 10},
-    ],
-}
+
+import streamlit as st
+
+# Initialize session state variables if not already present
+if 'goals' not in st.session_state:
+    st.session_state.goals = []
+if 'completed_goals' not in st.session_state:
+    st.session_state.completed_goals = []
 
 if menu == "Goals":
     st.header("Set and Track Your Goals")
@@ -431,6 +428,7 @@ if menu == "Goals":
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
+        completed_goal_indices = []
         for i, goal in enumerate(st.session_state.goals):
             col1, col2 = st.columns([5, 1])
             with col1:
@@ -439,8 +437,10 @@ if menu == "Goals":
                 if st.button(f"Complete", key=f"complete_{i}"):
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
-                        st.session_state.goals.pop(i)
-                        st.experimental_rerun()
+                        completed_goal_indices.append(i)
+        
+        # Remove completed goals from current goals
+        st.session_state.goals = [goal for j, goal in enumerate(st.session_state.goals) if j not in completed_goal_indices]
 
     # Display completed goals
     if st.session_state.completed_goals:
@@ -454,7 +454,6 @@ if menu == "Goals":
     # Calculate and display total eco points (for all goals)
     total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
     st.write(f"Total Eco Points (All Goals): {total_points}")
-
 # --- Offset Section ---
 if menu == "Offset":
     st.header("Offset Your Carbon Footprint")
