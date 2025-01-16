@@ -254,7 +254,7 @@ if st.button("Calculate"):
 
     fig, ax = plt.subplots()
     # Create a list of colors
-    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#c2c2f0', '#edc948']  
+    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#c2c2f0', '#edc948','#8c564b']  
     # Set the color for each bar using a loop
     for i, row in averages_df.iterrows():
         ax.bar(row.name, row['Carbon Footprint (tCO2e)'], color=colors[i])
