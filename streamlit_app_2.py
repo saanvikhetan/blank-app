@@ -149,7 +149,7 @@ list(emission_factors["offsetting"]["Actions"].keys()),
 ) 
 # --- CALCULATIONS --- 
 def calculate_emissions(): 
-"""Calculates the total annual carbon footprint.""" 
+ """Calculates the total annual carbon footprint.""" 
 # Diet 
 diet_emissions = emission_factors["diet"][diet] 
 # Food Waste 
