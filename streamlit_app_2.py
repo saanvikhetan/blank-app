@@ -328,6 +328,9 @@ if menu == "Goals":
         (a for a in available_actions if f"{a['action']} (+{a['points']} points)" == selected_action),
         None,
     )
+
+st.session_state.completed_goals = [] 
+
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
