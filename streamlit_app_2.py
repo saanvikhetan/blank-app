@@ -351,7 +351,6 @@ if st.session_state.goals:
                 if goal not in st.session_state.completed_goals:
                     st.session_state.completed_goals.append(goal)
                     st.session_state.goals.pop(i)  # Remove from current goals
-                    st.experimental_singletons.cache.clear()  # Clear the cache 
                     st.rerun()  # Rerun the app
 
 # Display completed goals
