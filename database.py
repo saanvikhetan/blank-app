@@ -30,7 +30,7 @@ data = {
     "new_items": 50,
     "non_essential_spending": 200,
     "offsetting_frequency": "Yearly",
-    "offsetting_actions": "Carbon offsetting purchases"
+    "offsetting_actions": "Carbon offsetting purchases"}
 
 
 conn.write(data)
