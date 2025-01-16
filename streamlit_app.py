@@ -378,9 +378,3 @@ if menu == "Goals":
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.goals)}")
     else:
         st.write("You haven't set any goals yet.")
-
-
-
-
-
-
