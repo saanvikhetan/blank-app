@@ -417,7 +417,7 @@ if menu == "Goals":
     category_actions = [a for a in available_actions if a["category"] == selected_category]
     selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
 
-     if st.button("Add to Goals"):
+    if st.button("Add to Goals"):
         action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
         if action_to_add and action_to_add not in st.session_state.goals:
             st.session_state.goals.append(action_to_add)
