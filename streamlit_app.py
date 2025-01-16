@@ -34,15 +34,14 @@ emission_factors = {
         "Semi-detached": 4,
         "Terrace": 3,
         "Flat": 2,
-        
-    "Cooling": {
-            "I don’t use a cooler": 0,
-            "Below 19°C": 3,
-            "19°C - 23°C": 2,
-            "24°C - 30°C": 1,
-        },
-    "Improvements": -0.2,  # Reduction per improvement
     },
+    "home_cooling": {  # Separate dictionary for cooling
+        "I don’t use a cooler": 0,
+        "Below 19°C": 3,
+        "19°C - 23°C": 2,
+        "24°C - 30°C": 1,
+    },
+    "home_improvements": -0.2,  # Reduction per improvement
     "stuff": {
         "TV, laptop, or PC": 0.2,
         "Large furniture": 0.3,
@@ -115,7 +114,7 @@ house_type = st.selectbox(
 )
 cooling = st.selectbox(
     "How cool is your house during summer?",
-    list(emission_factors["home"]["Cooling"].keys()),
+    list(emission_factors["home_cooling"].keys()),  # Use separate dictionary for cooling
 )
 home_improvements = st.multiselect(
     "Which of these home energy efficiency improvements are installed in your home?",
@@ -179,8 +178,8 @@ def calculate_emissions():
 
     # Home
     home_emissions = emission_factors["home"][house_type]
-    home_emissions += emission_factors["home"]["Cooling"][cooling]
-    home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements)
+    cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
+    home_improvements_emissions = emission_factors["home_improvements"] * len(home_improvements)
 
     # Stuff
     stuff_emissions = sum(
@@ -196,7 +195,7 @@ def calculate_emissions():
     category_emissions = {
         "Diet": diet_emissions + food_waste_emissions,
         "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
-        "Home": home_emissions,
+        "Home": home_emissions + cooling_emissions + home_improvements_emissions,
         "Stuff": stuff_emissions,
     }
 
