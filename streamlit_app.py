@@ -34,14 +34,14 @@ emission_factors = {
         "Semi-detached": 4,
         "Terrace": 3,
         "Flat": 2,
-        },
+        
     "Cooling": {
             "I don’t use a cooler": 0,
             "Below 19°C": 3,
             "19°C - 23°C": 2,
             "24°C - 30°C": 1,
         },
-    "Improvements":{ -0.2,  # Reduction per improvement
+    "Improvements": -0.2,  # Reduction per improvement
     },
     "stuff": {
         "TV, laptop, or PC": 0.2,
@@ -179,8 +179,8 @@ def calculate_emissions():
 
     # Home
     home_emissions = emission_factors["home"][house_type]
-    home_emissions += emission_factors["Cooling"][cooling]
-    home_emissions += emission_factors["Improvements"] * len(home_improvements)
+    home_emissions += emission_factors["home"]["Cooling"][cooling]
+    home_emissions += emission_factors["home"]["Improvements"] * len(home_improvements)
 
     # Stuff
     stuff_emissions = sum(
