@@ -42,7 +42,6 @@ emission_factors = {
         "19°C - 23°C": 2,
         "24°C - 30°C": 1,
     },
-    "home_improvements": -0.2,  # Reduction per improvement
     "stuff": {
         "TV, laptop, or PC": 0.2,
         "Large furniture": 0.3,
@@ -53,20 +52,6 @@ emission_factors = {
             "₹5,000 - ₹15,000": 0.5,
             "₹15,000 - ₹30,000": 1,
             "Over ₹30,000": 1.5,
-        },
-    },
-    "offsetting": {
-        "Frequency": {
-            "I never take offsetting actions": 0,
-            "Rarely (once or twice a year)": -0.1,
-            "Sometimes (a few times a year)": -0.3,
-            "Often (monthly or more frequently)": -0.6,
-            "Always (I actively offset regularly and for most of my activities)": -1,
-        },
-        "Actions": {
-            "Donate to environmental projects": -0.2,
-            "Participate in local initiatives": -0.3,
-            "Purchase carbon credits": -0.2,
         },
     },
 }
@@ -144,6 +129,15 @@ if "eco_points" not in st.session_state:
 
 # Navigation menu
 menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
+
+# --- Sidebar for displaying points and level ---
+if "eco_points" in st.session_state:
+    progress_level = get_progress_level(st.session_state.eco_points)
+    if progress_level:
+        st.sidebar.header("Your Progress")
+        st.sidebar.write(f"**{progress_level['title']}**")
+        st.sidebar.write(progress_level["description"])
+        st.sidebar.write(f"Points: {st.session_state.eco_points}")
 
 # --- Home Section ---
 if menu == "Home":
@@ -397,6 +391,7 @@ if menu == "Goals":
         st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.goals)}")
     else:
         st.write("You haven't set any goals yet.")
+
 
 # --- Offset Section ---
 if menu == "Offset":
