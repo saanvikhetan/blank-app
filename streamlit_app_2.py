@@ -179,7 +179,7 @@ def calculate_emissions():
     # Offsetting
     offsetting_reductions = emission_factors["offsetting"]["Frequency"][offsetting_frequency]
     for action in offsetting_actions:
-    offsetting_reductions += emission_factors["offsetting"]["Actions"][action]
+        offsetting_reductions += emission_factors["offsetting"]["Actions"][action]
     # Total Emissions
     total_emissions = sum(category_emissions.values()) + offsetting_reductions
     return total_emissions, category_emissions
