@@ -315,7 +315,7 @@ if menu == "Home":
 goals_data = {
     "Food": [
         {"action": "Have one meat-free day per week", "carbon_reduction": 0.078, "points": 50},
-        {"action": "Eat a plant-based diet", "carbon_reduction": 0.80, "points": 500},
+        {"action": "Eat a plant-based diet (If not already doing so)", "carbon_reduction": 0.80, "points": 500},
         {"action": "Choose local and seasonal produce for 75% of meals", "carbon_reduction": 0.137, "points": 75},
         {"action": "Avoid food waste by 25%", "carbon_reduction": 0.012, "points": 40},
         {"action": "Reduce consumption of processed foods by 25%", "carbon_reduction": 0.05, "points": 25},
