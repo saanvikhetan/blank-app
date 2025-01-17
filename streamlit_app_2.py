@@ -195,25 +195,26 @@ if completed_tasks == len(streaks) and not st.session_state.bonus_given:
     st.session_state.bonus_given = True
 
 # --- Streaks Tab ---
-st.title("Daily Eco-Friendly Streaks")
-st.write("Complete these tasks daily to maintain your streak and earn points!")
-
-# Display streak tasks with checkboxes
-for streak, description in streaks.items():
-    completed = st.checkbox(f"{streak}: {description}", value=st.session_state.streaks[streak])
-    st.session_state.streaks[streak] = completed  # Update session state
-
-# Recalculate completed tasks after updating checkboxes
-completed_tasks = sum(st.session_state.streaks.values())
-
-# Feedback and encouragement
-st.write(f"Today you've completed **{completed_tasks} tasks**.")
-if completed_tasks == len(streaks):
-    st.success("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
-elif completed_tasks > 0:
-    st.info("Great work! Keep going to complete all your tasks.")
-else:
-    st.warning("🌱 Start completing tasks to earn streak points and make a difference!")
+if menu == "Streaks":
+    st.title("Daily Eco-Friendly Streaks")
+    st.write("Complete these tasks daily to maintain your streak and earn points!")
+    
+    # Display streak tasks with checkboxes
+    for streak, description in streaks.items():
+        completed = st.checkbox(f"{streak}: {description}", value=st.session_state.streaks[streak])
+        st.session_state.streaks[streak] = completed  # Update session state
+    
+    # Recalculate completed tasks after updating checkboxes
+    completed_tasks = sum(st.session_state.streaks.values())
+    
+    # Feedback and encouragement
+    st.write(f"Today you've completed **{completed_tasks} tasks**.")
+    if completed_tasks == len(streaks):
+        st.success("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
+    elif completed_tasks > 0:
+        st.info("Great work! Keep going to complete all your tasks.")
+    else:
+        st.warning("🌱 Start completing tasks to earn streak points and make a difference!")
 
 
 
