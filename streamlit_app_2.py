@@ -463,7 +463,7 @@ if st.session_state.completed_goals:
 
 # Calculate and display total eco points (for all goals)
 total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
-st.write(f"Total Eco Points (All Goals): {total_points}")
+
 
 # Update session state with total points
 st.session_state.eco_points = total_points
