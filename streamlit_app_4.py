@@ -114,7 +114,7 @@ if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.sess
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
         st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
-        st.subheader(f"Streak Points: {st.session_state.streak_points}")
+        st.sidebar.subheader(f"Streak Points: {st.session_state.streak_points}")
 
 
 # --- Quiz Section ---
