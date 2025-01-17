@@ -86,7 +86,7 @@ if "quiz_completed" not in st.session_state:
 
 # Navigation menu
 if st.session_state.quiz_completed:
-    menu = st.radio("Navigation", ["Home", "Goals", "Offset"])
+    menu = st.radio("Navigation", ["Home", "Goals", "Offset", "Levels"])
 else:
     menu = "Quiz"
 
