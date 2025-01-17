@@ -93,6 +93,7 @@ else:
 # Sidebar for displaying points and level
 if "eco_points" in st.session_state and st.session_state.quiz_completed:
     progress_level = get_progress_level(st.session_state.eco_points)
+    st.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
     if progress_level:
         st.sidebar.header("Your Progress")
         st.sidebar.write(f"**{progress_level['title']}**")
@@ -297,7 +298,7 @@ if menu == "Home":
 
     if "total_emissions" in st.session_state and "category_emissions" in st.session_state:
         st.subheader("Your Current Carbon Footprint Results")
-        st.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
+        st.write(f"**Total Annual Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
         
         # Pie Chart
         st.header("Breakdown of Your Carbon Footprint")
