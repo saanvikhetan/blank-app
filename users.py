@@ -79,25 +79,25 @@ def show_logout_button(sidebar=False):
 def save_session_state():
     return
     
-    serialized_state = json.dumps(dict(st.session_state))
-    st.write("Writing serialized state = " + serialized_state)
+    #serialized_state = json.dumps(dict(st.session_state))
+    #st.write("Writing serialized state = " + serialized_state)
 
-    db_lib.store_user_data(get_logged_in_userd(), serialized_state)
+    #db_lib.store_user_data(get_logged_in_userd(), serialized_state)
 
 
 
 def restore_session_state():
     return
 
-    serialized_state = db_lib.read_latest_user_data(get_logged_in_userd())
+    ##serialized_state = db_lib.read_latest_user_data(get_logged_in_userd())
 
-    if serialized_state ==
-    restored_state = json.loads(serialized_state)
+    ##if serialized_state ==
+    #restored_state = json.loads(serialized_state)
     
 
-    st.write("Read serialized state
+    #st.write("Read serialized state
 
     # Update st.session_state with the restored values
-    for key, value in restored_state.items():
-        if key != "conn":
-            st.session_state[key] = value
+    #for key, value in restored_state.items():
+    #    if key != "conn":
+    #        st.session_state[key] = value
