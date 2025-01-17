@@ -594,6 +594,6 @@ if user_lib.is_user_logged_in() and menu == "Levels":
             st.write(f"Points: {level['points'][0]} - {level['points'][1]}")
         with col2:
             if level == current_level:
-                st.markdown("<p style='color:green;'>this is you</p>", unsafe_allow_html=True)
+                st.markdown("<p style='color:green;'>THIS IS YOU</p>", unsafe_allow_html=True)
         if st.button(f"Learn more about {level['title']}", key=level["title"]):
             st.write(level["description"])
