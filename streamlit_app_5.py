@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import date
+import user_lib
 
 # --- Initialize Session State ---
 if 'goals' not in st.session_state:
