@@ -138,20 +138,35 @@ if "eco_points" in st.session_state:
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
 
+# Initialize session state for streaks if not already present
+if 'streaks' not in st.session_state:
+    st.session_state.streaks = {
+        "Donate an Unused Item": False,
+        "Walk or Bike 1 Kilometer Instead of Driving": False,
+        "Cook a Plant-Based Meal": False,
+        "Conserve Water": False,
+        "Plant Something": False
+    }
+
 # --- Streaks Section ---
 if menu == "Streaks":
     st.header("Daily Eco-Friendly Streaks")
 
-    streaks = [
-        "Donate an Unused Item: Set aside something you no longer need for donation.",
-        "Walk or Bike 1 Kilometer Instead of Driving: Replace a short trip with walking or biking.",
-        "Cook a Plant-Based Meal: Prepare a vegetarian or vegan meal yourself.",
-        "Conserve Water: Turn off the tap while brushing your teeth or washing your hands.",
-        "Plant Something: Plant a seed, herb, or small tree in your garden or a pot."
-    ]
+    streaks = {
+        "Donate an Unused Item": "Set aside something you no longer need for donation.",
+        "Walk or Bike 1 Kilometer Instead of Driving": "Replace a short trip with walking or biking.",
+        "Cook a Plant-Based Meal": "Prepare a vegetarian or vegan meal yourself.",
+        "Conserve Water": "Turn off the tap while brushing your teeth or washing your hands.",
+        "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
+    }
 
-    for streak in streaks:
-        st.write(f"- {streak}")
+    for streak, description in streaks.items():
+        completed = st.checkbox(streak, value=st.session_state.streaks[streak])
+        st.session_state.streaks[streak] = completed
+        if completed:
+            st.write(f"✅ {description}")
+        else:
+            st.write(description)
 
 
 # --- Home Section ---
