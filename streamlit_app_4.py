@@ -325,7 +325,8 @@ if 'last_streak_date' not in st.session_state:
     st.session_state.last_streak_date = None
 if 'streak_counter' not in st.session_state:
     st.session_state.streak_counter = 0
-
+if 'eco_points' not in st.session_state:
+    st.session_state.eco_points = 0
 
 if user_lib.is_user_logged_in() and menu == "Streaks":
     st.header("Track Your Daily Eco-Friendly Streaks")
@@ -369,13 +370,13 @@ if user_lib.is_user_logged_in() and menu == "Streaks":
 
     # Award bonus points if all tasks are completed
     if completed_tasks == len(streaks) and not st.session_state.bonus_given:
-        st.session_state.streak_points += 20
+        st.session_state.eco_points += 20
         st.session_state.bonus_given = True
 
     # Display streak points and task count
     st.subheader(f"Streak Points: {st.session_state.streak_points}")
     st.write(f"Completed Tasks Today: {completed_tasks}")
-##################
+    st.write(f"Total Eco Points: {st.session_state.eco_points}")
 
 # Function to update carbon footprint history
 def update_carbon_footprint_history(new_value):
