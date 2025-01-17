@@ -294,22 +294,6 @@ if not st.session_state.quiz_completed:
 if menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
     st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
-        # --- Display Results ---
-    total_emissions, category_emissions = calculate_emissions()
-    st.session_state.total_emissions = total_emissions
-    st.session_state.category_emissions = category_emissions
-    st.session_state.max_category = max(category_emissions, key=category_emissions.get)
-
-    st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
-
-        # Pie Chart
-    st.header("Breakdown of Your Carbon Footprint")
-    fig, ax = plt.subplots()
-    labels = category_emissions.keys()
-    sizes = category_emissions.values()
-    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    st.pyplot(fig)
 
 
 # --- Goals Section ---
