@@ -90,7 +90,7 @@ if not user_lib.is_user_logged_in():
     user_lib.show_users_login()
     menu = None
 elif st.session_state.quiz_completed:
-    menu = st.radio("Navigation", ["Home", "Goals", "Offset", "Levels"])
+    menu = st.radio("Navigation", ["Home", "Goals", "Offset", "Levels","Streaks"])
 else:
     menu = "Quiz"
     
@@ -297,6 +297,94 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
             st.session_state.quiz_completed = True
             st.rerun()
 
+# Initialize session state for streak tracking
+if 'streaks' not in st.session_state:
+    st.session_state.streaks = {
+        "Donate an Unused Item": False,
+        "Walk or Bike 1 Kilometer Instead of Driving": False,
+        "Cook a Plant-Based Meal": False,
+        "Conserve Water": False,
+        "Plant Something": False
+    }
+
+if 'streak_points' not in st.session_state:
+    st.session_state.streak_points = 0
+
+if 'bonus_given' not in st.session_state:
+    st.session_state.bonus_given = False
+
+if 'last_streak_date' not in st.session_state:
+    st.session_state.last_streak_date = None
+
+if 'streak_counter' not in st.session_state:
+    st.session_state.streak_counter = 0
+
+# Define streak activities and their descriptions
+streaks = {
+    "Donate an Unused Item": "Set aside something you no longer need for donation.",
+    "Walk or Bike 1 Kilometer Instead of Driving": "Replace a short trip with walking or biking.",
+    "Cook a Plant-Based Meal": "Prepare a vegetarian or vegan meal yourself.",
+    "Conserve Water": "Turn off the tap while brushing your teeth or washing your hands.",
+    "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
+}
+
+# Sidebar for tracking daily eco-friendly streaks
+st.sidebar.header("Daily Eco-Friendly Streaks")
+
+# Count completed tasks for today's session
+completed_tasks = 0
+
+# Check if tasks are completed
+for streak, description in streaks.items():
+    completed = st.sidebar.checkbox(streak, value=st.session_state.streaks[streak])
+    
+    # Update session state and count completed tasks
+    st.session_state.streaks[streak] = completed
+    if completed:
+        completed_tasks += 1
+
+# Get today's date
+today = date.today()
+
+# Logic for awarding points
+if st.session_state.last_streak_date != today:
+    # New day: Reset daily streak logic
+    st.session_state.last_streak_date = today
+    st.session_state.bonus_given = False
+
+    # Reset tasks for the new day
+    for streak in streaks.keys():
+        st.session_state.streaks[streak] = False
+
+# Award 1 streak point for completing at least one task
+if completed_tasks > 0 and st.session_state.streak_counter == 0:
+    st.session_state.streak_points += 1
+    st.session_state.streak_counter += 1
+
+# Award bonus points if all tasks are completed
+if completed_tasks == len(streaks) and not st.session_state.bonus_given:
+    st.session_state.streak_points += 20
+    st.session_state.bonus_given = True
+
+# Sidebar display for streak points and task count
+st.sidebar.subheader(f"Streak Counter: {st.session_state.streak_counter}")
+st.sidebar.write(f"Completed Tasks Today: {completed_tasks}")
+if menu == "Streaks":
+    # Main content of the app
+    st.title("Welcome to Your Eco-Friendly Tracker")
+    st.write("Track your daily eco-friendly streaks and make a positive impact!")
+    
+    # Feedback on task completion
+    st.write(f"Today you've completed **{completed_tasks} tasks**.")
+    if completed_tasks == len(streaks):
+        st.write("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
+    elif completed_tasks > 0:
+        st.write("Great work! Keep going to complete all your tasks.")
+    
+    # Additional encouragement for no tasks completed
+    if completed_tasks == 0:
+        st.write("🌱 Start completing tasks to earn streak points and make a difference!")
+        
 # --- Home Section ---
 if user_lib.is_user_logged_in() and menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
