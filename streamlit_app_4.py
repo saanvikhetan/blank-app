@@ -399,6 +399,20 @@ def update_carbon_footprint_history(new_value):
 
 
 # --- Home Section ---
+
+#####################
+
+
+    
+    # Line Chart
+    st.header("Carbon Footprint Over Time")
+    if st.session_state.carbon_footprint_history:
+        df = pd.DataFrame(st.session_state.carbon_footprint_history, columns=['Carbon Footprint'])
+        st.line_chart(df)
+    else:
+        st.write("No carbon footprint data available.")
+
+######################
 if user_lib.is_user_logged_in() and menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
     st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
@@ -415,9 +429,9 @@ if user_lib.is_user_logged_in() and menu == "Home":
                colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
         ax.axis('equal')
         st.pyplot(fig)
-    else:
-        st.write("Complete the quiz to see your carbon footprint results.")
 
+
+    
     
         # Line Chart
         st.header("Carbon Footprint Over Time")
