@@ -423,8 +423,7 @@ if user_lib.is_user_logged_in() and menu == "Home":
             st.line_chart(df)
         else:
             st.write("No carbon footprint data available.")
-        else:
-            st.write("Complete the quiz to see your carbon footprint results.")
+
 
 
 # --- Goals Section ---
