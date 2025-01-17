@@ -226,25 +226,6 @@ if menu == "Streaks":
     if completed_tasks == 0:
         st.write("🌱 Start completing tasks to earn streak points and make a difference!")
     
-    # Main content of the app
-    st.title("Welcome to Your Eco-Friendly Tracker")
-    st.write("Track your daily eco-friendly streaks and make a positive impact!")
-    
-    # Feedback on task completion
-    st.write(f"Today you've completed **{completed_tasks} tasks**.")
-    if completed_tasks == len(streaks):
-        st.write("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
-    elif completed_tasks > 0:
-        st.write("Great work! Keep going to complete all your tasks.")
-    
-    # Additional tip if no tasks are completed
-    if completed_tasks == 0:
-        st.write("🌱 Start completing tasks to earn streak points and make a difference!")
-    
-    # Main content of the app
-    st.title("Welcome to Your Eco-Friendly Tracker")
-    st.write("Track your daily eco-friendly streaks and make a positive impact!")
-    
     # Optional: Display progress or additional tips
     st.write(f"You're on track! You've completed **{st.session_state.streak_counter} tasks** today.")
     if st.session_state.streak_counter == len(streaks):
