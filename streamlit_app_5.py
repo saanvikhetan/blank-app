@@ -390,3 +390,195 @@ if user_lib.is_user_logged_in() and menu == "Streaks":
     # Display streak points and task count
     st.markdown(f"### 🌟 Streak Points: {st.session_state.streak_points}")
     st.write(f"Completed Tasks Today: {completed_tasks}")
+
+
+# --- Home Section ---
+if user_lib.is_user_logged_in() and menu == "Home":
+    st.header("Welcome to Your Eco-Friendly Journey!")
+    st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
+    if "total_emissions" in st.session_state and "category_emissions" in st.session_state:
+        st.subheader("Your Current Carbon Footprint Results")
+        st.markdown(f"<h3><strong>Total Annual Carbon Footprint:</strong> {st.session_state.total_emissions:.2f} tons of CO₂e</h3>", unsafe_allow_html=True)
+        
+        # Pie Chart
+        st.markdown("<h4>Breakdown of Your Carbon Footprint</h4>", unsafe_allow_html=True)
+        fig, ax = plt.subplots()
+        labels = st.session_state.category_emissions.keys()
+        sizes = st.session_state.category_emissions.values()
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, 
+               colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
+        ax.axis('equal')
+        st.pyplot(fig)
+
+        # Line Chart
+        st.markdown("<h4>Carbon Footprint Over Time</h4>", unsafe_allow_html=True)
+        if st.session_state.carbon_footprint_history:
+            df = pd.DataFrame(st.session_state.carbon_footprint_history, columns=['Carbon Footprint'])
+            st.line_chart(df)
+        else:
+            st.write("No carbon footprint data available.")
+
+# --- Goals Section ---
+goals_data = {
+    "Food": [
+        {"action": "Have one meat-free day per week", "carbon_reduction": 0.078, "points": 50},
+        {"action": "Eat a plant-based diet (If not already doing so)", "carbon_reduction": 0.80, "points": 500},
+        {"action": "Choose local and seasonal produce for 75% of meals", "carbon_reduction": 0.137, "points": 75},
+        {"action": "Avoid food waste by 25%", "carbon_reduction": 0.012, "points": 40},
+        {"action": "Reduce consumption of processed foods by 25%", "carbon_reduction": 0.05, "points": 25},
+        {"action": "Support sustainable farming practices (e.g., certified organic)", "carbon_reduction": 1, "points": 200}
+    ],
+    "Travel": [
+        {"action": "Walk or cycle instead of driving for 5 short trips per week", "carbon_reduction": 0.028, "points": 25},
+        {"action": "Use public transportation or carpool for 3 trips per week", "carbon_reduction": 0.1, "points": 50},
+        {"action": "Bike or walk for 3 short distances per week", "carbon_reduction": 0.03, "points": 25},
+        {"action": "Take no more than 2 domestic flights per year", "carbon_reduction": 1, "points": 500},
+        {"action": "Drive an electric or hybrid vehicle instead of normal", "carbon_reduction": 1, "points": 800},
+        {"action": "Combine 2 trips per week to reduce car use", "carbon_reduction": 0.05, "points": 25}
+    ],
+    "Home": [
+        {"action": "Install energy-efficient lightbulbs in all fixtures", "carbon_reduction": 0.03, "points": 50},
+        {"action": "Use a fan instead of air conditioning for 3 months", "carbon_reduction": 0.04, "points": 50},
+        {"action": "Replace 1 major appliance with an energy-efficient model", "carbon_reduction": 0.125, "points": 50},
+        {"action": "Use LED lighting in all fixtures", "carbon_reduction": 0.05, "points": 75},
+        {"action": "Insulate your loft", "carbon_reduction": 0.5, "points": 200},
+        {"action": "Switch to a 100% renewable energy supplier", "carbon_reduction": 2, "points": 1500},
+        {"action": "Lower thermostat by 1°C in winter and raise by 1°C in summer", "carbon_reduction": 0.1, "points": 50},
+        {"action": "Cavity or solid wall insulation (if applicable)", "carbon_reduction": 1, "points": 500},
+        {"action": "Condensing boiler (if replacing an old boiler)", "carbon_reduction": 1.2, "points": 600},
+        {"action": "Double glazing all windows (if not already done)", "carbon_reduction": 0.8, "points": 400},
+        {"action": "Low flow fittings to all taps and showers", "carbon_reduction": 0.2, "points": 100},
+        {"action": "Solar water heater (if suitable for your location)", "carbon_reduction": 0.8, "points": 400}
+    ],
+    "Stuff": [
+        {"action": "Buy at least 5 second-hand instead of new items per year", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Repair 2 items instead of replacing them", "carbon_reduction": 0.1, "points": 150},
+        {"action": "Reduce monthly non-essential spending by 5%", "carbon_reduction": 0.05, "points": 100},
+        {"action": "Reduce, reuse, recycle consistently (e.g., weekly)", "carbon_reduction": 0.5, "points": 250},
+        {"action": "Buy second-hand or refurbished electronics", "carbon_reduction": 0.15, "points": 200},
+        {"action": "Avoid single-use plastics for 3 meals per week", "carbon_reduction": 0.03, "points": 100},
+        {"action": "Repair 1 major household item instead of replacing it", "carbon_reduction": 0.1, "points": 200},
+        {"action": "Support 2 sustainable brands per year", "carbon_reduction": 0.25, "points": 400}
+    ],
+    "Other": [
+        {"action": "Donate ₹4000 to a reputable environmental organization", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Participate in 2 local environmental initiatives per year", "carbon_reduction": 0.3, "points": 400},
+        {"action": "Purchase ₹4000 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
+    ]
+}
+
+# Initialize session state variables if not already present
+if 'goals' not in st.session_state:
+    st.session_state.goals = []
+if 'completed_goals' not in st.session_state:
+    st.session_state.completed_goals = []
+if "total_emissions" not in st.session_state:
+    st.session_state.total_emissions = 0
+
+def mark_goal_as_completed(goal):
+    if goal not in st.session_state.completed_goals:
+        st.session_state.completed_goals.append(goal)
+        st.session_state.total_emissions -= goal['carbon_reduction']# Decrease emissions
+        update_carbon_footprint_history(st.session_state.total_emissions)
+    if goal in st.session_state.goals:
+        st.session_state.goals.remove(goal)
+
+if user_lib.is_user_logged_in() and menu == "Goals":
+    st.header("Set and Track Your Goals")
+
+    # Flatten goals data into a list of actions with categories, carbon reduction, and points
+    available_actions = [
+        {
+            "action": action["action"],
+            "points": action["points"],
+            "category": category,
+            "carbon_reduction": action["carbon_reduction"]
+        }
+        for category, actions in goals_data.items()
+        for action in actions
+    ]
+
+    # Filter out actions that are already in the user's goals or completed goals
+    added_actions = [goal["action"] for goal in st.session_state.completed_goals + st.session_state.goals]
+    available_actions = [
+        action for action in available_actions
+        if action["action"] not in added_actions
+    ]
+
+    # Category options for goal selection
+    selected_category = st.radio("Choose a category:", list(goals_data.keys()))
+    category_actions = [a for a in available_actions if a["category"] == selected_category]
+    selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
+
+    if st.button("Add to Goals"):
+        action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
+        if action_to_add and action_to_add not in st.session_state.goals:
+            st.session_state.goals.append(action_to_add)
+            st.success(f"Added '{selected_action}' to your goals!")
+        elif action_to_add:
+            st.warning(f"'{selected_action}' is already in your goals.")
+
+    # Display current goals with "Mark as Completed" buttons
+    if st.session_state.goals:
+        st.subheader("Your Goals")
+        for i, goal in enumerate(st.session_state.goals):
+            col1, col2 = st.columns([5, 1])
+            with col1:
+                st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+            with col2:
+                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}", on_click=mark_goal_as_completed, args=(goal,)):
+                    st.experimental_rerun()
+
+    # Display completed goals
+    if st.session_state.completed_goals:
+        st.subheader("Completed Goals")
+        st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
+        for goal in st.session_state.completed_goals:
+            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+        st.markdown("</p>", unsafe_allow_html=True)
+        st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+
+    # Calculate and display total eco points (for all goals)
+    total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
+
+    # Update session state with total points
+    st.session_state.eco_points = total_points
+
+# --- Offset Section ---
+if user_lib.is_user_logged_in() and menu == "Offset":
+    st.header("Offset Your Carbon Footprint")
+    
+    offset_links = {
+        "HelpUsGreen": {
+            "url": "https://www.helpusgreen.com/",
+            "description": "By upcycling discarded temple flowers, they craft luxurious, eco-friendly incense. Therefore, fostering community growth and environmental conservation."
+        },
+        "Grow Trees": {
+            "url": "https://www.grow-trees.com/index.php",
+            "description": "With 20 million trees planted over almost 150 projects, Grow Trees is an environmental organization dedicated to facilitating tree planting through online platforms. They've recently started a project called Ratan Tata memorial forest, which will have a positive impact on carbon reduction, restoring forests and improving wildlife habitats."
+        },
+        "Solar Aid": {
+            "url": "https://solar-aid.org/",
+            "description": "Igniting kerosene lamps and paraffin candles can emit toxic fumes into people’s lungs and into the earth’s atmosphere, and in small towns this is the only option when the sun goes down. However, due to the use of solar power light, a real sustainable change can happen."
+        },
+        "TNC India": {
+            "url": "https://www.tncindia.in/what-we-do/our-priorities/support-renewable-energy/",
+            "description": "Their aim is to increase the use of readily available, cost-effective climate solutions such as reforestation, and implement policy changes to increase the rate of their transition to a clean energy future."
+        },
+        "WWF India": {
+            "url": "https://join.wwfindia.org/?source=WWF-JOIN-WEB&utm_source=main_website&utm_medium=nav_link&utm_campaign=donate",
+            "description": "WWF is an environmental organization whose main aims are to improve environmental literacy, spread awareness on how to lower carbon footprint, preserve India’s vast wildlife heritage and to empower vulnerable groups through policy changes and on-ground initiatives."
+        },
+        "BJSM": {
+            "url": "https://bjsm.org.in/donations/donate-to-protect-the-environment/",
+            "description": "This is one of India’s top NGOs dedicated to starting initiatives that combat climate change, focus on sustainable land management, aim to ensure clean and sufficient water resources and promote agroforestry."
+        },
+        "Gold Standard": {
+            "url": "https://www.goldstandard.org/donate-to-gold-standard",
+            "description": "Gold Standard is a small Swiss-based NGO with a big impact. Established in 2003, Gold Standard projects have already prevented more than 300 million tonnes of CO2 from entering our atmosphere."
+        }
+    }
+    
+    for name, info in offset_links.items():
+        st.write(f"[{name}]({info['url']})")
+        st.write(info['description'])
