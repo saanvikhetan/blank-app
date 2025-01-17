@@ -279,38 +279,30 @@ if st.button("Calculate"):
         "World": 4.7,
         "UK": 4.4,
         "India": 2.1,
-        "You": total_emissions
     }
+
+    # Create DataFrame for plotting
     averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
-    # Adding the categories from the calculated emissions
+    # Add "You" as stacked bar
     categories = list(category_emissions.keys())
-    for category in categories:
-        averages[category] = category_emissions[category]
+    you_df = pd.DataFrame(category_emissions, index=["You"]).T
+    you_df = you_df.sort_index().reindex(you_df.index)
+    you_df = you_df.T
 
-    fig, ax = plt.subplots()
-
-    # Define a dictionary to map countries and categories to colors
-    colors = {
-        "Saudi Arabia": "#dc143c",
-        "US": "#4169e1",
-        "China": "#3cb371",
-        "World": "#000080",
-        "UK": "#40e0d0",
-        "India": "#ff7f50",
-        "Diet": "#FF9999",
-        "Travel": "#66B3FF",
-        "Home": "#99FF99",
-        "Stuff": "#FFCC99",
-        "You": "#8b008b"
-    }
-
-    # Plot the bars with assigned colors
-    for key, value in averages.items():
-        ax.bar(key, value, color=colors[key])
+    # Plotting
+    fig, ax = plt.subplots(figsize=(10, 6))
+    averages_df.plot(kind='bar', ax=ax, color="#8b008b", legend=False)
+    
+    # Add stacked bar for "You"
+    bottom = 0
+    for idx, category in enumerate(categories):
+        ax.bar("You", you_df[category], bottom=bottom, color=colors[idx], label=category)
+        bottom += you_df[category].values[0]
 
     ax.set_ylabel("Carbon Footprint (tCO2e)")
     ax.set_title("Your Footprint vs. Global Averages")
+    ax.legend(title="Categories")
     st.pyplot(fig)
 
     # --- Personalized Goals ---
@@ -337,6 +329,8 @@ if st.button("Calculate"):
 
     st.subheader(f"Daily Goal for {max_category}")
     st.write(daily_goals[max_category])
+
+
 # --- Suggestions Section ---
 if menu == "Suggestions":
     st.header("Eco-Friendly Actions and Suggestions")
