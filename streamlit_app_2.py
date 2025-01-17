@@ -191,25 +191,24 @@ if st.session_state.last_streak_date != today:
     # New day: Reset daily streak logic
     st.session_state.last_streak_date = today
     st.session_state.bonus_given = False
-    st.session_state.streak_counter += 1  # Increment streak counter for the new day if at least one task is completed
 
     # Reset tasks for the new day
     for streak in streaks.keys():
         st.session_state.streaks[streak] = False
 
-    # Award 1 streak point for completing at least one task
-    if completed_tasks > 0:
-        st.session_state.streak_points += 1
-    
-    # Award bonus points if all tasks are completed
-    if completed_tasks == len(streaks):
-        st.session_state.streak_points += 20
-        st.session_state.bonus_given = True
+# Award 1 streak point for completing at least one task
+if completed_tasks > 0 and st.session_state.streak_counter == 0:
+    st.session_state.streak_points += 1
+    st.session_state.streak_counter += 1
+
+# Award bonus points if all tasks are completed
+if completed_tasks == len(streaks) and not st.session_state.bonus_given:
+    st.session_state.streak_points += 20
+    st.session_state.bonus_given = True
 
 # Sidebar display for streak points and task count
 st.sidebar.subheader(f"Streak Counter: {st.session_state.streak_counter}")
 st.sidebar.write(f"Completed Tasks Today: {completed_tasks}")
-
 if menu == "Streaks":
     # Main content of the app
     st.title("Welcome to Your Eco-Friendly Tracker")
