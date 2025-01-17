@@ -369,6 +369,12 @@ if 'goals' not in st.session_state:
 if 'completed_goals' not in st.session_state:
     st.session_state.completed_goals = []
 
+def mark_goal_as_completed(goal):
+    if goal not in st.session_state.completed_goals:
+        st.session_state.completed_goals.append(goal)
+    if goal in st.session_state.goals:
+        st.session_state.goals.remove(goal)
+
 if menu == "Goals":
     st.header("Set and Track Your Goals")
 
@@ -407,18 +413,13 @@ if menu == "Goals":
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
-        updated_goals = []
         for i, goal in enumerate(st.session_state.goals):
             col1, col2 = st.columns([5, 1])
             with col1:
                 st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
             with col2:
-                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
-                    if goal not in st.session_state.completed_goals:
-                        st.session_state.completed_goals.append(goal)
-                else:
-                    updated_goals.append(goal)
-        st.session_state.goals = updated_goals
+                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}", on_click=mark_goal_as_completed, args=(goal,)):
+                    st.experimental_rerun()
 
     # Display completed goals
     if st.session_state.completed_goals:
@@ -434,7 +435,6 @@ if menu == "Goals":
 
     # Update session state with total points
     st.session_state.eco_points = total_points
-
 
 # --- Offset Section ---
 if menu == "Offset":
