@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
+import datetime
 
 ## sheet names
 sheetname_usersinfo = "users_info"
@@ -74,3 +75,29 @@ def get_name_for_userid(userid):
         return row.iloc[0]["name"]
     
     
+
+## user data functions
+
+# columns to use userid, timestamp, state
+
+def store_user_data(userid, state):
+    new_userdata_df = pd.DataFrame({
+        "userid": [userid],
+        "timestamp": [datetime.datetime.now()],
+        "state": [state],
+    })
+    append_sheet_df(new_userdata_df, sheetname_userdata)
+
+
+def read_latest_user_data(userid):
+    df = read_sheet_df(sheetname_userdata)
+
+    user_data = df[df["userid"] == userid]
+    
+    if user_data.empty:
+        return None
+
+    user_data_sorted = user_data.sort_values(by="timestamp", ascending=False)
+    
+    return user_data_sorted.iloc[0]["state"]    
+

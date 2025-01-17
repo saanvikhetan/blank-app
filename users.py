@@ -48,6 +48,10 @@ def do_user_login(userid):
     st.session_state["logged_in_userid"] = userid
     st.session_state["logged_in_user_name"] = db_lib.get_name_for_userid(userid)
 
+def get_logged_in_userid():
+    return st.session_state["logged_in_userid"]
+
+
 def get_logged_in_user_name():
     return st.session_state["logged_in_user_name"]
 
@@ -73,10 +77,27 @@ def show_logout_button(sidebar=False):
         
             
 def save_session_state():
-    # todo
-    pass
+    return
+    
+    serialized_state = json.dumps(dict(st.session_state))
+    st.write("Writing serialized state = " + serialized_state)
+
+    db_lib.store_user_data(get_logged_in_userd(), serialized_state)
+
 
 
 def restore_session_state():
-    # todo
-    pass
+    return
+
+    serialized_state = db_lib.read_latest_user_data(get_logged_in_userd())
+
+    if serialized_state ==
+    restored_state = json.loads(serialized_state)
+    
+
+    st.write("Read serialized state
+
+    # Update st.session_state with the restored values
+    for key, value in restored_state.items():
+        if key != "conn":
+            st.session_state[key] = value
