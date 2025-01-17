@@ -271,39 +271,38 @@ if st.button("Calculate"):
     st.pyplot(fig)
 
     # --- Bar Graph ---
-    st.header("Comparison to Global Averages")
-    averages = {
-        "Saudi Arabia": 22.1,
-        "US": 14.3,
-        "China": 8.4,
-        "World": 4.7,
-        "UK": 4.4,
-        "India": 2.1,
-    }
+        st.header("Comparison to Global Averages")
+        averages = {
+            "Saudi Arabia": 22.1,
+            "US": 14.3,
+            "China": 8.4,
+            "World": 4.7,
+            "UK": 4.4,
+            "India": 2.1,
+            "You": total_emissions
+        }
+        averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
-    # Create DataFrame for plotting
-    averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
+        fig, ax = plt.subplots()
 
-    # Plotting
-    fig, ax = plt.subplots(figsize=(10, 6))
+        # Define a dictionary to map countries to colors
+        colors = {
+            "Saudi Arabia": "#dc143c",
+            "US": "#4169e1",
+            "China": "#3cb371",
+            "World": "#000080",
+            "UK": "#40e0d0",
+            "India": "#ff7f50",
+            "You": "#8b008b"
+        }
 
-    # Define categories and colors
-    categories = list(category_emissions.keys())
+        # Plot the bars with assigned colors
+        for country, value in averages.items():
+            ax.bar(country, value, color=colors[country])
 
-    # Plot your carbon footprint as a stacked bar
-    bottom = 0
-    for idx, (category, color) in enumerate(zip(categories, colors)):
-        ax.bar("You", category_emissions[category], bottom=bottom, color=color, label=category)
-        bottom += category_emissions[category]
-
-    # Plot global averages
-    averages_df.plot(kind='bar', ax=ax, color="#8b008b", legend=False)
-
-    ax.set_ylabel("Carbon Footprint (tCO2e)")
-    ax.set_title("Your Footprint vs. Global Averages")
-    ax.legend(title="Categories")
-    st.pyplot(fig)
-
+        ax.set_ylabel("Carbon Footprint (tCO2e)")
+        ax.set_title("Your Footprint vs. Global Averages")
+        st.pyplot(fig)
 
     # --- Personalized Goals ---
     st.header("Personalized Goals")
