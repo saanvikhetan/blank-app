@@ -19,64 +19,64 @@ if 'carbon_footprint_history' not in st.session_state:
 # Define emission factors (replace with your actual values)
 emission_factors = {
     "diet": {
-        "Meat in every meal": 3.3,
-        "Meat in some meals": 2.5,
-        "Meat very rarely": 1.7,
-        "Vegetarian": 1.2,
-        "Vegan": 0.9,
+        "Meat in every meal 🍖": 3.3,
+        "Meat in some meals 🍗": 2.5,
+        "Meat very rarely 🍗": 1.7,
+        "Vegetarian 🥗": 1.2,
+        "Vegan 🌱": 0.9,
     },
     "food_waste": {
-        "None": 0,
-        "0% - 10%": 0.1,
-        "10% - 30%": 0.4,
-        "More than 30%": 1.0,
+        "None 🚫": 0,
+        "0% - 10% 💧": 0.1,
+        "10% - 30% 🗑️": 0.4,
+        "More than 30% 🗑️": 1.0,
     },
     "vehicle_use": {
-        "Electric car": 1,
-        "Hybrid car": 2,
-        "Small petrol/diesel car": 3,
-        "Medium petrol/diesel car": 4,
-        "Large petrol/diesel car": 5,
-        "Motorbike": 2.5,
-        "Public Transport": 1.5,
-        "Walking/Cycling": 0,
+        "Electric car 🔌🚗": 1,
+        "Hybrid car 🚗": 2,
+        "Small petrol/diesel car 🚗": 3,
+        "Medium petrol/diesel car 🚗": 4,
+        "Large petrol/diesel car 🚗": 5,
+        "Motorbike 🏍️": 2.5,
+        "Public Transport 🚌": 1.5,
+        "Walking/Cycling 🚶‍♀️🚴‍♂️": 0,
     },
     "home": {
-        "Detached": 6,
-        "Semi-detached": 4,
-        "Terrace": 3,
-        "Flat": 2,
+        "Detached 🏡": 6,
+        "Semi-detached 🏠": 4,
+        "Terrace 🏘️": 3,
+        "Flat 🏢": 2,
     },
     "home_cooling": {  # Separate dictionary for cooling
-        "I don’t use a cooler": 0,
-        "Below 19°C": 3,
-        "19°C - 23°C": 2,
-        "24°C - 30°C": 1,
+        "I don’t use a cooler ❄️🚫": 0,
+        "Below 19°C ❄️": 3,
+        "19°C - 23°C 🌬️": 2,
+        "24°C - 30°C ☀️": 1,
     },
     "stuff": {
-        "TV, laptop, or PC": 0.2,
-        "Large furniture": 0.3,
-        "Washing machine, dishwasher, etc.": 0.4,
-        "Mobile phone or tablet": 0.1,
-        "None": 0,
+        "TV, laptop, or PC 💻": 0.2,
+        "Large furniture 🛋️": 0.3,
+        "Washing machine, dishwasher, etc. 🧺": 0.4,
+        "Mobile phone or tablet 📱": 0.1,
+        "None 🚫": 0,
         "Spending": {
-            "₹0 - ₹5,000": 0.2,
-            "₹5,000 - ₹15,000": 0.5,
-            "₹15,000 - ₹30,000": 1,
-            "Over ₹30,000": 1.5,
+            "₹0 - ₹5,000 💸": 0.2,
+            "₹5,000 - ₹15,000 💸": 0.5,
+            "₹15,000 - ₹30,000 💸": 1,
+            "Over ₹30,000 💸": 1.5,
         },
     },
 }
 
 # Progress levels and badges
 progress_levels = [
-    {"title": "Eco Newbie", "points": [0, 500], "description": "Welcome to the world of sustainability! You're just starting your eco-friendly journey and taking your first steps toward reducing your carbon footprint. Engage in basic actions like meat-free days, buying second-hand items, or using public transport."},
-    {"title": "Green Enthusiast", "points": [501, 1000], "description": "You're becoming more eco-conscious! Your commitment to reducing your footprint is growing, and you're making significant strides in your sustainability efforts. Start making eco-friendly choices regularly, such as reducing food waste and choosing sustainable farming practices."},
-    {"title": "Sustainability Advocate", "points": [1001, 2000], "description": "You're actively promoting sustainable living. Your eco-conscious habits are becoming a regular part of your lifestyle, and you're encouraging others to make a change. Regularly use energy-efficient appliances, reduce processed foods, and make conscious decisions about waste and consumption."},
-    {"title": "Planet Saver", "points": [2001, 3500], "description": "You're making a noticeable impact on the planet! Your dedication to sustainability is clear in both your actions and your lifestyle choices. Keep up the great work! Make major changes, such as installing solar panels, reducing air travel, and embracing renewable energy."},
-    {"title": "Eco Warrior", "points": [3501, 5000], "description": "You’ve become a true warrior for the environment! Your commitment to sustainability is helping to lead the way for others, and your daily choices are making a real difference. Drive an electric vehicle, support sustainable brands, and implement energy-efficient systems in your home."},
-    {"title": "Zero-Carbon Champion", "points": [5001, 7000], "description": "You’ve achieved a highly sustainable lifestyle! You've reduced your carbon footprint to a remarkable level and continue to advocate for climate action. Your lifestyle is fully aligned with eco-conscious choices, such as living zero waste, eliminating single-use plastics, and significantly reducing your carbon emissions."},
-    {"title": "Planet Protector", "points": [7001, 8690], "description": "You are a true protector of the planet! Your relentless pursuit of sustainability has reduced your environmental impact to its minimum, and you're leading the charge for a greener future. Your efforts to reduce CO2 emissions through sustainable travel, energy, food, and lifestyle choices are exemplary. You’ve embraced every aspect of eco-friendly living."}
+    {"title": "Eco Newbie 🌱", "points": [0, 500], "description": "Welcome to the world of sustainability! You're just starting your eco-friendly journey and taking your first steps toward reducing your carbon footprint. Engage in basic actions like meat-free days, buying second-hand items, or using public transport."},
+    {"title": "Green Enthusiast 🌿", "points": [501, 1000], "description": "You're becoming more eco-conscious! Your commitment to reducing your footprint is growing, and you're making significant strides in your sustainability efforts. Start making eco-friendly choices regularly, such as reducing food waste and choosing sustainable farming practices."},
+    {"title": "Sustainability Advocate 🌍", "points": [1001, 2000], "description": "You're actively promoting sustainable living. Your eco-conscious habits are becoming a regular part of your lifestyle, and you're encouraging others to make a change. Regularly use energy-efficient appliances, reduce processed foods, and make conscious decisions about waste and consumption."},
+    {"title": "Planet Saver 🌎", "points": [2001, 3500], "description": "You're making a noticeable impact on the planet! Your dedication to sustainability is clear in both your actions and your lifestyle choices. Keep up the great work! Make major changes, such as installing solar panels, reducing air travel, and embracing renewable energy."},
+    {"title": "Eco Warrior 🌳", "points": [3501, 5000], "description": "You’ve become a true warrior for the environment! Your commitment to sustainability is helping to lead the way for others, and your daily choices are making a real difference. Drive an electric vehicle, support sustainable brands, and implement energy-efficient systems in your home."},
+    {"title": "Zero-Carbon Champion ⚡", "points": [5001, 7000], "description": "You’ve achieved a highly sustainable lifestyle! You've reduced your carbon footprint to a remarkable level and continue to advocate for climate action. Your lifestyle is fully aligned with eco-conscious choices, such as living zero waste, eliminating single-use plastics, and significantly reducing your carbon emissions."},
+    {"title": "Planet Protector 🛡️", "points": [7001, 8690], "description": "You are a true protector of the planet! Your relentless pursuit of sustainability has reduced your environmental impact to its minimum, and you're leading the charge for a greener future. Your efforts to reduce CO2 emissions through sustainable travel, energy, food, and lifestyle choices are exemplary. You’ve embraced every aspect of eco-friendly living."}
 ]
 
 def get_progress_level(points):
@@ -86,7 +86,7 @@ def get_progress_level(points):
     return None
     
 # --- Streamlit App ---
-st.title("E-mission")
+st.title("E-mission 🌍")
 
 # Initialize session state for goals and points
 if "goals" not in st.session_state:
@@ -109,19 +109,19 @@ else:
 if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.session_state.quiz_completed:
     progress_level = get_progress_level(st.session_state.eco_points)
     if progress_level:
-        st.sidebar.header("Your Progress")
+        st.sidebar.header("Your Progress 🌱")
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
-        st.sidebar.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
-        st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
+        st.sidebar.write(f"🌟 Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+        st.sidebar.write(f"🌍 **Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
 
 
 # --- Quiz Section ---
 if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
-    st.header("Calculate Your Carbon Footprint")
+    st.header("Calculate Your Carbon Footprint 🌿")
 
     # --- DIET ---
-    st.subheader("Diet")
+    st.subheader("Diet 🥗")
     diet = st.selectbox(
         "How would you best describe your diet?",
         list(emission_factors["diet"].keys())
@@ -132,7 +132,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- TRAVEL ---
-    st.subheader("Travel")
+    st.subheader("Travel 🚗")
     vehicle = st.selectbox(
         "Which of these best describes the mode of transport you use most?",
         list(emission_factors["vehicle_use"].keys())
