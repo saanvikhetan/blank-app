@@ -287,6 +287,9 @@ if st.button("Calculate"):
     # Plotting
     fig, ax = plt.subplots(figsize=(10, 6))
 
+    # Define categories and colors
+    categories = list(category_emissions.keys())
+
     # Plot your carbon footprint as a stacked bar
     bottom = 0
     for idx, (category, color) in enumerate(zip(categories, colors)):
@@ -296,12 +299,11 @@ if st.button("Calculate"):
     # Plot global averages
     averages_df.plot(kind='bar', ax=ax, color="#8b008b", legend=False)
 
-    
-
     ax.set_ylabel("Carbon Footprint (tCO2e)")
     ax.set_title("Your Footprint vs. Global Averages")
     ax.legend(title="Categories")
     st.pyplot(fig)
+
 
     # --- Personalized Goals ---
     st.header("Personalized Goals")
