@@ -284,19 +284,19 @@ if st.button("Calculate"):
     # Create DataFrame for plotting
     averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
-    # Add "You" as a separate bar
-    you_df = pd.DataFrame({'Carbon Footprint (tCO2e)': [total_emissions]}, index=['You'])
-
     # Plotting
     fig, ax = plt.subplots(figsize=(10, 6))
-    averages_df.plot(kind='bar', ax=ax, color="#8b008b", legend=False)
 
-    # Define categories and colors
-    categories = list(category_emissions.keys())
+    # Plot your carbon footprint as a stacked bar
     bottom = 0
     for idx, (category, color) in enumerate(zip(categories, colors)):
         ax.bar("You", category_emissions[category], bottom=bottom, color=color, label=category)
         bottom += category_emissions[category]
+
+    # Plot global averages
+    averages_df.plot(kind='bar', ax=ax, color="#8b008b", legend=False)
+
+    
 
     ax.set_ylabel("Carbon Footprint (tCO2e)")
     ax.set_title("Your Footprint vs. Global Averages")
