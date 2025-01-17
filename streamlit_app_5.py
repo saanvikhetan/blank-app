@@ -45,7 +45,7 @@ emission_factors = {
         "Terrace": 3,
         "Flat": 2,
     },
-    "home_cooling": {  # Separate dictionary for cooling
+    "home_cooling": {
         "I don’t use a cooler": 0,
         "Below 19°C": 3,
         "19°C - 23°C": 2,
@@ -305,7 +305,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         if st.button("Done ✅"):
             st.session_state.quiz_completed = True
             st.experimental_rerun()
-            
+
 # --- Streaks Section ---
 if 'streaks' not in st.session_state:
     st.session_state.streaks = {
