@@ -114,6 +114,7 @@ if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.sess
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
         st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
+        st.subheader(f"Streak Points: {st.session_state.streak_points}")
 
 
 # --- Quiz Section ---
@@ -371,7 +372,6 @@ if user_lib.is_user_logged_in() and menu == "Streaks":
     # Display streak points and task count
     st.subheader(f"Streak Points: {st.session_state.streak_points}")
     st.write(f"Completed Tasks Today: {completed_tasks}")
-    st.write(f"Total Eco Points: {st.session_state.eco_points}")
 
 # Function to update carbon footprint history
 def update_carbon_footprint_history(new_value):
