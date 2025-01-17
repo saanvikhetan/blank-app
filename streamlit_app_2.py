@@ -193,15 +193,15 @@ if st.session_state.last_streak_date != today:
     st.session_state.bonus_given = False
     st.session_state.streak_counter = 0  # Reset streak counter for the new day
 
-# Award points for completed tasks
-if completed_tasks > 0:
-    st.session_state.streak_points += completed_tasks
-    st.session_state.streak_counter += completed_tasks
+    if completed_tasks > 0:
+        # Award 1 streak point for completing at least one task
+        st.session_state.streak_points += 1
+        st.session_state.streak_counter = 1  # Only 1 streak point per day
 
-if completed_tasks == len(streaks) and not st.session_state.bonus_given:
-    # Award 20 bonus points for completing all tasks
-    st.session_state.streak_points += 20
-    st.session_state.bonus_given = True
+    if completed_tasks == len(streaks):
+        # Award 20 bonus points for completing all tasks
+        st.session_state.streak_points += 20
+        st.session_state.bonus_given = True
 
 # Sidebar display for streak points and task count
 st.sidebar.subheader(f"Total Streak Points: {st.session_state.streak_points}")
