@@ -37,9 +37,9 @@ def register_new_user(name, email, password):
     df = read_sheet_df(sheetname_usersinfo)
     # columns in the Pandas Dataframe df will be:   UserID	Name	Email	Password
 
-    max_userID = # TODO: add code here to find max of userID so far in df 
+    #max_userID = # TODO: add code here to find max of userID so far in df 
     new_userID = max_userID + 1
-    new_user_df = # TODO: new df with 1 row: new_userID, name, email, password
+    #new_user_df = # TODO: new df with 1 row: new_userID, name, email, password
 
     append_sheet_df(new_user_df, sheetname_usersinfo)
 
