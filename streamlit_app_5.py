@@ -5,38 +5,6 @@ import math
 import users as user_lib
 from datetime import date
 
-# Custom CSS for styling
-st.markdown("""
-    <style>
-        .stButton > button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-        .stButton > button:hover {
-            background-color: #45a049;
-        }
-        .stHeader, .stSubheader {
-            color: #4CAF50;
-        }
-        .stSidebar .stSidebarContent {
-            background-color: #f1f1f1;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .stSidebar .stSidebarContent .stHeader {
-            color: #4CAF50;
-        }
-    </style>
-""", unsafe_allow_html=True)
 
 def update_carbon_footprint_history(new_value):
     st.session_state.carbon_footprint_history.append(new_value)
@@ -77,7 +45,7 @@ emission_factors = {
         "Terrace": 3,
         "Flat": 2,
     },
-    "home_cooling": {
+    "home_cooling": {  # Separate dictionary for cooling
         "I don’t use a cooler": 0,
         "Below 19°C": 3,
         "19°C - 23°C": 2,
@@ -114,9 +82,9 @@ def get_progress_level(points):
         if level["points"][0] <= points <= level["points"][1]:
             return level
     return None
-
+    
 # --- Streamlit App ---
-st.markdown("# 🌍 Carbon Footprint Calculator")
+st.title("🌍 Carbon Footprint Calculator")
 
 # Initialize session state for goals and points
 if "goals" not in st.session_state:
@@ -131,7 +99,7 @@ if not user_lib.is_user_logged_in():
     user_lib.show_users_login()
     menu = None
 elif st.session_state.quiz_completed:
-    menu = st.radio("Navigation", ["Home", "Goals", "Offset", "Levels","Streaks"])
+    menu = st.radio("Navigation", ["🏠 Home", "🎯 Goals", "🌱 Offset", "⭐ Levels", "🔄 Streaks"], index=0)
 else:
     menu = "Quiz"
     
@@ -140,18 +108,18 @@ if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.sess
     progress_level = get_progress_level(st.session_state.eco_points)
     if progress_level:
         st.sidebar.header("Your Progress")
-        st.sidebar.write(f"**{progress_level['title']}**")
+        st.sidebar.markdown(f"### **{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
-        st.sidebar.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
-        st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
-
+        st.sidebar.markdown(f"**Total Eco Points:** {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+        st.sidebar.markdown(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
+        st.sidebar.subheader(f"⭐ Streak Points: {st.session_state.streak_points}")
 
 # --- Quiz Section ---
 if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
-    st.markdown("## 📝 Calculate Your Carbon Footprint")
+    st.header("🌿 Calculate Your Carbon Footprint 🌿")
 
     # --- DIET ---
-    st.markdown("### 🍽️ Diet")
+    st.subheader("🍽️ Diet")
     diet = st.selectbox(
         "How would you best describe your diet?",
         list(emission_factors["diet"].keys())
@@ -162,7 +130,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- TRAVEL ---
-    st.markdown("### 🚗 Travel")
+    st.subheader("🚗 Travel")
     vehicle = st.selectbox(
         "Which of these best describes the mode of transport you use most?",
         list(emission_factors["vehicle_use"].keys())
@@ -184,18 +152,18 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- HOME ---
-    st.markdown("### 🏡 Home")
+    st.subheader("🏡 Home")
     house_type = st.selectbox(
         "What kind of house do you live in?",
         list(emission_factors["home"].keys())
     )
     cooling = st.selectbox(
         "How cool is your house during summer?",
-        list(emission_factors["home_cooling"].keys()),
+        list(emission_factors["home_cooling"].keys()),  # Use separate dictionary for cooling
     )
 
     # --- STUFF ---
-    st.markdown("### 📦 Stuff")
+    st.subheader("🛒 Stuff")
     new_items = st.multiselect(
         "In the last 12 months, have you bought any of these new household items?",
         [
@@ -232,7 +200,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
 
         # Home
         home_emissions = emission_factors["home"][house_type]
-        cooling_emissions = emission_factors["home_cooling"][cooling]
+        cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
 
         # Stuff
         stuff_emissions = sum(
@@ -253,7 +221,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         return total_emissions, category_emissions
 
     # --- Display Results ---
-    if st.button("Calculate"):
+    if st.button("Calculate 🌱"):
         total_emissions, category_emissions = calculate_emissions()
         st.session_state.total_emissions = total_emissions
         st.session_state.category_emissions = category_emissions
@@ -262,16 +230,16 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
         # Pie Chart
-        st.markdown("## 📊 Breakdown of Your Carbon Footprint")
+        st.header("📊 Breakdown of Your Carbon Footprint")
         fig, ax = plt.subplots()
         labels = category_emissions.keys()
         sizes = category_emissions.values()
         ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
-        ax.axis('equal')
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         st.pyplot(fig)
 
         # --- Bar Graph ---
-        st.markdown("## 🌍 Comparison to Global Averages")
+        st.header("🌍 Comparison to Global Averages")
         averages = {
             "Saudi Arabia": 22.1,
             "US": 14.3,
@@ -305,7 +273,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         st.pyplot(fig)
 
         # --- Personalized Goals ---
-        st.markdown("## 🎯 Personalized Goals")
+        st.header("🎯 Personalized Goals")
 
         weekly_goals = {
             "Diet": "Reduce meat consumption to 2-3 times a week.",
@@ -323,10 +291,10 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
 
         max_category = st.session_state.max_category
 
-        st.markdown(f"### Weekly Goal for {max_category}")
+        st.subheader(f"📅 Weekly Goal for {max_category}")
         st.write(weekly_goals[max_category])
 
-        st.markdown(f"### Daily Goal for {max_category}")
+        st.subheader(f"📆 Daily Goal for {max_category}")
         st.write(daily_goals[max_category])
 
         # Mark quiz as completed
@@ -334,13 +302,32 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
 
     # Add "Done" button to go to the home page
     if st.session_state.quiz_completed:
-        if st.button("Done"):
+        if st.button("Done ✅"):
             st.session_state.quiz_completed = True
-            st.rerun()
+            st.experimental_rerun()
             
 # --- Streaks Section ---
+if 'streaks' not in st.session_state:
+    st.session_state.streaks = {
+        "Donate an Unused Item": False,
+        "Walk or Bike 1 Kilometer Instead of Driving": False,
+        "Cook a Plant-Based Meal": False,
+        "Conserve Water": False,
+        "Plant Something": False
+    }
+if 'streak_points' not in st.session_state:
+    st.session_state.streak_points = 0
+if 'bonus_given' not in st.session_state:
+    st.session_state.bonus_given = False
+if 'last_streak_date' not in st.session_state:
+    st.session_state.last_streak_date = None
+if 'streak_counter' not in st.session_state:
+    st.session_state.streak_counter = 0
+if 'eco_points' not in st.session_state:
+    st.session_state.eco_points = 0
+
 if user_lib.is_user_logged_in() and menu == "Streaks":
-    st.markdown("## 📅 Track Your Daily Eco-Friendly Streaks")
+    st.header("Track Your Daily Eco-Friendly Streaks")
 
     # Define streak activities and their descriptions
     streaks = {
@@ -354,11 +341,8 @@ if user_lib.is_user_logged_in() and menu == "Streaks":
     # Display streak actions with checkboxes
     completed_tasks = 0
     for streak, description in streaks.items():
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            completed = st.checkbox("", value=st.session_state.streaks[streak], key=streak)
-        with col2:
-            st.markdown(f"**{streak}**: {description}")
+        completed = st.checkbox(streak, value=st.session_state.streaks[streak], key=streak)
+        st.write(description)
         st.session_state.streaks[streak] = completed
         if completed:
             completed_tasks += 1
@@ -382,26 +366,31 @@ if user_lib.is_user_logged_in() and menu == "Streaks":
         st.session_state.streak_points += 1
         st.session_state.streak_counter += 1
 
-    # Award bonus points if all tasks are completed
-    if completed_tasks == len(streaks) and not st.session_state.bonus_given:
-        st.session_state.streak_points += 20
-        st.session_state.bonus_given = True
-
     # Display streak points and task count
-    st.markdown(f"### 🌟 Streak Points: {st.session_state.streak_points}")
+    st.subheader(f"Streak Points: {st.session_state.streak_points}")
     st.write(f"Completed Tasks Today: {completed_tasks}")
+
+# Function to update carbon footprint history
+def update_carbon_footprint_history(new_value):
+    st.session_state.carbon_footprint_history.append(new_value)
 
 
 # --- Home Section ---
+
+#####################
+
+
+
+######################
 if user_lib.is_user_logged_in() and menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
     st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
     if "total_emissions" in st.session_state and "category_emissions" in st.session_state:
         st.subheader("Your Current Carbon Footprint Results")
-        st.markdown(f"<h3><strong>Total Annual Carbon Footprint:</strong> {st.session_state.total_emissions:.2f} tons of CO₂e</h3>", unsafe_allow_html=True)
+        st.write(f"**Total Annual Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
         
         # Pie Chart
-        st.markdown("<h4>Breakdown of Your Carbon Footprint</h4>", unsafe_allow_html=True)
+        st.header("Breakdown of Your Carbon Footprint")
         fig, ax = plt.subplots()
         labels = st.session_state.category_emissions.keys()
         sizes = st.session_state.category_emissions.values()
@@ -410,13 +399,18 @@ if user_lib.is_user_logged_in() and menu == "Home":
         ax.axis('equal')
         st.pyplot(fig)
 
+
+    
+    
         # Line Chart
-        st.markdown("<h4>Carbon Footprint Over Time</h4>", unsafe_allow_html=True)
+        st.header("Carbon Footprint Over Time")
         if st.session_state.carbon_footprint_history:
             df = pd.DataFrame(st.session_state.carbon_footprint_history, columns=['Carbon Footprint'])
             st.line_chart(df)
         else:
             st.write("No carbon footprint data available.")
+
+
 
 # --- Goals Section ---
 goals_data = {
@@ -504,12 +498,11 @@ if user_lib.is_user_logged_in() and menu == "Goals":
         action for action in available_actions
         if action["action"] not in added_actions
     ]
-
-    # Category options for goal selection
+################
     selected_category = st.radio("Choose a category:", list(goals_data.keys()))
     category_actions = [a for a in available_actions if a["category"] == selected_category]
     selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
-
+    
     if st.button("Add to Goals"):
         action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
         if action_to_add and action_to_add not in st.session_state.goals:
@@ -517,7 +510,7 @@ if user_lib.is_user_logged_in() and menu == "Goals":
             st.success(f"Added '{selected_action}' to your goals!")
         elif action_to_add:
             st.warning(f"'{selected_action}' is already in your goals.")
-
+###################
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
@@ -585,6 +578,8 @@ if user_lib.is_user_logged_in() and menu == "Offset":
 
 if user_lib.is_user_logged_in() and menu == "Levels":
     st.header("Available Levels")
+
+
     
     # Get the user's current progress level
     current_level = get_progress_level(st.session_state.eco_points)
@@ -592,11 +587,10 @@ if user_lib.is_user_logged_in() and menu == "Levels":
     for level in progress_levels:
         col1, col2 = st.columns([4, 1])
         with col1:
-            st.markdown(f"<h5 style='color:#2E8B57;'>{level['title']}</h5>", unsafe_allow_html=True)
-            st.write(f"<p style='font-size:14px;'>Points: {level['points'][0]} - {level['points'][1]}</p>", unsafe_allow_html=True)
-            st.write(f"<p style='font-size:14px;'>{level['description']}</p>", unsafe_allow_html=True)
+            st.subheader(level["title"])
+            st.write(f"Points: {level['points'][0]} - {level['points'][1]}")
         with col2:
             if level == current_level:
-                st.markdown("<p style='color:green;'>This is you</p>", unsafe_allow_html=True)
+                st.markdown("<p style='color:green;'>this is you</p>", unsafe_allow_html=True)
         if st.button(f"Learn more about {level['title']}", key=level["title"]):
             st.write(level["description"])
