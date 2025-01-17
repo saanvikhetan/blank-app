@@ -5,28 +5,6 @@ import math
 import users as user_lib
 from datetime import date
 
-# Custom CSS
-st.markdown(
-    """
-    <style>
-    .main {
-        background-color: #f0f2f6;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: #2c3e50;
-    }
-    .stButton>button {
-        background-color: #2c3e50;
-        color: white;
-        border-radius: 5px;
-    }
-    .stButton>button:hover {
-        background-color: #34495e;
-        color: white;
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
 
 def update_carbon_footprint_history(new_value):
     st.session_state.carbon_footprint_history.append(new_value)
@@ -34,6 +12,8 @@ def update_carbon_footprint_history(new_value):
 # --- Initialization of session state variables ---
 if 'carbon_footprint_history' not in st.session_state:
     st.session_state.carbon_footprint_history = []
+
+
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
@@ -104,7 +84,7 @@ def get_progress_level(points):
         if level["points"][0] <= points <= level["points"][1]:
             return level
     return None
-
+    
 # --- Streamlit App ---
 st.title("E-mission")
 
@@ -121,10 +101,10 @@ if not user_lib.is_user_logged_in():
     user_lib.show_users_login()
     menu = None
 elif st.session_state.quiz_completed:
-    menu = st.sidebar.radio("Navigation", ["Home", "Goals", "Offset", "Levels", "Streaks"])
+    menu = st.sidebar.radio("Navigation", ["Home", "Goals", "Offset", "Levels","Streaks"])
 else:
     menu = "Quiz"
-
+    
 # Sidebar for displaying points and level
 if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.session_state.quiz_completed:
     progress_level = get_progress_level(st.session_state.eco_points)
@@ -134,7 +114,7 @@ if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.sess
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
         st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
-        st.sidebar.subheader(f"Streak Points: {st.session_state.streak_points}")
+
 
 # --- Quiz Section ---
 if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
@@ -327,7 +307,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         if st.button("Done"):
             st.session_state.quiz_completed = True
             st.rerun()
-
+            
 # --- Streaks Section ---
 if 'streaks' not in st.session_state:
     st.session_state.streaks = {
