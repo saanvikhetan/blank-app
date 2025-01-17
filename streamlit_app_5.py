@@ -99,7 +99,7 @@ if not user_lib.is_user_logged_in():
     user_lib.show_users_login()
     menu = None
 elif st.session_state.quiz_completed:
-    menu = st.radio("Navigation", ["🏠 Home", "🎯 Goals", "🌱 Offset", "⭐ Levels", "🔄 Streaks"], index=0)
+    menu = st.sidebar.radio("Navigation", ["🏠 Home", "🎯 Goals", "🌱 Offset", "⭐ Levels", "🔄 Streaks"], index=0)
 else:
     menu = "Quiz"
     
