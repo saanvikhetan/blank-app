@@ -270,39 +270,36 @@ if st.button("Calculate"):
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     st.pyplot(fig)
 
-    # --- Bar Graph ---
-        st.header("Comparison to Global Averages")
-        averages = {
-            "Saudi Arabia": 22.1,
-            "US": 14.3,
-            "China": 8.4,
-            "World": 4.7,
-            "UK": 4.4,
-            "India": 2.1,
-            "You": total_emissions
-        }
-        averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
-
+# --- Bar Graph ---
+       st.header("Comparison to Global Averages")
+       averages = {
+           "Saudi Arabia": 22.1,
+           "US": 14.3,
+           "China": 8.4,
+           "World": 4.7,
+           "UK": 4.4,
+           "India": 2.1,
+           "You": total_emissions
+       }
+       averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
         fig, ax = plt.subplots()
-
         # Define a dictionary to map countries to colors
-        colors = {
-            "Saudi Arabia": "#dc143c",
-            "US": "#4169e1",
-            "China": "#3cb371",
-            "World": "#000080",
-            "UK": "#40e0d0",
-            "India": "#ff7f50",
-            "You": "#8b008b"
-        }
-
+       colors = {
+           "Saudi Arabia": "#dc143c",
+           "US": "#4169e1",
+           "China": "#3cb371",
+           "World": "#000080",
+           "UK": "#40e0d0",
+           "India": "#ff7f50",
+           "You": "#8b008b"
+       }
         # Plot the bars with assigned colors
-        for country, value in averages.items():
-            ax.bar(country, value, color=colors[country])
-
+       for country, value in averages.items():
+           ax.bar(country, value, color=colors[country])
         ax.set_ylabel("Carbon Footprint (tCO2e)")
         ax.set_title("Your Footprint vs. Global Averages")
         st.pyplot(fig)
+
 
     # --- Personalized Goals ---
     st.header("Personalized Goals")
