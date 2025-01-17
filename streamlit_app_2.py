@@ -209,6 +209,7 @@ if completed_tasks == len(streaks) and not st.session_state.bonus_given:
 # Sidebar display for streak points and task count
 st.sidebar.subheader(f"Streak Counter: {st.session_state.streak_counter}")
 st.sidebar.write(f"Completed Tasks Today: {completed_tasks}")
+
 if menu == "Streaks":
     # Main content of the app
     st.title("Welcome to Your Eco-Friendly Tracker")
@@ -224,6 +225,11 @@ if menu == "Streaks":
     # Additional encouragement for no tasks completed
     if completed_tasks == 0:
         st.write("🌱 Start completing tasks to earn streak points and make a difference!")
+
+    # Display all streak tasks
+    st.header("Daily Eco-Friendly Streaks")
+    for streak, description in streaks.items():
+        st.checkbox(streak, value=st.session_state.streaks[streak])
 
 
 
