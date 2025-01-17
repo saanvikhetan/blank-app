@@ -207,8 +207,7 @@ if st.session_state.last_streak_date != today:
         st.session_state.bonus_given = True
 
 # Sidebar display for streak points and task count
-st.sidebar.subheader(f"Total Streak Points: {st.session_state.streak_points}")
-st.sidebar.write(f"Streak Counter: {st.session_state.streak_counter}")
+st.sidebar.subheader(f"Streak Counter: {st.session_state.streak_counter}")
 st.sidebar.write(f"Completed Tasks Today: {completed_tasks}")
 
 if menu == "Streaks":
