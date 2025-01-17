@@ -121,7 +121,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     st.header("Calculate Your Carbon Footprint")
 
     # --- DIET ---
-    st.subheader("Diet")
+    st.subheader("Diet🥗")
     diet = st.selectbox(
         "How would you best describe your diet?",
         list(emission_factors["diet"].keys())
@@ -132,7 +132,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- TRAVEL ---
-    st.subheader("Travel")
+    st.subheader("Travel🚗")
     vehicle = st.selectbox(
         "Which of these best describes the mode of transport you use most?",
         list(emission_factors["vehicle_use"].keys())
@@ -154,7 +154,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- HOME ---
-    st.subheader("Home")
+    st.subheader("Home🏡")
     house_type = st.selectbox(
         "What kind of house do you live in?",
         list(emission_factors["home"].keys())
@@ -165,7 +165,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- STUFF ---
-    st.subheader("Stuff")
+    st.subheader("Stuff📦")
     new_items = st.multiselect(
         "In the last 12 months, have you bought any of these new household items?",
         [
