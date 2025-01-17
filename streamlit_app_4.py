@@ -224,7 +224,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         st.session_state.total_emissions = total_emissions
         st.session_state.category_emissions = category_emissions
         st.session_state.max_category = max(category_emissions, key=category_emissions.get)
-
+        update_carbon_footprint_history(total_emissions)
         st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
         # Pie Chart
