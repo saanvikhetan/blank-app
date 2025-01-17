@@ -355,9 +355,9 @@ goals_data = {
         {"action": "Support 2 sustainable brands per year", "carbon_reduction": 0.25, "points": 400}
     ],
     "Other": [
-        {"action": "Donate $50 to a reputable environmental organization", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Donate ₹4000 to a reputable environmental organization", "carbon_reduction": 0.2, "points": 200},
         {"action": "Participate in 2 local environmental initiatives per year", "carbon_reduction": 0.3, "points": 400},
-        {"action": "Purchase $50 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
+        {"action": "Purchase ₹4000 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
     ]
 }
 
