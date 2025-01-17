@@ -582,3 +582,21 @@ if user_lib.is_user_logged_in() and menu == "Offset":
     for name, info in offset_links.items():
         st.write(f"[{name}]({info['url']})")
         st.write(info['description'])
+
+if user_lib.is_user_logged_in() and menu == "Levels":
+    st.header("Available Levels")
+    
+    # Get the user's current progress level
+    current_level = get_progress_level(st.session_state.eco_points)
+
+    for level in progress_levels:
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.markdown(f"<h5 style='color:#2E8B57;'>{level['title']}</h5>", unsafe_allow_html=True)
+            st.write(f"<p style='font-size:14px;'>Points: {level['points'][0]} - {level['points'][1]}</p>", unsafe_allow_html=True)
+            st.write(f"<p style='font-size:14px;'>{level['description']}</p>", unsafe_allow_html=True)
+        with col2:
+            if level == current_level:
+                st.markdown("<p style='color:green;'>this is you</p>", unsafe_allow_html=True)
+        if st.button(f"Learn more about {level['title']}", key=level["title"]):
+            st.write(level["description"])
