@@ -193,6 +193,7 @@ if menu == "Home":
     new_items = st.multiselect(
         "In the last 12 months, have you bought any of these new household items?",
         [
+            "None",  # Add the None option here
             "TV, laptop, or PC",
             "Washing machine, dishwasher, etc.",
             "Mobile phone or tablet",
@@ -202,8 +203,6 @@ if menu == "Home":
         "In a typical month, how much do you spend on non-essential items?",
         list(emission_factors["stuff"]["Spending"].keys()),
     )
-
-    
 
     # --- CALCULATIONS ---
     def calculate_emissions():
@@ -231,11 +230,13 @@ if menu == "Home":
         
 
         # Stuff
-        stuff_emissions = sum(
-            emission_factors["stuff"].get(item, 0) for item in new_items
-        ) + emission_factors["stuff"]["Spending"][non_essential_spending]
-
-        
+        if "None" in new_items:
+            new_items_emissions = 0
+        else:
+            new_items_emissions = sum(
+                emission_factors["stuff"].get(item, 0) for item in new_items
+            )
+        stuff_emissions = new_items_emissions + emission_factors["stuff"]["Spending"][non_essential_spending]
 
         # Category breakdown
         category_emissions = {
