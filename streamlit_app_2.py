@@ -384,13 +384,6 @@ goals_data = {
         {"action": "Purchase $50 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
     ]
 }
-import streamlit as st
-
-# Initialize session state variables if not already present
-if 'goals' not in st.session_state:
-    st.session_state.goals = []
-if 'completed_goals' not in st.session_state:
-    st.session_state.completed_goals = []
 
 
 import streamlit as st
@@ -417,7 +410,7 @@ if menu == "Goals":
     ]
 
     # Filter out actions that are already in the user's goals or completed goals
-    added_actions = [goal["action"] for goal in st.session_state.goals + st.session_state.completed_goals]
+    added_actions = [goal["action"] for goal in st.session_state.completed_goals + st.session_state.goals]
     available_actions = [
     action for action in available_actions
     if action["action"] not in added_actions
