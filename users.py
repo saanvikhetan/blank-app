@@ -42,8 +42,8 @@ def show_users_login():
 
 
 def is_user_logged_in():
-    st.session_state["logged_in_userid"] = 2
-    st.session_state["logged_in_user_name"] = "Saanvi"
+    # st.session_state["logged_in_userid"] = 2
+    # st.session_state["logged_in_user_name"] = "Saanvi"
     return ("logged_in_userid" in st.session_state)
 
 def do_user_login(userid):
