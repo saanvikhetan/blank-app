@@ -368,13 +368,16 @@ if 'goals' not in st.session_state:
     st.session_state.goals = []
 if 'completed_goals' not in st.session_state:
     st.session_state.completed_goals = []
+if "total_emissions" not in st.session_state:
+    st.session_state.total_emissions = 0
 
 def mark_goal_as_completed(goal):
     if goal not in st.session_state.completed_goals:
         st.session_state.completed_goals.append(goal)
     if goal in st.session_state.goals:
         st.session_state.goals.remove(goal)
-
+    if goal in st.session_state.goals:
+        st.session_state.goals.remove(goal)
 if menu == "Goals":
     st.header("Set and Track Your Goals")
 
