@@ -385,7 +385,16 @@ if menu == "Streaks":
     # Additional encouragement for no tasks completed
     if completed_tasks == 0:
         st.write("🌱 Start completing tasks to earn streak points and make a difference!")
-        
+##################
+# Initialize session state variables if not already present
+if 'carbon_footprint_history' not in st.session_state:
+    st.session_state.carbon_footprint_history = []
+
+# Function to update carbon footprint history
+def update_carbon_footprint_history(new_value):
+    st.session_state.carbon_footprint_history.append(new_value)
+
+
 # --- Home Section ---
 if user_lib.is_user_logged_in() and menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
@@ -405,6 +414,18 @@ if user_lib.is_user_logged_in() and menu == "Home":
         st.pyplot(fig)
     else:
         st.write("Complete the quiz to see your carbon footprint results.")
+
+    
+        # Line Chart
+        st.header("Carbon Footprint Over Time")
+        if st.session_state.carbon_footprint_history:
+            df = pd.DataFrame(st.session_state.carbon_footprint_history, columns=['Carbon Footprint'])
+            st.line_chart(df)
+        else:
+            st.write("No carbon footprint data available.")
+    else:
+        st.write("Complete the quiz to see your carbon footprint results.")
+
 
 # --- Goals Section ---
 goals_data = {
@@ -466,7 +487,8 @@ if "total_emissions" not in st.session_state:
 def mark_goal_as_completed(goal):
     if goal not in st.session_state.completed_goals:
         st.session_state.completed_goals.append(goal)
-        st.session_state.total_emissions -= goal['carbon_reduction']  # Decrease emissions
+        st.session_state.total_emissions -= goal['carbon_reduction']# Decrease emissions
+        update_carbon_footprint_history(st.session_state.total_emissions)
     if goal in st.session_state.goals:
         st.session_state.goals.remove(goal)
 
@@ -573,6 +595,8 @@ if user_lib.is_user_logged_in() and menu == "Offset":
 if user_lib.is_user_logged_in() and menu == "Levels":
     st.header("Available Levels")
 
+
+    
     # Get the user's current progress level
     current_level = get_progress_level(st.session_state.eco_points)
 
