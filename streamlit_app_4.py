@@ -109,12 +109,13 @@ else:
 if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.session_state.quiz_completed:
     progress_level = get_progress_level(st.session_state.eco_points)
     if progress_level:
-        st.sidebar.header("Your Progress")
+        # st.sidebar.header("Your Progress")
+        st.sidebar.header(user_lib.get_logged_in_user_name() + ", Your Progress")
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
         st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
-
+        user_lib.show_logout_button(sidebar=True)
 
 # --- Quiz Section ---
 if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
