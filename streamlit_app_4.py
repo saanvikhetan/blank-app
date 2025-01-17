@@ -368,11 +368,6 @@ if user_lib.is_user_logged_in() and menu == "Streaks":
         st.session_state.streak_points += 1
         st.session_state.streak_counter += 1
 
-    # Award bonus points if all tasks are completed
-    if completed_tasks == len(streaks) and not st.session_state.bonus_given:
-        st.session_state.eco_points += 20
-        st.session_state.bonus_given = True
-
     # Display streak points and task count
     st.subheader(f"Streak Points: {st.session_state.streak_points}")
     st.write(f"Completed Tasks Today: {completed_tasks}")
