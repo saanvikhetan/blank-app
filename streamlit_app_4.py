@@ -419,7 +419,6 @@ if menu == "Goals":
                     if goal not in st.session_state.completed_goals:
                         st.session_state.completed_goals.append(goal)
                         st.session_state.total_emissions -= goal['carbon_reduction']  # Reduce total emissions
-                        st.success(f"Completed '{goal['action']}'! Reduced emissions by {goal['carbon_reduction']} tons of CO₂e.")
                 else:
                     updated_goals.append(goal)
         st.session_state.goals = updated_goals
