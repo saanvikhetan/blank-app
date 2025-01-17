@@ -473,12 +473,19 @@ if menu == "Offset":
         st.write(f"[{name}]({info['url']})")
         st.write(info['description'])
 
-
 if menu == "Levels":
     st.header("Available Levels")
 
+    # Get the user's current progress level
+    current_level = get_progress_level(st.session_state.eco_points)
+
     for level in progress_levels:
-        st.subheader(level["title"])
-        st.write(f"Points: {level['points'][0]} - {level['points'][1]}")
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.subheader(level["title"])
+            st.write(f"Points: {level['points'][0]} - {level['points'][1]}")
+        with col2:
+            if level == current_level:
+                st.markdown("<p style='color:green;'>this is you</p>", unsafe_allow_html=True)
         if st.button(f"Learn more about {level['title']}", key=level["title"]):
             st.write(level["description"])
