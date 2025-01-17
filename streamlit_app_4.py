@@ -487,20 +487,19 @@ if user_lib.is_user_logged_in() and menu == "Goals":
         action for action in available_actions
         if action["action"] not in added_actions
     ]
-
-    # Category options for goal selection
+################
     selected_category = st.radio("Choose a category:", list(goals_data.keys()))
     category_actions = [a for a in available_actions if a["category"] == selected_category]
     selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
-
+    
     if st.button("Add to Goals"):
         action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
-    if action_to_add and action_to_add not in st.session_state.goals:
-        st.session_state.goals.append(action_to_add)
-        st.success(f"Added '{selected_action}' to your goals!")
-    elif action_to_add:
-        st.warning(f"'{selected_action}' is already in your goals.")
-
+        if action_to_add and action_to_add not in st.session_state.goals:
+            st.session_state.goals.append(action_to_add)
+            st.success(f"Added '{selected_action}' to your goals!")
+        elif action_to_add:
+            st.warning(f"'{selected_action}' is already in your goals.")
+###################
     # Display current goals with "Mark as Completed" buttons
     if st.session_state.goals:
         st.subheader("Your Goals")
