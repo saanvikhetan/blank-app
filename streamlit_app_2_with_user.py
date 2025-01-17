@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
+import users as user_lib
+
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
@@ -126,21 +128,26 @@ if "goals" not in st.session_state:
 if "eco_points" not in st.session_state:
     st.session_state.eco_points = 0
 
-# Navigation menu
-menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
+
+if "logged_in_userid" not in st.session_state:
+    user_lib.show_users_login()
+    menu = None
+else:
+    menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
 
 # Sidebar for displaying points and level
-if "eco_points" in st.session_state:
+if user_lib.is_user_logged_in() and "eco_points" in st.session_state:
     progress_level = get_progress_level(st.session_state.eco_points)
     if progress_level:
-        st.sidebar.header("Your Progress")
+        st.sidebar.header(user_lib.get_logged_in_user_name() + ", Your Progress")
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
+        user_lib.show_logout_button(sidebar=True)
 
 
 # --- Home Section ---
-if menu == "Home":
+if user_lib.is_user_logged_in() and menu == "Home":
     st.header("Calculate Your Carbon Footprint")
 
     # --- DIET ---
@@ -328,7 +335,7 @@ if menu == "Home":
         st.write(daily_goals[max_category])
 
 # --- Suggestions Section ---
-if menu == "Suggestions":
+if user_lib.is_user_logged_in() and menu == "Suggestions":
     st.header("Eco-Friendly Actions and Suggestions")
     for category, actions in suggestions_data.items():
         st.subheader(category)
@@ -401,7 +408,7 @@ if 'goals' not in st.session_state:
 if 'completed_goals' not in st.session_state:
     st.session_state.completed_goals = []
 
-if menu == "Goals":
+if user_lib.is_user_logged_in() and menu == "Goals":
     st.header("Set and Track Your Goals")
 
     # Flatten goals data into a list of actions with categories, carbon reduction, and points
@@ -468,7 +475,7 @@ st.write(f"Total Eco Points (All Goals): {total_points}")
 # Update session state with total points
 st.session_state.eco_points = total_points
 # --- Offset Section ---
-if menu == "Offset":
+if user_lib.is_user_logged_in() and menu == "Offset":
     st.header("Offset Your Carbon Footprint")
     
     offset_links = {
