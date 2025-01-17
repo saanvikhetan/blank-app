@@ -148,35 +148,62 @@ if 'streaks' not in st.session_state:
         "Plant Something": False
     }
 
-# --- Streaks Section ---
-if menu == "Streaks":
-    st.header("Daily Eco-Friendly Streaks")
-
-    streaks = {
-        "Donate an Unused Item": "Set aside something you no longer need for donation.",
-        "Walk or Bike 1 Kilometer Instead of Driving": "Replace a short trip with walking or biking.",
-        "Cook a Plant-Based Meal": "Prepare a vegetarian or vegan meal yourself.",
-        "Conserve Water": "Turn off the tap while brushing your teeth or washing your hands.",
-        "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
+# Initialize session state for streaks and the streak counter if not already present
+if 'streaks' not in st.session_state:
+    st.session_state.streaks = {
+        "Donate an Unused Item": False,
+        "Walk or Bike 1 Kilometer Instead of Driving": False,
+        "Cook a Plant-Based Meal": False,
+        "Conserve Water": False,
+        "Plant Something": False
     }
 
-    # Check if any streak is completed
-    any_completed = any(st.session_state.streaks.values())
+if 'streak_counter' not in st.session_state:
+    st.session_state.streak_counter = 0
 
-    # If any streak is completed, disable all checkboxes
-    for streak, description in streaks.items():
-        if any_completed and not st.session_state.streaks[streak]:
-            disabled = True
-        else:
-            disabled = False
+# Define streak activities and their descriptions
+streaks = {
+    "Donate an Unused Item": "Set aside something you no longer need for donation.",
+    "Walk or Bike 1 Kilometer Instead of Driving": "Replace a short trip with walking or biking.",
+    "Cook a Plant-Based Meal": "Prepare a vegetarian or vegan meal yourself.",
+    "Conserve Water": "Turn off the tap while brushing your teeth or washing your hands.",
+    "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
+}
 
-        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=disabled)
-        st.session_state.streaks[streak] = completed
-        
-        if completed:
-            st.write(f"✅ {description}")
-        else:
-            st.write(description)
+# Sidebar for tracking daily eco-friendly streaks
+st.sidebar.header("Daily Eco-Friendly Streaks")
+
+# Reset streak counter to recount completed tasks
+completed_tasks = 0
+
+for streak, description in streaks.items():
+    # Display checkboxes for each streak activity
+    completed = st.sidebar.checkbox(streak, value=st.session_state.streaks[streak])
+    
+    # Update session state and count completed tasks
+    if completed and not st.session_state.streaks[streak]:
+        st.session_state.streaks[streak] = True
+        completed_tasks += 1
+    elif completed:
+        completed_tasks += 1
+    else:
+        st.session_state.streaks[streak] = False
+
+# Update the streak counter
+st.session_state.streak_counter = completed_tasks
+
+# Display the streak count in the sidebar
+st.sidebar.subheader(f"Today's Streak Count: {st.session_state.streak_counter}")
+
+# Main content of the app
+st.title("Welcome to Your Eco-Friendly Tracker")
+st.write("Track your daily eco-friendly streaks and make a positive impact!")
+
+# Optional: Display progress or additional tips
+st.write(f"You're on track! You've completed **{st.session_state.streak_counter} tasks** today.")
+if st.session_state.streak_counter == len(streaks):
+    st.write("🎉 Amazing! You've completed all tasks for today. Keep it up!")
+
 
 # --- Home Section ---
 if menu == "Home":
