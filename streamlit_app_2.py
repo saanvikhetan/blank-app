@@ -140,26 +140,26 @@ if "eco_points" in st.session_state:
 import streamlit as st
 from datetime import date
 
-# Initialize session state for streak tracking
-if 'streaks' not in st.session_state:
+# Initialize session state variables for streaks
+if "streaks" not in st.session_state:
     st.session_state.streaks = {
         "Donate an Unused Item": False,
         "Walk or Bike 1 Kilometer Instead of Driving": False,
         "Cook a Plant-Based Meal": False,
         "Conserve Water": False,
-        "Plant Something": False
+        "Plant Something": False,
     }
 
-if 'streak_points' not in st.session_state:
+if "streak_points" not in st.session_state:
     st.session_state.streak_points = 0
 
-if 'bonus_given' not in st.session_state:
+if "bonus_given" not in st.session_state:
     st.session_state.bonus_given = False
 
-if 'last_streak_date' not in st.session_state:
+if "last_streak_date" not in st.session_state:
     st.session_state.last_streak_date = None
 
-if 'streak_counter' not in st.session_state:
+if "streak_counter" not in st.session_state:
     st.session_state.streak_counter = 0
 
 # Define streak activities and their descriptions
@@ -168,43 +168,49 @@ streaks = {
     "Walk or Bike 1 Kilometer Instead of Driving": "Replace a short trip with walking or biking.",
     "Cook a Plant-Based Meal": "Prepare a vegetarian or vegan meal yourself.",
     "Conserve Water": "Turn off the tap while brushing your teeth or washing your hands.",
-    "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
+    "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot.",
 }
 
-# --- Sidebar: Display streak summary ---
+# Get today's date
+today = date.today()
+
+# Reset streak logic for a new day
+if st.session_state.last_streak_date != today:
+    st.session_state.last_streak_date = today
+    st.session_state.bonus_given = False
+    if sum(st.session_state.streaks.values()) > 0:
+        st.session_state.streak_counter += 1  # Increment streak if tasks were completed yesterday
+    else:
+        st.session_state.streak_counter = 0  # Reset streak if no tasks were completed yesterday
+    for task in streaks:
+        st.session_state.streaks[task] = False  # Reset tasks for the new day
+
+# Sidebar: Display streak summary
 st.sidebar.header("Daily Eco-Friendly Streaks")
 completed_tasks = sum(st.session_state.streaks.values())  # Count completed tasks
 st.sidebar.subheader(f"Current Streak: {st.session_state.streak_counter}")
 st.sidebar.write(f"Tasks Completed Today: {completed_tasks}")
 
-# Reset streak logic for a new day
-today = date.today()
-if st.session_state.last_streak_date != today:
-    st.session_state.last_streak_date = today
-    st.session_state.bonus_given = False
-    if completed_tasks == 0:  # Only reset streak if no tasks were completed the previous day
-        st.session_state.streak_counter = 0
-    for streak in streaks.keys():
-        st.session_state.streaks[streak] = False
-
-# Display streak tasks with checkboxes in the Streaks tab
+# Streaks Tab
 if menu == "Streaks":
     st.title("Daily Eco-Friendly Streaks")
     st.write("Complete these tasks daily to maintain your streak and earn points!")
 
-    completed_tasks = 0
-    for streak, description in streaks.items():
-        completed = st.checkbox(f"{streak}: {description}", value=st.session_state.streaks[streak])
-        st.session_state.streaks[streak] = completed  # Update the state
-        if completed:
-            completed_tasks += 1
+    # Display streak tasks with checkboxes
+    for task, description in streaks.items():
+        st.session_state.streaks[task] = st.checkbox(
+            f"{task}: {description}", value=st.session_state.streaks[task]
+        )
 
-    # Update points and streak counter based on completed tasks
-    if completed_tasks > 0 and st.session_state.streak_counter == 0:
+    # Recalculate completed tasks after updating checkboxes
+    completed_tasks = sum(st.session_state.streaks.values())
+
+    # Award streak points
+    if completed_tasks > 0 and not st.session_state.bonus_given:
         st.session_state.streak_points += 1
-        st.session_state.streak_counter = 1  # Start the streak
-    if completed_tasks == len(streaks) and not st.session_state.bonus_given:
-        st.session_state.streak_points += 20
+        st.session_state.bonus_given = True
+    if completed_tasks == len(streaks):
+        st.session_state.streak_points += 20  # Bonus for completing all tasks
         st.session_state.bonus_given = True
 
     # Feedback and encouragement
@@ -215,6 +221,8 @@ if menu == "Streaks":
         st.info("Great work! Keep going to complete all your tasks.")
     else:
         st.warning("🌱 Start completing tasks to earn streak points and make a difference!")
+
+
 
 
 
