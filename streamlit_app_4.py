@@ -309,6 +309,24 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
             st.rerun()
             
 # --- Streaks Section ---
+if 'streaks' not in st.session_state:
+    st.session_state.streaks = {
+        "Donate an Unused Item": False,
+        "Walk or Bike 1 Kilometer Instead of Driving": False,
+        "Cook a Plant-Based Meal": False,
+        "Conserve Water": False,
+        "Plant Something": False
+    }
+if 'streak_points' not in st.session_state:
+    st.session_state.streak_points = 0
+if 'bonus_given' not in st.session_state:
+    st.session_state.bonus_given = False
+if 'last_streak_date' not in st.session_state:
+    st.session_state.last_streak_date = None
+if 'streak_counter' not in st.session_state:
+    st.session_state.streak_counter = 0
+
+
 if user_lib.is_user_logged_in() and menu == "Streaks":
     st.header("Track Your Daily Eco-Friendly Streaks")
 
