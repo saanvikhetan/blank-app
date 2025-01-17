@@ -295,7 +295,7 @@ if not st.session_state.quiz_completed:
 if menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
     st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
-
+    st.write(f"Your E-mission Points: {st.session_state.eco_points}")
     if "total_emissions" in st.session_state and "category_emissions" in st.session_state:
         st.subheader("Your Current Carbon Footprint Results")
         st.write(f"**Total Annual Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
