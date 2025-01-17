@@ -137,11 +137,7 @@ if "eco_points" in st.session_state:
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
-
-
-
-
-# Initialize session state for streak tracking if not already done
+# Initialize session state for streak tracking
 if 'streaks' not in st.session_state:
     st.session_state.streaks = {
         "Donate an Unused Item": False,
@@ -172,9 +168,6 @@ streaks = {
     "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
 }
 
-# Get today's date
-today = date.today()
-
 # Sidebar for tracking daily eco-friendly streaks
 st.sidebar.header("Daily Eco-Friendly Streaks")
 
@@ -184,7 +177,7 @@ completed_tasks = 0
 # Check if tasks are completed
 for streak, description in streaks.items():
     completed = st.sidebar.checkbox(streak, value=st.session_state.streaks[streak])
-
+    
     # Update session state and count completed tasks
     if completed:
         st.session_state.streaks[streak] = True
@@ -192,13 +185,10 @@ for streak, description in streaks.items():
     else:
         st.session_state.streaks[streak] = False
 
-# DEBUG: Show current session state values
-st.write("Session State: ", st.session_state)
-st.write(f"Completed tasks today: {completed_tasks}")
-st.write(f"Current streak points: {st.session_state.streak_points}")
-st.write(f"Last streak date: {st.session_state.last_streak_date}")
+# Get today's date
+today = date.today()
 
-# Logic for awarding points and handling a new day
+# Logic for awarding points
 if st.session_state.last_streak_date != today:
     # New day: Reset daily streak logic
     st.session_state.last_streak_date = today
@@ -233,6 +223,12 @@ elif completed_tasks > 0:
 # Additional encouragement for no tasks completed
 if completed_tasks == 0:
     st.write("🌱 Start completing tasks to earn streak points and make a difference!")
+
+
+
+
+   
+
 
     # Main content of the app
     st.title("Welcome to Your Eco-Friendly Tracker")
