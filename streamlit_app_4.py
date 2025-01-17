@@ -345,4 +345,67 @@ if 'completed_goals' not in st.session_state:
     st.session_state.completed_goals = []
 
 if menu == "Goals":
-    st.header("Set and Track Your Goals
+    st.header("Set and Track Your Goals")
+
+    # Flatten goals data into a list of actions with categories, carbon reduction, and points
+    available_actions = [
+        {
+            "action": action["action"],
+            "points": action["points"],
+            "category": category,
+            "carbon_reduction": action["carbon_reduction"]
+        }
+        for category, actions in goals_data.items()
+        for action in actions
+    ]
+
+    # Filter out actions that are already in the user's goals or completed goals
+    added_actions = [goal["action"] for goal in st.session_state.completed_goals + st.session_state.goals]
+    available_actions = [
+    action for action in available_actions
+    if action["action"] not in added_actions
+]
+
+    # Category options for goal selection
+    selected_category = st.selectbox("Choose a category:", list(goals_data.keys()))
+    category_actions = [a for a in available_actions if a["category"] == selected_category]
+    selected_action = st.selectbox("Choose an action to add to your goals:", [a["action"] for a in category_actions])
+
+    if st.button("Add to Goals"):
+        action_to_add = next((a for a in category_actions if a["action"] == selected_action), None)
+        if action_to_add and action_to_add not in st.session_state.goals:
+            st.session_state.goals.append(action_to_add)
+            st.success(f"Added '{selected_action}' to your goals!")
+        elif action_to_add:
+            st.warning(f"'{selected_action}' is already in your goals.")
+
+    # Display current goals with "Mark as Completed" buttons
+    if st.session_state.goals:
+        st.subheader("Your Goals")
+        updated_goals = []
+        for i, goal in enumerate(st.session_state.goals):
+            col1, col2 = st.columns([5, 1])
+            with col1:
+                st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+            with col2:
+                if st.button(f"Mark as Completed ({goal['points']})", key=f"complete_{i}"):
+                    if goal not in st.session_state.completed_goals:
+                        st.session_state.completed_goals.append(goal)
+                else:
+                    updated_goals.append(goal)
+        st.session_state.goals = updated_goals
+
+    # Display completed goals
+    if st.session_state.completed_goals:
+        st.subheader("Completed Goals")
+        st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
+        for goal in st.session_state.completed_goals:
+            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+        st.markdown("</p>", unsafe_allow_html=True)
+        st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+
+    # Calculate and display total eco points (for all goals)
+    total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
+
+    # Update session state with total points
+    st.session_state.eco_points = total_points
