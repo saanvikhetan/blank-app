@@ -140,6 +140,7 @@ if "eco_points" in st.session_state:
 
 
 
+# Initialize session state for streak tracking
 if 'streaks' not in st.session_state:
     st.session_state.streaks = {
         "Donate an Unused Item": False,
@@ -158,7 +159,7 @@ if 'bonus_given' not in st.session_state:
 if 'last_streak_date' not in st.session_state:
     st.session_state.last_streak_date = None
 
-if 'streak_counter' not in st.session_state:  # Initialize streak_counter
+if 'streak_counter' not in st.session_state:
     st.session_state.streak_counter = 0
 
 # Define streak activities and their descriptions
@@ -176,8 +177,8 @@ st.sidebar.header("Daily Eco-Friendly Streaks")
 # Count completed tasks for today's session
 completed_tasks = 0
 
+# Check if tasks are completed
 for streak, description in streaks.items():
-    # Display checkboxes for each streak activity
     completed = st.sidebar.checkbox(streak, value=st.session_state.streaks[streak])
     
     # Update session state and count completed tasks
@@ -195,6 +196,7 @@ if st.session_state.last_streak_date != today:
     # New day: Reset daily streak logic
     st.session_state.last_streak_date = today
     st.session_state.bonus_given = False
+    st.session_state.streak_counter = 0  # Reset streak counter for the new day
 
     if completed_tasks > 0:
         # Award 1 streak point for completing at least one task
@@ -211,24 +213,23 @@ st.sidebar.subheader(f"Total Streak Points: {st.session_state.streak_points}")
 st.sidebar.write(f"Completed Tasks Today: {st.session_state.streak_counter}")
 
 if menu == "Streaks":
+    
+
     # Main content of the app
     st.title("Welcome to Your Eco-Friendly Tracker")
     st.write("Track your daily eco-friendly streaks and make a positive impact!")
     
     # Feedback on task completion
-    st.write(f"Today you've completed **{completed_tasks} tasks**.")
+    st.write(f"Today you've completed *{completed_tasks} tasks*.")
     if completed_tasks == len(streaks):
-        st.write("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
+        st.write("🎉 Congratulations! You've completed all tasks and earned *20 bonus points*!")
     elif completed_tasks > 0:
         st.write("Great work! Keep going to complete all your tasks.")
     
     # Additional encouragement for no tasks completed
     if completed_tasks == 0:
-        st.write("🌱 Start completing tasks to earn streak points and make a difference!")
-    
-    
-    if st.session_state.streak_counter == len(streaks):
-        st.write("🎉 Amazing! You've completed all tasks for today. Keep it up!")
+        st.write("🌱 Start completing tasks to earn streak points and make a difference!")
+
 
 
 # --- Home Section ---
