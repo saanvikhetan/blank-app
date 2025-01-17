@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
+import users as user_lib
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
@@ -85,12 +86,16 @@ if "quiz_completed" not in st.session_state:
     st.session_state.quiz_completed = False
 
 # Navigation menu
-if st.session_state.quiz_completed:
+if not user_lib.is_user_logged_in():
+    user_lib.show_users_login()
+    menu = None
+elif st.session_state.quiz_completed:
     menu = st.radio("Navigation", ["Home", "Goals", "Offset", "Levels"])
 else:
     menu = "Quiz"
+    
 # Sidebar for displaying points and level
-if "eco_points" in st.session_state and st.session_state.quiz_completed:
+if user_lib.is_user_logged_in() and "eco_points" in st.session_state and st.session_state.quiz_completed:
     progress_level = get_progress_level(st.session_state.eco_points)
     if progress_level:
         st.sidebar.header("Your Progress")
@@ -101,7 +106,7 @@ if "eco_points" in st.session_state and st.session_state.quiz_completed:
 
 
 # --- Quiz Section ---
-if not st.session_state.quiz_completed:
+if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     st.header("Calculate Your Carbon Footprint")
 
     # --- DIET ---
@@ -293,7 +298,7 @@ if not st.session_state.quiz_completed:
             st.rerun()
 
 # --- Home Section ---
-if menu == "Home":
+if user_lib.is_user_logged_in() and menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
     st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
     if "total_emissions" in st.session_state and "category_emissions" in st.session_state:
@@ -376,7 +381,7 @@ def mark_goal_as_completed(goal):
     if goal in st.session_state.goals:
         st.session_state.goals.remove(goal)
 
-if menu == "Goals":
+if user_lib.is_user_logged_in() and menu == "Goals":
     st.header("Set and Track Your Goals")
 
     # Flatten goals data into a list of actions with categories, carbon reduction, and points
@@ -438,7 +443,7 @@ if menu == "Goals":
     st.session_state.eco_points = total_points
 
 # --- Offset Section ---
-if menu == "Offset":
+if user_lib.is_user_logged_in() and menu == "Offset":
     st.header("Offset Your Carbon Footprint")
     
     offset_links = {
@@ -476,7 +481,7 @@ if menu == "Offset":
         st.write(f"[{name}]({info['url']})")
         st.write(info['description'])
 
-if menu == "Levels":
+if user_lib.is_user_logged_in() and menu == "Levels":
     st.header("Available Levels")
 
     # Get the user's current progress level
