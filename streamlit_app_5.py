@@ -182,126 +182,134 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
     )
 
     # --- CALCULATIONS ---
-    def calculate_emissions():
-        """Calculates the total annual carbon footprint."""
-        # Diet
-        diet_emissions = emission_factors["diet"][diet]
+def calculate_emissions():
+    """Calculates the total annual carbon footprint."""
+    # Diet
+    diet_emissions = emission_factors["diet"][diet]
 
-        # Food Waste
-        food_waste_emissions = emission_factors["food_waste"][food_waste]
+    # Food Waste
+    food_waste_emissions = emission_factors["food_waste"][food_waste]
 
-        # Travel
-        vehicle_emissions = (
-            emission_factors["vehicle_use"][vehicle] * hours_in_vehicle * 0.27
-        )
-        public_transport_emissions = (
-            emission_factors["vehicle_use"]["Public Transport"] * public_transport_hours * 0.0833
-        )
-        flight_emissions = (
-            domestic_flights * 0.5 + indian_subcontinent_flights * 1.5 + international_flights * 3
-        )
+    # Travel
+    vehicle_emissions = (
+        emission_factors["vehicle_use"][vehicle] * hours_in_vehicle * 0.27
+    )
+    
+    # Debug statement for public_transport_hours
+    st.write(f"Public Transport Hours: {public_transport_hours}")
+    
+    public_transport_emissions = (
+        emission_factors["vehicle_use"]["Public Transport"] * public_transport_hours * 0.0833
+    )
+    
+    # Debug statement for public_transport_emissions
+    st.write(f"Public Transport Emissions: {public_transport_emissions}")
+    
+    flight_emissions = (
+        domestic_flights * 0.5 + indian_subcontinent_flights * 1.5 + international_flights * 3
+    )
 
-        # Home
-        home_emissions = emission_factors["home"][house_type]
-        cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
+    # Home
+    home_emissions = emission_factors["home"][house_type]
+    cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
 
-        # Stuff
-        stuff_emissions = sum(
-            emission_factors["stuff"].get(item, 0) for item in new_items
-        ) + emission_factors["stuff"]["Spending"][non_essential_spending]
+    # Stuff
+    stuff_emissions = sum(
+        emission_factors["stuff"].get(item, 0) for item in new_items
+    ) + emission_factors["stuff"]["Spending"][non_essential_spending]
 
-        # Category breakdown
-        category_emissions = {
-            "Diet": diet_emissions + food_waste_emissions,
-            "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
-            "Home": home_emissions + cooling_emissions,
-            "Stuff": stuff_emissions,
-        }
+    # Category breakdown
+    category_emissions = {
+        "Diet": diet_emissions + food_waste_emissions,
+        "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
+        "Home": home_emissions + cooling_emissions,
+        "Stuff": stuff_emissions,
+    }
 
-        # Total Emissions
-        total_emissions = sum(category_emissions.values())
+    # Total Emissions
+    total_emissions = sum(category_emissions.values())
 
-        return total_emissions, category_emissions
+    return total_emissions, category_emissions
 
-    # --- Display Results ---
-    if st.button("Calculate", key="calculate_button", type="primary"):
-        total_emissions, category_emissions = calculate_emissions()
-        st.session_state.total_emissions = total_emissions
-        st.session_state.category_emissions = category_emissions
-        st.session_state.max_category = max(category_emissions, key=category_emissions.get)
-        update_carbon_footprint_history(total_emissions)
-        st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+# --- Display Results ---
+if st.button("Calculate", key="calculate_button", type="primary"):
+    total_emissions, category_emissions = calculate_emissions()
+    st.session_state.total_emissions = total_emissions
+    st.session_state.category_emissions = category_emissions
+    st.session_state.max_category = max(category_emissions, key=category_emissions.get)
+    update_carbon_footprint_history(total_emissions)
+    st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
-        # Pie Chart
-        st.header("Breakdown of Your Carbon Footprint 🍰")
-        fig, ax = plt.subplots()
-        labels = category_emissions.keys()
-        sizes = category_emissions.values()
-        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        st.pyplot(fig)
+    # Pie Chart
+    st.header("Breakdown of Your Carbon Footprint 🍰")
+    fig, ax = plt.subplots()
+    labels = category_emissions.keys()
+    sizes = category_emissions.values()
+    ax.pie(sizes, labels=labels, autopct='%1.1%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    st.pyplot(fig)
 
-        # --- Bar Graph ---
-        st.header("Comparison to Global Averages 📊")
-        averages = {
-            "Saudi Arabia 🇸🇦": 22.1,
-            "US 🇺🇸": 14.3,
-            "China 🇨🇳": 8.4,
-            "World 🌍": 4.7,
-            "UK 🇬🇧": 4.4,
-            "India 🇮🇳": 2.1,
-            "You": total_emissions
-        }
-        averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
+    # --- Bar Graph ---
+    st.header("Comparison to Global Averages 📊")
+    averages = {
+        "Saudi Arabia 🇸🇦": 22.1,
+        "US 🇺🇸": 14.3,
+        "China 🇨🇳": 8.4,
+        "World 🌍": 4.7,
+        "UK 🇬🇧": 4.4,
+        "India 🇮🇳": 2.1,
+        "You": total_emissions
+    }
+    averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
-        fig, ax = plt.subplots()
+    fig, ax = plt.subplots()
 
-        # Define a dictionary to map countries to colors
-        colors = {
-            "Saudi Arabia 🇸🇦": "#dc143c",
-            "US 🇺🇸": "#4169e1",
-            "China 🇨🇳": "#3cb371",
-            "World 🌍": "#000080",
-            "UK 🇬🇧": "#40e0d0",
-            "India 🇮🇳": "#ff7f50",
-            "You": "#8b008b"
-        }
+    # Define a dictionary to map countries to colors
+    colors = {
+        "Saudi Arabia 🇸🇦": "#dc143c",
+        "US 🇺🇸": "#4169e1",
+        "China 🇨🇳": "#3cb371",
+        "World 🌍": "#000080",
+        "UK 🇬🇧": "#40e0d0",
+        "India 🇮🇳": "#ff7f50",
+        "You": "#8b008b"
+    }
 
-        # Plot the bars with assigned colors
-        for country, value in averages.items():
-            ax.bar(country, value, color=colors[country])
+    # Plot the bars with assigned colors
+    for country, value in averages.items():
+        ax.bar(country, value, color=colors[country])
 
-        ax.set_ylabel("Carbon Footprint (tCO2e)")
-        ax.set_title("Your Footprint vs. Global Averages")
-        st.pyplot(fig)
+    ax.set_ylabel("Carbon Footprint (tCO2e)")
+    ax.set_title("Your Footprint vs. Global Averages")
+    st.pyplot(fig)
 
-        # --- Personalized Goals ---
-        st.header("Personalized Goals 🎯")
+    # --- Personalized Goals ---
+    st.header("Personalized Goals 🎯")
 
-        weekly_goals = {
-            "Diet": "Reduce meat consumption to 2-3 times a week.",
-            "Travel": "Use public transport or walk/bike for at least 3 days a week.",
-            "Home": "Implement one energy-saving home improvement per month.",
-            "Stuff": "Limit non-essential purchases to once a week."
-        }
+    weekly_goals = {
+        "Diet": "Reduce meat consumption to 2-3 times a week.",
+        "Travel": "Use public transport or walk/bike for at least 3 days a week.",
+        "Home": "Implement one energy-saving home improvement per month.",
+        "Stuff": "Limit non-essential purchases to once a week."
+    }
 
-        daily_goals = {
-            "Diet": "Incorporate at least one vegetarian meal per day.",
-            "Travel": "Use public transport or walk/bike for short distances daily.",
-            "Home": "Turn off lights and appliances when not in use.",
-            "Stuff": "Avoid buying non-essential items on a daily basis."
-        }
+    daily_goals = {
+        "Diet": "Incorporate at least one vegetarian meal per day.",
+        "Travel": "Use public transport or walk/bike for short distances daily.",
+        "Home": "Turn off lights and appliances when not in use.",
+        "Stuff": "Avoid buying non-essential items on a daily basis."
+    }
 
-        max_category = st.session_state.max_category
+    max_category = st.session_state.max_category
 
-        st.subheader(f"Weekly Goal for {max_category} 📅")
-        st.write(weekly_goals[max_category])
+    st.subheader(f"Weekly Goal for {max_category} 📅")
+    st.write(weekly_goals[max_category])
 
-        st.subheader(f"Daily Goal for {max_category} 🗓️")
-        st.write(daily_goals[max_category])
+    st.subheader(f"Daily Goal for {max_category} 🗓️")
+    st.write(daily_goals[max_category])
 
-        # Mark quiz as completed
-        st.session_state.quiz_completed = True
+    # Mark quiz as completed
+    st.session_state.quiz_completed = True
 
     # Add "Done" button to go to the home page
     if st.session_state.quiz_completed:
