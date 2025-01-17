@@ -5,6 +5,12 @@ import math
 import users as user_lib
 from datetime import date
 
+# Initialize session state variables if not already present
+if 'carbon_footprint_history' not in st.session_state:
+    st.session_state.carbon_footprint_history = []
+
+
+
 # --- Data ---
 # Define emission factors (replace with your actual values)
 emission_factors = {
@@ -386,9 +392,6 @@ if menu == "Streaks":
     if completed_tasks == 0:
         st.write("🌱 Start completing tasks to earn streak points and make a difference!")
 ##################
-# Initialize session state variables if not already present
-if 'carbon_footprint_history' not in st.session_state:
-    st.session_state.carbon_footprint_history = []
 
 # Function to update carbon footprint history
 def update_carbon_footprint_history(new_value):
