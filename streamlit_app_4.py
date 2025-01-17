@@ -86,7 +86,7 @@ def get_progress_level(points):
     return None
     
 # --- Streamlit App ---
-st.title("Carbon Footprint Calculator")
+st.title("E-mission")
 
 # Initialize session state for goals and points
 if "goals" not in st.session_state:
