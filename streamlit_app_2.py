@@ -127,7 +127,7 @@ if "eco_points" not in st.session_state:
     st.session_state.eco_points = 0
 
 # Navigation menu
-menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset"])
+menu = st.radio("Navigation", ["Home", "Suggestions", "Goals", "Offset","Streaks"])
 
 # Sidebar for displaying points and level
 if "eco_points" in st.session_state:
@@ -137,6 +137,21 @@ if "eco_points" in st.session_state:
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
+
+# --- Streaks Section ---
+if menu == "Streaks":
+    st.header("Daily Eco-Friendly Streaks")
+
+    streaks = [
+        "Donate an Unused Item: Set aside something you no longer need for donation.",
+        "Walk or Bike 1 Kilometer Instead of Driving: Replace a short trip with walking or biking.",
+        "Cook a Plant-Based Meal: Prepare a vegetarian or vegan meal yourself.",
+        "Conserve Water: Turn off the tap while brushing your teeth or washing your hands.",
+        "Plant Something: Plant a seed, herb, or small tree in your garden or a pot."
+    ]
+
+    for streak in streaks:
+        st.write(f"- {streak}")
 
 
 # --- Home Section ---
