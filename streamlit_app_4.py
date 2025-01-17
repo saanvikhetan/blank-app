@@ -456,3 +456,13 @@ if menu == "Offset":
     for name, info in offset_links.items():
         st.write(f"[{name}]({info['url']})")
         st.write(info['description'])
+
+
+if menu == "Levels":
+    st.header("Available Levels")
+
+    for level in progress_levels:
+        st.subheader(level["title"])
+        st.write(f"Points: {level['points'][0]} - {level['points'][1]}")
+        if st.button(f"Learn more about {level['title']}", key=level["title"]):
+            st.write(level["description"])
