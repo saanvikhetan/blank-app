@@ -148,45 +148,6 @@ if 'streaks' not in st.session_state:
         "Plant Something": False
     }
 
-# Initialize session state for streaks if not already present
-if 'streaks' not in st.session_state:
-    st.session_state.streaks = {
-        "Donate an Unused Item": False,
-        "Walk or Bike 1 Kilometer Instead of Driving": False,
-        "Cook a Plant-Based Meal": False,
-        "Conserve Water": False,
-        "Plant Something": False
-    }
-
-# Initialize session state for streaks if not already present
-if 'streaks' not in st.session_state:
-    st.session_state.streaks = {
-        "Donate an Unused Item": False,
-        "Walk or Bike 1 Kilometer Instead of Driving": False,
-        "Cook a Plant-Based Meal": False,
-        "Conserve Water": False,
-        "Plant Something": False
-    }
-
-# Initialize session state for streaks if not already present
-if 'streaks' not in st.session_state:
-    st.session_state.streaks = {
-        "Donate an Unused Item": False,
-        "Walk or Bike 1 Kilometer Instead of Driving": False,
-        "Cook a Plant-Based Meal": False,
-        "Conserve Water": False,
-        "Plant Something": False
-    }
-
-# Initialize session state for streaks if not already present
-if 'streaks' not in st.session_state:
-    st.session_state.streaks = {
-        "Donate an Unused Item": False,
-        "Walk or Bike 1 Kilometer Instead of Driving": False,
-        "Cook a Plant-Based Meal": False,
-        "Conserve Water": False,
-        "Plant Something": False
-    }
 
 # --- Streaks Section ---
 if menu == "Streaks":
@@ -203,12 +164,17 @@ if menu == "Streaks":
     # Check if any streak is completed
     any_completed = any(st.session_state.streaks.values())
 
+    # If any streak is completed, disable all checkboxes
     for streak, description in streaks.items():
-        # Disable all checkboxes if any streak is completed
-        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=any_completed and not st.session_state.streaks[streak])
+        if any_completed and not st.session_state.streaks[streak]:
+            disabled = True
+        else:
+            disabled = False
+
+        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=disabled)
+        st.session_state.streaks[streak] = completed
+        
         if completed:
-            st.session_state.streaks[streak] = True
-        if st.session_state.streaks[streak]:
             st.write(f"✅ {description}")
         else:
             st.write(description)
