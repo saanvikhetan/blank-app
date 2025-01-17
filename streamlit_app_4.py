@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math
 import users as user_lib
+from datetime import date
 
 # --- Data ---
 # Define emission factors (replace with your actual values)
