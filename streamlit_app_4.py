@@ -46,6 +46,7 @@ emission_factors = {
         "Large furniture": 0.3,
         "Washing machine, dishwasher, etc.": 0.4,
         "Mobile phone or tablet": 0.1,
+        "None": 0
         "Spending": {
             "₹0 - ₹5,000": 0.2,
             "₹5,000 - ₹15,000": 0.5,
@@ -117,7 +118,7 @@ if not st.session_state.quiz_completed:
     # --- TRAVEL ---
     st.subheader("Travel")
     vehicle = st.selectbox(
-        "Which of these best describes the vehicle you use most?",
+        "Which of these best describes the mode of transport you use most?",
         list(emission_factors["vehicle_use"].keys())
     )
     hours_in_vehicle = st.slider(
@@ -155,6 +156,7 @@ if not st.session_state.quiz_completed:
             "TV, laptop, or PC",
             "Washing machine, dishwasher, etc.",
             "Mobile phone or tablet",
+            "None",
         ],
     )
     non_essential_spending = st.selectbox(
