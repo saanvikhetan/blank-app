@@ -1,1 +1,348 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import math
 
+# --- Data ---
+# Define emission factors (replace with your actual values)
+emission_factors = {
+    "diet": {
+        "Meat in every meal": 3.3,
+        "Meat in some meals": 2.5,
+        "Meat very rarely": 1.7,
+        "Vegetarian": 1.2,
+        "Vegan": 0.9,
+    },
+    "food_waste": {
+        "None": 0,
+        "0% - 10%": 0.1,
+        "10% - 30%": 0.4,
+        "More than 30%": 1.0,
+    },
+    "vehicle_use": {
+        "Electric car": 1,
+        "Hybrid car": 2,
+        "Small petrol/diesel car": 3,
+        "Medium petrol/diesel car": 4,
+        "Large petrol/diesel car": 5,
+        "Motorbike": 2.5,
+        "Public Transport": 1.5,
+        "Walking/Cycling": 0,
+    },
+    "home": {
+        "Detached": 6,
+        "Semi-detached": 4,
+        "Terrace": 3,
+        "Flat": 2,
+    },
+    "home_cooling": {  # Separate dictionary for cooling
+        "I don’t use a cooler": 0,
+        "Below 19°C": 3,
+        "19°C - 23°C": 2,
+        "24°C - 30°C": 1,
+    },
+    "stuff": {
+        "TV, laptop, or PC": 0.2,
+        "Large furniture": 0.3,
+        "Washing machine, dishwasher, etc.": 0.4,
+        "Mobile phone or tablet": 0.1,
+        "Spending": {
+            "₹0 - ₹5,000": 0.2,
+            "₹5,000 - ₹15,000": 0.5,
+            "₹15,000 - ₹30,000": 1,
+            "Over ₹30,000": 1.5,
+        },
+    },
+}
+
+# Progress levels and badges
+progress_levels = [
+    {"title": "Eco Newbie", "points": [0, 500], "description": "Welcome to the world of sustainability! You're just starting your eco-friendly journey and taking your first steps toward reducing your carbon footprint. Engage in basic actions like meat-free days, buying second-hand items, or using public transport."},
+    {"title": "Green Enthusiast", "points": [501, 1000], "description": "You're becoming more eco-conscious! Your commitment to reducing your footprint is growing, and you're making significant strides in your sustainability efforts. Start making eco-friendly choices regularly, such as reducing food waste and choosing sustainable farming practices."},
+    {"title": "Sustainability Advocate", "points": [1001, 2000], "description": "You're actively promoting sustainable living. Your eco-conscious habits are becoming a regular part of your lifestyle, and you're encouraging others to make a change. Regularly use energy-efficient appliances, reduce processed foods, and make conscious decisions about waste and consumption."},
+    {"title": "Planet Saver", "points": [2001, 3500], "description": "You're making a noticeable impact on the planet! Your dedication to sustainability is clear in both your actions and your lifestyle choices. Keep up the great work! Make major changes, such as installing solar panels, reducing air travel, and embracing renewable energy."},
+    {"title": "Eco Warrior", "points": [3501, 5000], "description": "You’ve become a true warrior for the environment! Your commitment to sustainability is helping to lead the way for others, and your daily choices are making a real difference. Drive an electric vehicle, support sustainable brands, and implement energy-efficient systems in your home."},
+    {"title": "Zero-Carbon Champion", "points": [5001, 7000], "description": "You’ve achieved a highly sustainable lifestyle! You've reduced your carbon footprint to a remarkable level and continue to advocate for climate action. Your lifestyle is fully aligned with eco-conscious choices, such as living zero waste, eliminating single-use plastics, and significantly reducing your carbon emissions."},
+    {"title": "Planet Protector", "points": [7001, 8690], "description": "You are a true protector of the planet! Your relentless pursuit of sustainability has reduced your environmental impact to its minimum, and you're leading the charge for a greener future. Your efforts to reduce CO2 emissions through sustainable travel, energy, food, and lifestyle choices are exemplary. You’ve embraced every aspect of eco-friendly living."}
+]
+
+# Function to determine user's progress level and badge
+def get_progress_level(points):
+    for level in progress_levels:
+        if level["points"][0] <= points <= level["points"][1]:
+            return level
+    return None
+
+# --- Streamlit App ---
+st.title("Carbon Footprint Calculator")
+
+# Initialize session state for goals and points
+if "goals" not in st.session_state:
+    st.session_state.goals = []
+if "eco_points" not in st.session_state:
+    st.session_state.eco_points = 0
+if "quiz_completed" not in st.session_state:
+    st.session_state.quiz_completed = False
+
+# Navigation menu
+if st.session_state.quiz_completed:
+    menu = st.radio("Navigation", ["Home", "Goals", "Offset"])
+else:
+    menu = "Quiz"
+
+# Sidebar for displaying points and level
+if "eco_points" in st.session_state and st.session_state.quiz_completed:
+    progress_level = get_progress_level(st.session_state.eco_points)
+    if progress_level:
+        st.sidebar.header("Your Progress")
+        st.sidebar.write(f"**{progress_level['title']}**")
+        st.sidebar.write(progress_level["description"])
+        st.sidebar.write(f"Points: {st.session_state.eco_points}")
+
+# --- Quiz Section ---
+if not st.session_state.quiz_completed:
+    st.header("Calculate Your Carbon Footprint")
+
+    # --- DIET ---
+    st.subheader("Diet")
+    diet = st.selectbox(
+        "How would you best describe your diet?",
+        list(emission_factors["diet"].keys())
+    )
+    food_waste = st.selectbox(
+        "Of the food you buy, how much is wasted and thrown away?",
+        list(emission_factors["food_waste"].keys())
+    )
+
+    # --- TRAVEL ---
+    st.subheader("Travel")
+    vehicle = st.selectbox(
+        "Which of these best describes the vehicle you use most?",
+        list(emission_factors["vehicle_use"].keys())
+    )
+    hours_in_vehicle = st.slider(
+        "How many hours a week do you spend in your car or on your motorbike for personal use?",
+        0, 25, 5
+    )
+    public_transport_hours = st.slider(
+        "How many hours a week do you spend on public transport (metro/train/bus) for personal use?",
+        0, 25, 5
+    )
+    domestic_flights = st.number_input("Number of domestic flights in the last year:", min_value=0)
+    indian_subcontinent_flights = st.number_input(
+        "Number of flights to the Indian Subcontinent in the last year:", min_value=0
+    )
+    international_flights = st.number_input(
+        "Number of international flights in the last year:", min_value=0
+    )
+
+    # --- HOME ---
+    st.subheader("Home")
+    house_type = st.selectbox(
+        "What kind of house do you live in?",
+        list(emission_factors["home"].keys())
+    )
+    cooling = st.selectbox(
+        "How cool is your house during summer?",
+        list(emission_factors["home_cooling"].keys()),  # Use separate dictionary for cooling
+    )
+
+    # --- STUFF ---
+    st.subheader("Stuff")
+    new_items = st.multiselect(
+        "In the last 12 months, have you bought any of these new household items?",
+        [
+            "TV, laptop, or PC",
+            "Washing machine, dishwasher, etc.",
+            "Mobile phone or tablet",
+        ],
+    )
+    non_essential_spending = st.selectbox(
+        "In a typical month, how much do you spend on non-essential items?",
+        list(emission_factors["stuff"]["Spending"].keys()),
+    )
+
+    # --- CALCULATIONS ---
+    def calculate_emissions():
+        """Calculates the total annual carbon footprint."""
+        # Diet
+        diet_emissions = emission_factors["diet"][diet]
+
+        # Food Waste
+        food_waste_emissions = emission_factors["food_waste"][food_waste]
+
+        # Travel
+        vehicle_emissions = (
+            emission_factors["vehicle_use"][vehicle] * hours_in_vehicle * 0.27
+        )
+        public_transport_emissions = (
+            emission_factors["vehicle_use"]["Public Transport"] * public_transport_hours * 0.0833
+        )
+        flight_emissions = (
+            domestic_flights * 0.5 + indian_subcontinent_flights * 1.5 + international_flights * 3
+        )
+
+        # Home
+        home_emissions = emission_factors["home"][house_type]
+        cooling_emissions = emission_factors["home_cooling"][cooling]  # Use separate dictionary
+
+        # Stuff
+        stuff_emissions = sum(
+            emission_factors["stuff"].get(item, 0) for item in new_items
+        ) + emission_factors["stuff"]["Spending"][non_essential_spending]
+
+        # Category breakdown
+        category_emissions = {
+            "Diet": diet_emissions + food_waste_emissions,
+            "Travel": vehicle_emissions + public_transport_emissions + flight_emissions,
+            "Home": home_emissions + cooling_emissions,
+            "Stuff": stuff_emissions,
+        }
+
+        # Total Emissions
+        total_emissions = sum(category_emissions.values())
+
+        return total_emissions, category_emissions
+
+    # --- Display Results ---
+    if st.button("Calculate"):
+        total_emissions, category_emissions = calculate_emissions()
+        st.session_state.total_emissions = total_emissions
+        st.session_state.category_emissions = category_emissions
+        st.session_state.max_category = max(category_emissions, key=category_emissions.get)
+
+        st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+
+        # Pie Chart
+        st.header("Breakdown of Your Carbon Footprint")
+        fig, ax = plt.subplots()
+        labels = category_emissions.keys()
+        sizes = category_emissions.values()
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        st.pyplot(fig)
+
+        # --- Bar Graph ---
+        st.header("Comparison to Global Averages")
+        averages = {
+            "Saudi Arabia": 22.1,
+            "US": 14.3,
+            "China": 8.4,
+            "World": 4.7,
+            "UK": 4.4,
+            "India": 2.1,
+            "You": total_emissions
+        }
+        averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
+
+        fig, ax = plt.subplots()
+
+        # Define a dictionary to map countries to colors
+        colors = {
+            "Saudi Arabia": "#dc143c",
+            "US": "#4169e1",
+            "China": "#3cb371",
+            "World": "#000080",
+            "UK": "#40e0d0",
+            "India": "#ff7f50",
+            "You": "#8b008b"
+        }
+
+        # Plot the bars with assigned colors
+        for country, value in averages.items():
+            ax.bar(country, value, color=colors[country])
+
+        ax.set_ylabel("Carbon Footprint (tCO2e)")
+        ax.set_title("Your Footprint vs. Global Averages")
+        st.pyplot(fig)
+
+        # --- Personalized Goals ---
+        st.header("Personalized Goals")
+
+        weekly_goals = {
+            "Diet": "Reduce meat consumption to 2-3 times a week.",
+            "Travel": "Use public transport or walk/bike for at least 3 days a week.",
+            "Home": "Implement one energy-saving home improvement per month.",
+            "Stuff": "Limit non-essential purchases to once a week."
+        }
+
+        daily_goals = {
+            "Diet": "Incorporate at least one vegetarian meal per day.",
+            "Travel": "Use public transport or walk/bike for short distances daily.",
+            "Home": "Turn off lights and appliances when not in use.",
+            "Stuff": "Avoid buying non-essential items on a daily basis."
+        }
+
+        max_category = st.session_state.max_category
+
+        st.subheader(f"Weekly Goal for {max_category}")
+        st.write(weekly_goals[max_category])
+
+        st.subheader(f"Daily Goal for {max_category}")
+        st.write(daily_goals[max_category])
+
+        # Mark quiz as completed
+        st.session_state.quiz_completed = True
+
+# --- Home Section ---
+if menu == "Home":
+    st.header("Welcome to Your Eco-Friendly Journey!")
+    st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
+
+# --- Goals Section ---
+goals_data = {
+    "Food": [
+        {"action": "Have one meat-free day per week", "carbon_reduction": 0.078, "points": 50},
+        {"action": "Eat a plant-based diet", "carbon_reduction": 0.80, "points": 500},
+        {"action": "Choose local and seasonal produce for 75% of meals", "carbon_reduction": 0.137, "points": 75},
+        {"action": "Avoid food waste by 25%", "carbon_reduction": 0.012, "points": 40},
+        {"action": "Reduce consumption of processed foods by 25%", "carbon_reduction": 0.05, "points": 25},
+        {"action": "Support sustainable farming practices (e.g., certified organic)", "carbon_reduction": 1, "points": 200}
+    ],
+    "Travel": [
+        {"action": "Walk or cycle instead of driving for 5 short trips per week", "carbon_reduction": 0.028, "points": 25},
+        {"action": "Use public transportation or carpool for 3 trips per week", "carbon_reduction": 0.1, "points": 50},
+        {"action": "Bike or walk for 3 short distances per week", "carbon_reduction": 0.03, "points": 25},
+        {"action": "Take no more than 2 domestic flights per year", "carbon_reduction": 1, "points": 500},
+        {"action": "Drive an electric or hybrid vehicle instead of normal", "carbon_reduction": 1, "points": 800},
+        {"action": "Combine 2 trips per week to reduce car use", "carbon_reduction": 0.05, "points": 25}
+    ],
+    "Home": [
+        {"action": "Install energy-efficient lightbulbs in all fixtures", "carbon_reduction": 0.03, "points": 50},
+        {"action": "Use a fan instead of air conditioning for 3 months", "carbon_reduction": 0.04, "points": 50},
+        {"action": "Replace 1 major appliance with an energy-efficient model", "carbon_reduction": 0.125, "points": 50},
+        {"action": "Use LED lighting in all fixtures", "carbon_reduction": 0.05, "points": 75},
+        {"action": "Insulate your loft", "carbon_reduction": 0.5, "points": 200},
+        {"action": "Switch to a 100% renewable energy supplier", "carbon_reduction": 2, "points": 1500},
+        {"action": "Lower thermostat by 1°C in winter and raise by 1°C in summer", "carbon_reduction": 0.1, "points": 50},
+        {"action": "Cavity or solid wall insulation (if applicable)", "carbon_reduction": 1, "points": 500},
+        {"action": "Condensing boiler (if replacing an old boiler)", "carbon_reduction": 1.2, "points": 600},
+        {"action": "Double glazing all windows (if not already done)", "carbon_reduction": 0.8, "points": 400},
+        {"action": "Low flow fittings to all taps and showers", "carbon_reduction": 0.2, "points": 100},
+        {"action": "Solar water heater (if suitable for your location)", "carbon_reduction": 0.8, "points": 400}
+    ],
+    "Stuff": [
+        {"action": "Buy at least 5 second-hand instead of new items per year", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Repair 2 items instead of replacing them", "carbon_reduction": 0.1, "points": 150},
+        {"action": "Reduce monthly non-essential spending by 5%", "carbon_reduction": 0.05, "points": 100},
+        {"action": "Reduce, reuse, recycle consistently (e.g., weekly)", "carbon_reduction": 0.5, "points": 250},
+        {"action": "Buy second-hand or refurbished electronics", "carbon_reduction": 0.15, "points": 200},
+        {"action": "Avoid single-use plastics for 3 meals per week", "carbon_reduction": 0.03, "points": 100},
+        {"action": "Repair 1 major household item instead of replacing it", "carbon_reduction": 0.1, "points": 200},
+        {"action": "Support 2 sustainable brands per year", "carbon_reduction": 0.25, "points": 400}
+    ],
+    "Other": [
+        {"action": "Donate $50 to a reputable environmental organization", "carbon_reduction": 0.2, "points": 200},
+        {"action": "Participate in 2 local environmental initiatives per year", "carbon_reduction": 0.3, "points": 400},
+        {"action": "Purchase $50 of carbon offsets", "carbon_reduction": 0.2, "points": 200}
+    ]
+}
+
+# Initialize session state variables if not already present
+if 'goals' not in st.session_state:
+    st.session_state.goals = []
+if 'completed_goals' not in st.session_state:
+    st.session_state.completed_goals = []
+
+if menu == "Goals":
+    st.header("Set and Track Your Goals
