@@ -229,7 +229,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         st.session_state.category_emissions = category_emissions
         st.session_state.max_category = max(category_emissions, key=category_emissions.get)
         update_carbon_footprint_history(total_emissions)
-        st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+        st.subheader(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
         # Pie Chart
         st.header("Breakdown of Your Carbon Footprint")
@@ -389,7 +389,7 @@ if user_lib.is_user_logged_in() and menu == "Home":
     st.write("Use the navigation menu to explore suggestions, track your goals, or offset your carbon footprint.")
     if "total_emissions" in st.session_state and "category_emissions" in st.session_state:
         st.subheader("Your Current Carbon Footprint Results")
-        st.write(f"**Total Annual Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
+        st.subheader(f"**Total Annual Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
         
         # Pie Chart
         st.header("Breakdown of Your Carbon Footprint")
