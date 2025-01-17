@@ -226,8 +226,7 @@ if menu == "Streaks":
     if completed_tasks == 0:
         st.write("🌱 Start completing tasks to earn streak points and make a difference!")
     
-    # Optional: Display progress or additional tips
-    st.write(f"You're on track! You've completed **{st.session_state.streak_counter} tasks** today.")
+    
     if st.session_state.streak_counter == len(streaks):
         st.write("🎉 Amazing! You've completed all tasks for today. Keep it up!")
 
