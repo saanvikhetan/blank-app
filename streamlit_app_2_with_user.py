@@ -144,6 +144,7 @@ if user_lib.is_user_logged_in() and "eco_points" in st.session_state:
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
         user_lib.show_logout_button(sidebar=True)
+        st.sidebar.write(st.session_state)
 
 
 # --- Home Section ---

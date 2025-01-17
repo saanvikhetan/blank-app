@@ -6,6 +6,9 @@ import time
 def show_users_login():
     if not is_user_logged_in():
 
+        st.write("")
+        st.write("")
+
         email = st.text_input("Email", key="email")
         password = st.text_input("Password", type="password", key="password")
         if st.button("Login"):
@@ -16,7 +19,7 @@ def show_users_login():
                 do_user_login(userid)
                 st.write("You are logged in, " + get_logged_in_user_name())
                 time.sleep(1)
-                # read_user_session_state() ## TODO
+                restore_session_state()
                 st.rerun()
 
         st.divider()
@@ -38,7 +41,6 @@ def show_users_login():
                     st.rerun()
 
 
-
 def is_user_logged_in():
     return ("logged_in_userid" in st.session_state)
 
@@ -57,6 +59,7 @@ def do_user_logout(sidebar=False):
         st.write("Logging you out, see you soon, " + get_logged_in_user_name())
     del st.session_state["logged_in_userid"]
     del st.session_state["logged_in_user_name"]
+    save_session_state()
     time.sleep(1)
     st.rerun()
 
@@ -69,4 +72,11 @@ def show_logout_button(sidebar=False):
             do_user_logout(sidebar)
         
             
+def save_session_state():
+    # todo
+    pass
 
+
+def restore_session_state():
+    # todo
+    pass
