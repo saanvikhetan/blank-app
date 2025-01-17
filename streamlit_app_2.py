@@ -138,7 +138,7 @@ if "eco_points" in st.session_state:
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
 
-# Initialize session state for streaks and streak count if not already present
+# Initialize session state for streaks if not already present
 if 'streaks' not in st.session_state:
     st.session_state.streaks = {
         "Donate an Unused Item": False,
@@ -147,8 +147,6 @@ if 'streaks' not in st.session_state:
         "Conserve Water": False,
         "Plant Something": False
     }
-if 'streak_count' not in st.session_state:
-    st.session_state.streak_count = 0
 
 # --- Streaks Section ---
 if menu == "Streaks":
@@ -165,24 +163,20 @@ if menu == "Streaks":
     # Check if any streak is completed
     any_completed = any(st.session_state.streaks.values())
 
+    # If any streak is completed, disable all checkboxes
     for streak, description in streaks.items():
-        # Disable all checkboxes if any streak is completed
-        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=any_completed and not st.session_state.streaks[streak])
-        
-        # Update the session state and increment streak count if a new streak is completed
-        if completed and not st.session_state.streaks[streak]:
-            st.session_state.streaks[streak] = completed
-            st.session_state.streak_count += 1
+        if any_completed and not st.session_state.streaks[streak]:
+            disabled = True
+        else:
+            disabled = False
 
-    # Display the description with a checkmark if completed
-    for streak, description in streaks.items():
-        if st.session_state.streaks[streak]:
+        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=disabled)
+        st.session_state.streaks[streak] = completed
+        
+        if completed:
             st.write(f"✅ {description}")
         else:
             st.write(description)
-    
-    # Display the streak count
-    st.subheader(f"Streak Count: {st.session_state.streak_count}")
 
 # --- Home Section ---
 if menu == "Home":
