@@ -251,7 +251,7 @@ if menu == "Home":
 
         return total_emissions, category_emissions
 
-    # --- Display Results ---
+# --- Display Results ---
 if st.button("Calculate"):
     total_emissions, category_emissions = calculate_emissions()
     st.session_state.total_emissions = total_emissions
@@ -290,11 +290,12 @@ if st.button("Calculate"):
     # Plotting
     fig, ax = plt.subplots(figsize=(10, 6))
     averages_df.plot(kind='bar', ax=ax, color="#8b008b", legend=False)
-    
-    # Add stacked bar for "You"
+
+    # Define categories and colors
+    categories = list(category_emissions.keys())
     bottom = 0
     for idx, (category, color) in enumerate(zip(categories, colors)):
-        ax.bar("You", you_df['Carbon Footprint (tCO2e)'], bottom=bottom, color=color, label=category)
+        ax.bar("You", category_emissions[category], bottom=bottom, color=color, label=category)
         bottom += category_emissions[category]
 
     ax.set_ylabel("Carbon Footprint (tCO2e)")
@@ -326,7 +327,6 @@ if st.button("Calculate"):
 
     st.subheader(f"Daily Goal for {max_category}")
     st.write(daily_goals[max_category])
-
 
 # --- Suggestions Section ---
 if menu == "Suggestions":
