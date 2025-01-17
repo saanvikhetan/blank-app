@@ -597,6 +597,6 @@ if user_lib.is_user_logged_in() and menu == "Levels":
             st.write(f"<p style='font-size:14px;'>{level['description']}</p>", unsafe_allow_html=True)
         with col2:
             if level == current_level:
-                st.markdown("<p style='color:green;'>this is you</p>", unsafe_allow_html=True)
+                st.markdown("<p style='color:green;'>This is you</p>", unsafe_allow_html=True)
         if st.button(f"Learn more about {level['title']}", key=level["title"]):
             st.write(level["description"])
