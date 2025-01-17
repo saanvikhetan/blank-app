@@ -364,13 +364,13 @@ goals_data = {
 }
 
 # Initialize session state variables if not already present
+# Initialize session state variables if not already present
 if 'goals' not in st.session_state:
     st.session_state.goals = []
 if 'completed_goals' not in st.session_state:
     st.session_state.completed_goals = []
 if "total_emissions" not in st.session_state:
     st.session_state.total_emissions = 0
-
 
 def mark_goal_as_completed(goal):
     if goal not in st.session_state.completed_goals:
@@ -397,9 +397,9 @@ if menu == "Goals":
     # Filter out actions that are already in the user's goals or completed goals
     added_actions = [goal["action"] for goal in st.session_state.completed_goals + st.session_state.goals]
     available_actions = [
-    action for action in available_actions
-    if action["action"] not in added_actions
-]
+        action for action in available_actions
+        if action["action"] not in added_actions
+    ]
 
     # Category options for goal selection
     selected_category = st.selectbox("Choose a category:", list(goals_data.keys()))
@@ -439,7 +439,6 @@ if menu == "Goals":
 
     # Update session state with total points
     st.session_state.eco_points = total_points
-    
 # --- Offset Section ---
 if menu == "Offset":
     st.header("Offset Your Carbon Footprint")
