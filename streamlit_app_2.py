@@ -168,73 +168,46 @@ streaks = {
     "Plant Something": "Plant a seed, herb, or small tree in your garden or a pot."
 }
 
-# Sidebar for tracking daily eco-friendly streaks
+# --- Sidebar: Display streak summary ---
 st.sidebar.header("Daily Eco-Friendly Streaks")
+completed_tasks = sum(st.session_state.streaks.values())  # Count completed tasks
+st.sidebar.subheader(f"Current Streak: {st.session_state.streak_counter}")
+st.sidebar.write(f"Tasks Completed Today: {completed_tasks}")
 
-# Count completed tasks for today's session
-completed_tasks = 0
-
-# Check if tasks are completed
-for streak, description in streaks.items():
-    completed = st.sidebar.checkbox(streak, value=st.session_state.streaks[streak])
-    
-    # Update session state and count completed tasks
-    st.session_state.streaks[streak] = completed
-    if completed:
-        completed_tasks += 1
-
-# Get today's date
+# Reset streak logic for a new day
 today = date.today()
-
-# Logic for awarding points
 if st.session_state.last_streak_date != today:
-    # New day: Reset daily streak logic
     st.session_state.last_streak_date = today
     st.session_state.bonus_given = False
-
-    # Reset tasks for the new day
     for streak in streaks.keys():
         st.session_state.streaks[streak] = False
 
-# Award 1 streak point for completing at least one task
+# Award streak points
 if completed_tasks > 0 and st.session_state.streak_counter == 0:
     st.session_state.streak_points += 1
     st.session_state.streak_counter += 1
-
-# Award bonus points if all tasks are completed
 if completed_tasks == len(streaks) and not st.session_state.bonus_given:
     st.session_state.streak_points += 20
     st.session_state.bonus_given = True
 
-# Sidebar display for streak points and task count
-st.sidebar.subheader(f"Streak Counter: {st.session_state.streak_counter}")
-st.sidebar.write(f"Completed Tasks Today: {completed_tasks}")
-
+# --- Streaks Tab ---
 if menu == "Streaks":
-    # Main content of the app
-    st.title("Welcome to Your Eco-Friendly Tracker")
-    st.write("Track your daily eco-friendly streaks and make a positive impact!")
+    st.title("Daily Eco-Friendly Streaks")
+    st.write("Complete these tasks daily to maintain your streak and earn points!")
     
-    # Feedback on task completion
+    # Display streak tasks with checkboxes
+    for streak, description in streaks.items():
+        completed = st.checkbox(f"{streak}: {description}", value=st.session_state.streaks[streak])
+        st.session_state.streaks[streak] = completed  # Update session state
+
+    # Feedback and encouragement
     st.write(f"Today you've completed **{completed_tasks} tasks**.")
     if completed_tasks == len(streaks):
-        st.write("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
+        st.success("🎉 Congratulations! You've completed all tasks and earned **20 bonus points**!")
     elif completed_tasks > 0:
-        st.write("Great work! Keep going to complete all your tasks.")
-    
-    # Additional encouragement for no tasks completed
-    if completed_tasks == 0:
-        st.write("🌱 Start completing tasks to earn streak points and make a difference!")
-
-    # Display all streak tasks
-    st.header("Daily Eco-Friendly Streaks")
-    for streak, description in streaks.items():
-        st.checkbox(streak, value=st.session_state.streaks[streak])
-
-
-
-   
-
+        st.info("Great work! Keep going to complete all your tasks.")
+    else:
+        st.warning("🌱 Start completing tasks to earn streak points and make a difference!")
 
 
 
