@@ -407,14 +407,6 @@ def update_carbon_footprint_history(new_value):
 #####################
 
 
-    
-    # Line Chart
-    st.header("Carbon Footprint Over Time")
-    if st.session_state.carbon_footprint_history:
-        df = pd.DataFrame(st.session_state.carbon_footprint_history, columns=['Carbon Footprint'])
-        st.line_chart(df)
-    else:
-        st.write("No carbon footprint data available.")
 
 ######################
 if user_lib.is_user_logged_in() and menu == "Home":
