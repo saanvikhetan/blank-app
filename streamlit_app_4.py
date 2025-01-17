@@ -275,7 +275,7 @@ if user_lib.is_user_logged_in() and not st.session_state.quiz_completed:
         st.pyplot(fig)
 
         # --- Personalized Goals ---
-        st.header("Personalized Goals")
+        st.header("Personalized Suggestions")
 
         weekly_goals = {
             "Diet": "Reduce meat consumption to 2-3 times a week.",
