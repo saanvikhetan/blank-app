@@ -98,7 +98,6 @@ if "eco_points" in st.session_state and st.session_state.quiz_completed:
         st.sidebar.write(f"**{progress_level['title']}**")
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
-        st.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
 
 # --- Quiz Section ---
 if not st.session_state.quiz_completed:
