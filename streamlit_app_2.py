@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
-
+from datetime import date
 # --- Data ---
 # Define emission factors (replace with your actual values)
 emission_factors = {
