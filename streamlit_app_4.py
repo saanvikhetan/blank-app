@@ -66,13 +66,12 @@ progress_levels = [
     {"title": "Planet Protector", "points": [7001, 8690], "description": "You are a true protector of the planet! Your relentless pursuit of sustainability has reduced your environmental impact to its minimum, and you're leading the charge for a greener future. Your efforts to reduce CO2 emissions through sustainable travel, energy, food, and lifestyle choices are exemplary. You’ve embraced every aspect of eco-friendly living."}
 ]
 
-# Function to determine user's progress level and badge
 def get_progress_level(points):
     for level in progress_levels:
         if level["points"][0] <= points <= level["points"][1]:
             return level
     return None
-
+    
 # --- Streamlit App ---
 st.title("Carbon Footprint Calculator")
 
@@ -89,7 +88,6 @@ if st.session_state.quiz_completed:
     menu = st.radio("Navigation", ["Home", "Goals", "Offset", "Levels"])
 else:
     menu = "Quiz"
-
 # Sidebar for displaying points and level
 if "eco_points" in st.session_state and st.session_state.quiz_completed:
     progress_level = get_progress_level(st.session_state.eco_points)
@@ -99,6 +97,7 @@ if "eco_points" in st.session_state and st.session_state.quiz_completed:
         st.sidebar.write(progress_level["description"])
         st.sidebar.write(f"Points: {st.session_state.eco_points}")
         st.sidebar.write(f"**Total Carbon Footprint:** {st.session_state.total_emissions:.2f} tons of CO₂e")
+
 
 # --- Quiz Section ---
 if not st.session_state.quiz_completed:
