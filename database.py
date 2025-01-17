@@ -9,19 +9,28 @@ sheetname_userdata = "user_data"
 
 ## low level func
 
+csv_mode = True
+
 def gsheet_connect():
     ## Connect only if not already connected
-    if "conn" not in st.session_state:
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        st.session_state.conn = conn
+    if not csv_mode:
+        if "conn" not in st.session_state:
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            st.session_state.conn = conn
 
 def read_sheet_df(sheet_name):
     gsheet_connect()
-    return st.session_state.conn.read(ttl=0, worksheet=sheet_name)
+    if csv_mode:
+        return pd.read_csv(sheet_name + '.csv')
+    else:
+        return st.session_state.conn.read(ttl=0, worksheet=sheet_name)
 
 def overwrite_sheet_df(df, sheet_name):
     gsheet_connect()
-    st.session_state.conn.update(data=df, worksheet=sheet_name)
+    if csv_mode:
+        df.to_csv(sheet_name + '.csv', index=False)
+    else:
+        st.session_state.conn.update(data=df, worksheet=sheet_name)
 
 def append_sheet_df(df_append, sheet_name):
     gsheet_connect()
