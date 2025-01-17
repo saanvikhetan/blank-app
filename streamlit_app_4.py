@@ -5,7 +5,11 @@ import math
 import users as user_lib
 from datetime import date
 
-# Initialize session state variables if not already present
+
+def update_carbon_footprint_history(new_value):
+    st.session_state.carbon_footprint_history.append(new_value)
+
+# --- Initialization of session state variables ---
 if 'carbon_footprint_history' not in st.session_state:
     st.session_state.carbon_footprint_history = []
 
