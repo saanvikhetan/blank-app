@@ -284,6 +284,12 @@ if not st.session_state.quiz_completed:
         # Mark quiz as completed
         st.session_state.quiz_completed = True
 
+    # Add "Done" button to go to the home page
+    if st.session_state.quiz_completed:
+        if st.button("Done"):
+            st.session_state.quiz_completed = True
+            st.rerun()
+
 # --- Home Section ---
 if menu == "Home":
     st.header("Welcome to Your Eco-Friendly Journey!")
