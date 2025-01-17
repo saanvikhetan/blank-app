@@ -46,7 +46,7 @@ emission_factors = {
         "Large furniture": 0.3,
         "Washing machine, dishwasher, etc.": 0.4,
         "Mobile phone or tablet": 0.1,
-        "None": 0
+        "None": 0,
         "Spending": {
             "₹0 - ₹5,000": 0.2,
             "₹5,000 - ₹15,000": 0.5,
