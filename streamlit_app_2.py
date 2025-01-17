@@ -251,80 +251,82 @@ if menu == "Home":
 
         return total_emissions, category_emissions
 
-# --- Display Results ---
-if st.button("Calculate"):
-    total_emissions, category_emissions = calculate_emissions()
-    st.session_state.total_emissions = total_emissions
-    st.session_state.category_emissions = category_emissions
-    st.session_state.max_category = max(category_emissions, key=category_emissions.get)
+    # --- Display Results ---
+    if st.button("Calculate"):
+        total_emissions, category_emissions = calculate_emissions()
+        st.session_state.total_emissions = total_emissions
+        st.session_state.category_emissions = category_emissions
+        st.session_state.max_category = max(category_emissions, key=category_emissions.get)
 
-    st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
+        st.success(f"Your estimated annual carbon footprint is: {total_emissions:.2f} tons of CO₂e")
 
-    # Pie Chart
-    st.header("Breakdown of Your Carbon Footprint")
-    fig, ax = plt.subplots()
-    labels = category_emissions.keys()
-    sizes = category_emissions.values()
-    colors = ["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"]
-    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    st.pyplot(fig)
+        # Pie Chart
+        st.header("Breakdown of Your Carbon Footprint")
+        fig, ax = plt.subplots()
+        labels = category_emissions.keys()
+        sizes = category_emissions.values()
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=["#FF9999", "#66B3FF", "#99FF99", "#FFCC99"])
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        st.pyplot(fig)
 
-# --- Bar Graph ---
-    st.header("Comparison to Global Averages")
-    averages = {
-        "Saudi Arabia": 22.1,
-        "US": 14.3,
-        "China": 8.4,
-        "World": 4.7,
-        "UK": 4.4,
-        "India": 2.1,
-        "You": total_emissions
-      }
-averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
-fig, ax = plt.subplots()
-# Define a dictionary to map countries to colors
-colors = {
-     "Saudi Arabia": "#dc143c",
-     "US": "#4169e1",
-     "China": "#3cb371",
-     "World": "#000080",
-     "UK": "#40e0d0",
-     "India": "#ff7f50",
-     "You": "#8b008b"
-       }
-# Plot the bars with assigned colors
-for country, value in averages.items():
-    ax.bar(country, value, color=colors[country])
-ax.set_ylabel("Carbon Footprint (tCO2e)")
-ax.set_title("Your Footprint vs. Global Averages")
-st.pyplot(fig)
+        # --- Bar Graph ---
+        st.header("Comparison to Global Averages")
+        averages = {
+            "Saudi Arabia": 22.1,
+            "US": 14.3,
+            "China": 8.4,
+            "World": 4.7,
+            "UK": 4.4,
+            "India": 2.1,
+            "You": total_emissions
+        }
+        averages_df = pd.DataFrame.from_dict(averages, orient='index', columns=['Carbon Footprint (tCO2e)'])
 
+        fig, ax = plt.subplots()
 
-    # --- Personalized Goals ---
-    st.header("Personalized Goals")
+        # Define a dictionary to map countries to colors
+        colors = {
+            "Saudi Arabia": "#dc143c",
+            "US": "#4169e1",
+            "China": "#3cb371",
+            "World": "#000080",
+            "UK": "#40e0d0",
+            "India": "#ff7f50",
+            "You": "#8b008b"
+        }
 
-    weekly_goals = {
-        "Diet": "Reduce meat consumption to 2-3 times a week.",
-        "Travel": "Use public transport or walk/bike for at least 3 days a week.",
-        "Home": "Implement one energy-saving home improvement per month.",
-        "Stuff": "Limit non-essential purchases to once a week."
-    }
+        # Plot the bars with assigned colors
+        for country, value in averages.items():
+            ax.bar(country, value, color=colors[country])
 
-    daily_goals = {
-        "Diet": "Incorporate at least one vegetarian meal per day.",
-        "Travel": "Use public transport or walk/bike for short distances daily.",
-        "Home": "Turn off lights and appliances when not in use.",
-        "Stuff": "Avoid buying non-essential items on a daily basis."
-    }
+        ax.set_ylabel("Carbon Footprint (tCO2e)")
+        ax.set_title("Your Footprint vs. Global Averages")
+        st.pyplot(fig)
 
-    max_category = st.session_state.max_category
+        # --- Personalized Goals ---
+        st.header("Personalized Goals")
 
-    st.subheader(f"Weekly Goal for {max_category}")
-    st.write(weekly_goals[max_category])
+        weekly_goals = {
+            "Diet": "Reduce meat consumption to 2-3 times a week.",
+            "Travel": "Use public transport or walk/bike for at least 3 days a week.",
+            "Home": "Implement one energy-saving home improvement per month.",
+            "Stuff": "Limit non-essential purchases to once a week."
+        }
 
-    st.subheader(f"Daily Goal for {max_category}")
-    st.write(daily_goals[max_category])
+        daily_goals = {
+            "Diet": "Incorporate at least one vegetarian meal per day.",
+            "Travel": "Use public transport or walk/bike for short distances daily.",
+            "Home": "Turn off lights and appliances when not in use.",
+            "Stuff": "Avoid buying non-essential items on a daily basis."
+        }
+
+        max_category = st.session_state.max_category
+
+        st.subheader(f"Weekly Goal for {max_category}")
+        st.write(weekly_goals[max_category])
+
+        st.subheader(f"Daily Goal for {max_category}")
+        st.write(daily_goals[max_category])
 
 # --- Suggestions Section ---
 if menu == "Suggestions":
@@ -497,3 +499,4 @@ if menu == "Offset":
         st.write(f"[{name}]({info['url']})")
         st.write(info['description'])
         st.write("")  # Add a blank line for better spacing
+
