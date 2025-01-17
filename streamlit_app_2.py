@@ -148,7 +148,6 @@ if 'streaks' not in st.session_state:
         "Plant Something": False
     }
 
-
 # --- Streaks Section ---
 if menu == "Streaks":
     st.header("Daily Eco-Friendly Streaks")
@@ -164,17 +163,17 @@ if menu == "Streaks":
     # Check if any streak is completed
     any_completed = any(st.session_state.streaks.values())
 
-    # If any streak is completed, disable all checkboxes
     for streak, description in streaks.items():
-        if any_completed and not st.session_state.streaks[streak]:
-            disabled = True
-        else:
-            disabled = False
-
-        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=disabled)
-        st.session_state.streaks[streak] = completed
+        # Disable all checkboxes if any streak is completed
+        completed = st.checkbox(streak, value=st.session_state.streaks[streak], disabled=any_completed and not st.session_state.streaks[streak])
         
+        # Update the session state only if the checkbox is checked
         if completed:
+            st.session_state.streaks[streak] = completed
+
+    # Display the description with a checkmark if completed
+    for streak, description in streaks.items():
+        if st.session_state.streaks[streak]:
             st.write(f"✅ {description}")
         else:
             st.write(description)
