@@ -416,13 +416,13 @@ if menu == "Goals":
         for action in actions
     ]
 
-     # Filter out actions that are already in the user's goals or completed goals
+    # Filter out actions that are already in the user's goals or completed goals
     added_actions = [goal["action"] for goal in st.session_state.goals + st.session_state.completed_goals]
     available_actions = [
         action for action in available_actions
         if action["action"] not in added_actions
     ]
-        
+
     # Category options for goal selection
     selected_category = st.selectbox("Choose a category:", list(goals_data.keys()))
     category_actions = [a for a in available_actions if a["category"] == selected_category]
@@ -452,21 +452,20 @@ if menu == "Goals":
                     updated_goals.append(goal)
         st.session_state.goals = updated_goals
 
-   # Display completed goals
-if st.session_state.completed_goals:
-    st.subheader("Completed Goals")
-    st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
-    for goal in st.session_state.completed_goals:
-        st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
-    st.markdown("</p>", unsafe_allow_html=True)
-    st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
+    # Display completed goals
+    if st.session_state.completed_goals:
+        st.subheader("Completed Goals")
+        st.markdown("<p style='color:green;'>", unsafe_allow_html=True)
+        for goal in st.session_state.completed_goals:
+            st.write(f"- {goal['action']} ({goal['category']}, +{goal['points']} points)")
+        st.markdown("</p>", unsafe_allow_html=True)
+        st.write(f"Total Eco Points: {sum(goal['points'] for goal in st.session_state.completed_goals)}")
 
-# Calculate and display total eco points (for all goals)
-total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
+    # Calculate and display total eco points (for all goals)
+    total_points = sum(goal['points'] for goal in st.session_state.goals) + sum(goal['points'] for goal in st.session_state.completed_goals)
 
-
-# Update session state with total points
-st.session_state.eco_points = total_points
+    # Update session state with total points
+    st.session_state.eco_points = total_points
 # --- Offset Section ---
 if menu == "Offset":
     st.header("Offset Your Carbon Footprint")
