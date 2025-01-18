@@ -87,6 +87,7 @@ def show_logout_button(sidebar=False):
             
 def save_session_state():
     state_to_save = dict(st.session_state)
+    state_to_save.pop("conn", None)
     binary_data = pickle.dumps(state_to_save)
     encoded_data = base64.b64encode(binary_data).decode('utf-8')
     db_lib.store_user_data(get_logged_in_userid(), encoded_data)
@@ -104,10 +105,12 @@ def restore_session_state():
     
     # clean up session_state
     for key in st.session_state.keys():
-        del st.session_state[key]
+        if key != "conn":
+            del st.session_state[key]
 
     # load session_state
     for key, value in state_dict.items():
-        st.session_state[key] = value
+        if key != "conn":
+            st.session_state[key] = value
 
     
