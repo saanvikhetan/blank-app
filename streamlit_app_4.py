@@ -5,6 +5,7 @@ import math
 import users as user_lib
 from datetime import date
 
+st.write(st.secrets)
 
 def update_carbon_footprint_history(new_value):
     st.session_state.carbon_footprint_history.append(new_value)
