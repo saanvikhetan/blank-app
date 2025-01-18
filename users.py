@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import database as db_lib
 import time
+import pickle
+import base64
 
 def show_users_login():
     if not is_user_logged_in():
@@ -18,8 +20,8 @@ def show_users_login():
             else:
                 do_user_login(userid)
                 st.write("You are logged in, " + get_logged_in_user_name())
+                restore_session_state()                
                 time.sleep(1)
-                restore_session_state()
                 st.rerun()
 
         st.divider()
@@ -63,10 +65,15 @@ def do_user_logout(sidebar=False):
         st.sidebar.write("Logging you out, see you soon, " + get_logged_in_user_name())
     else:
         st.write("Logging you out, see you soon, " + get_logged_in_user_name())
+    save_session_state()
     del st.session_state["logged_in_userid"]
     del st.session_state["logged_in_user_name"]
-    save_session_state()
     time.sleep(1)
+
+    # clean up session_state
+    for key in st.session_state.keys():
+        del st.session_state[key]
+
     st.rerun()
 
 def show_logout_button(sidebar=False):
@@ -79,27 +86,28 @@ def show_logout_button(sidebar=False):
         
             
 def save_session_state():
-    return
-    
-    #serialized_state = json.dumps(dict(st.session_state))
-    #st.write("Writing serialized state = " + serialized_state)
-
-    #db_lib.store_user_data(get_logged_in_userd(), serialized_state)
-
+    state_to_save = dict(st.session_state)
+    binary_data = pickle.dumps(state_to_save)
+    encoded_data = base64.b64encode(binary_data).decode('utf-8')
+    db_lib.store_user_data(get_logged_in_userid(), encoded_data)
 
 
 def restore_session_state():
-    return
-
-    ##serialized_state = db_lib.read_latest_user_data(get_logged_in_userd())
-
-    ##if serialized_state ==
-    #restored_state = json.loads(serialized_state)
+    encoded_data = db_lib.read_latest_user_data(get_logged_in_userid())
+    if encoded_data is None:
+        return
     
+    binary_data = base64.b64decode(encoded_data.encode('utf-8'))
+    state_dict = pickle.loads(binary_data)
+    st.write("Read session_state")
+    st.write(state_dict)
+    
+    # clean up session_state
+    for key in st.session_state.keys():
+        del st.session_state[key]
 
-    #st.write("Read serialized state
+    # load session_state
+    for key, value in state_dict.items():
+        st.session_state[key] = value
 
-    # Update st.session_state with the restored values
-    #for key, value in restored_state.items():
-    #    if key != "conn":
-    #        st.session_state[key] = value
+    

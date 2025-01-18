@@ -3,3 +3,6 @@ streamlit
 matplotlib
 seaborn
 pandas
+pickle
+base64
+
