@@ -9,7 +9,7 @@ sheetname_userdata = "user_data"
 
 ## low level func
 
-csv_mode = True
+csv_mode = False
 
 def gsheet_connect():
     ## Connect only if not already connected
