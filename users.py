@@ -100,8 +100,8 @@ def restore_session_state():
     
     binary_data = base64.b64decode(encoded_data.encode('utf-8'))
     state_dict = pickle.loads(binary_data)
-    st.write("Read session_state")
-    st.write(state_dict)
+    #st.write("Read session_state")
+    #st.write(state_dict)
     
     # clean up session_state
     for key in st.session_state.keys():
