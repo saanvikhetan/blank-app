@@ -101,6 +101,9 @@ def store_user_data(userid, state):
 def read_latest_user_data(userid):
     df = read_sheet_df(sheetname_userdata)
 
+    if df.empty:
+        return None
+
     user_data = df[df["userid"] == userid]
     
     if user_data.empty:
